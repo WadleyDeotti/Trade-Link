@@ -36,7 +36,29 @@
         <div class="loginTem">
             Já tem uma conta? <a id="loginSend" href="pagina2.html">LOGIN</a>
         </div>
-        <button type="submit" class="submit-btn">CONCLUIR</button>
+        <button type="submit" class="submit-btn" id="abrirModal">CONCLUIR</button>
+    </div>
+
+    <div id="Modal">
+
+    <!-- Modal usando a tag dialog -->
+    <dialog id="meuDialog">
+        <div class="modal-cabecalho">
+            <h2>Modal Teste</h2>
+            <button class="fechar-modal" id="fecharModal" aria-label="Fechar modal">&times;</button>
+        </div>
+        
+        <div class="modal-corpo">
+            <p>Lorem Ipsum Lorem Ipsum Lorem Ipsum  tag &lt;dialog&gt; Lorem Ipsum </p>
+            <p>Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum </p>
+        </div>
+        
+        <div class="modal-rodape">
+            <button class="modal-btn modal-btn-secundario">Cancelar</button>
+            <button class="modal-btn modal-btn-primario">Confirmar</button>
+        </div>
+    </dialog>
+
     </div>
 
     

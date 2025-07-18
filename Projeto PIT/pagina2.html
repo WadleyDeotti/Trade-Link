@@ -23,14 +23,16 @@
                maxlength="15" oninput="mascaraTelefone()">
         </div>
         <div class="formGroup" id="campoTroca">
-        <p class="labelregis">CNPJ:</p>
-        <input type="text" class="inputregis" id="inputCnpj" placeholder="XX.XXX.XXX/XXXX-XX" 
-        maxlength="18" oninput="mascaraCnpj()">
+            <p class="labelregis">CPF/CNPJ:</p>
+            <input type="text" class="inputregis" id="inputTroca" placeholder="8" 
+            maxlength="18">
         </div>
         <div class="loginTem">
             Não tem uma conta? <a id="loginSend" href="index.html">Registre-se</a>
         </div>
-        <button type="submit" class="submit-btn">CONCLUIR</button>
+        <div id="buttonTocra">
+            <button type="submit" class="submit-btn" onclick="verificarDado()">CONCLUIR</button>
+        </div>
     </div>
 </body>
 </html>

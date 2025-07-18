@@ -108,3 +108,33 @@ function mascaraCpf(){
         cpf.value = valorFormatado;
     }
 }
+
+// Elementos do DOM
+        const dialog = document.getElementById('meuDialog');
+        const abrirBtn = document.getElementById('abrirModal');
+        const fecharBtn = document.getElementById('fecharModal');
+
+        // Abrir modal
+        abrirBtn.addEventListener('click', () => {
+            dialog.showModal(); // Método nativo para abrir o dialog como modal
+        });
+
+        // Fechar modal
+        fecharBtn.addEventListener('click', () => {
+            dialog.close(); // Método nativo para fechar o dialog
+        });
+
+        // Fechar ao pressionar ESC (funciona automaticamente com dialog)
+        
+        // Fechar ao clicar no backdrop (fora do modal)
+        dialog.addEventListener('click', (event) => {
+            if (event.target === dialog) {
+                dialog.close();
+            }
+        });
+
+        // Evento quando o modal é fechado
+        dialog.addEventListener('close', () => {
+            console.log('Modal foi fechado');
+        });
+
