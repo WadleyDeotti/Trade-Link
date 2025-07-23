@@ -70,3 +70,12 @@ body{
 .submit-btn:hover {
     background-color: #112649;
 }
+
+.labelregisTROLL{
+    display: block;
+    font-size: 35px;
+    color: #172B4B;
+    margin-bottom: 50px;
+    padding-left : 50px ; 
+    font-weight: bold;
+}

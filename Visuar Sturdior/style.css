@@ -90,3 +90,79 @@ body{
 .submit-btn:hover {
     background-color: #112649;
 }
+
+
+
+#campoTroca {
+    position: relative;
+    overflow: hidden;
+    min-height: 70px;
+}
+
+.fade-slide {
+    animation: slideInLeft 0.3s ease forwards;
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.fade-register {
+    animation: slideRegister 0.3s ease;
+}
+
+@keyframes slideRegister {
+    from {
+        opacity: 0;
+        transform: translateX(-40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.typeSelector {
+    position: relative;
+    display: flex;
+    margin-bottom: 20px;
+    border: 1px solid #E9FFFF;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.tab-indicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 100%;
+    background-color: #172B4B;
+    border-radius: 8px;
+    z-index: 0;
+    transition: transform 0.3s ease;
+}
+
+.typeOption {
+    flex: 1;
+    padding: 12px;
+    text-align: center;
+    cursor: pointer;
+    background-color: transparent;
+    color: #172B4B;
+    position: relative;
+    z-index: 1;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.typeOption.selected {
+    color: #E9FFFF;
+}

@@ -11,10 +11,12 @@
 
     <div id="register">
         <p>Escolha seu tipo de cadastro</p>
-        <div class="typeSelector">
-            <div class="typeOption selected" data-type="fornecedor">Fornecedor</div>
-            <div class="typeOption" data-type="empresa">Empresa</div>
-        </div>
+    <div class="typeSelector">
+        <div class="tab-indicator"></div>
+        <div class="typeOption selected" data-type="fornecedor">Fornecedor</div>
+        <div class="typeOption" data-type="empresa">Empresa</div>
+    </div>
+
         <div class="formGroup">
             <p class="labelregis">Nome:</p>
             <input class="inputregis" type="text">
@@ -32,6 +34,10 @@
         <p class="labelregis">CPF:</p>
             <input type="text" class="inputregis" id="inputCpf" placeholder="XXX.XXX.XXX-XX" 
                maxlength="15" oninput="mascaraCpf()">
+        </div>
+        <div class="formGroup">
+            <p class="labelregis">Senha:</p>
+            <input class="inputregis" type="text">
         </div>
         <div class="loginTem">
             Já tem uma conta? <a id="loginSend" href="pagina2.html">LOGIN</a>

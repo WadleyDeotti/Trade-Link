@@ -108,3 +108,38 @@ function mascaraCpf(){
         cpf.value = valorFormatado;
     }
 }
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    const typeOptions = document.querySelectorAll('.typeOption');
+    const tabIndicator = document.querySelector('.tab-indicator');
+    const docField = document.getElementById('campoTroca');
+    const registerContainer = document.getElementById('register');
+
+    typeOptions.forEach(option => {
+        option.addEventListener('click', function () {
+           typeOptions.forEach(opt => opt.classList.remove('selected'));
+            this.classList.add('selected');
+
+            // Move o indicador de fundo
+            if (this.dataset.type === 'fornecedor') {
+                tabIndicator.style.transform = 'translateX(0%)';
+            } else {
+                tabIndicator.style.transform = 'translateX(100%)';
+            }
+
+
+            // animação container
+// registerContainer.classList.add('fade-register');
+// ...
+// docField.classList.remove('fade-slide');
+// void docField.offsetWidth;
+// docField.classList.add('fade-slide');
+// ...
+// setTimeout(() => {
+//     registerContainer.classList.remove('fade-register');
+// }, 300);
+
+        });
+    });
+});
