@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+
+    <div id="register">
+        <p>Escolha seu tipo de cadastro</p>
+        <div class="typeSelector">
+            <div class="typeOption selected" data-type="fornecedor">Fornecedor</div>
+            <div class="typeOption" data-type="empresa">Empresa</div>
+        </div>
+        <div class="formGroup">
+            <p class="labelregis">Nome:</p>
+            <input class="inputregis" type="text">
+        </div>
+        <div class="formGroup">
+            <p class="labelregis">Email:</p>
+            <input class="inputregis" type="text">
+        </div>
+        <div class="formGroup">
+            <p class="labelregis">Telefone:</p>
+            <input type="text" class="inputregis" id="inputTel" placeholder="(XX) XXXXX-XXXX" 
+               maxlength="15" oninput="mascaraTelefone()">
+        </div>
+        <div id="campoTroca">
+        <div class="formGroup">
+        <p class="labelregis">CPF:</p>
+            <input type="text" class="inputregis" id="inputCpf" placeholder="XXX.XXX.XXX-XX" 
+               maxlength="15" oninput="mascaraCpf()">
+        </div>
+        <div class="loginTem">
+            Já tem uma conta? <a class="loginSend" href="pagina2.html">LOGIN</a>
+        </div>
+        <div class="loginTem">
+            <a class="loginSend" href="fornecedores.html">Fornecedores</a>
+        </div>
+        <button type="submit" class="submit-btn" id="submit-btn" onclick="validarCPF()">CONCLUIR</button>
+        </div>
+    </div>
+    
+
+    <div id="Modal">
+
+    <!-- Modal usando a tag dialog -->
+    <dialog id="meuDialog">
+        <div class="modal-cabecalho">
+            <h2>Modal Teste</h2>
+            <button class="fechar-modal" id="fecharModal" aria-label="Fechar modal">&times;</button>
+        </div>
+        
+        <div class="modal-corpo">
+            <p id="resultado" class="result">Lorem Ipsum Lorem Ipsum Lorem Ipsum  tag &lt;dialog&gt; Lorem Ipsum </p>
+            <p>Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum </p>
+        </div>
+        
+        <div class="modal-rodape">
+            <button class="modal-btn modal-btn-secundario">Cancelar</button>
+            <button class="modal-btn modal-btn-primario">Confirmar</button>
+        </div>
+    </dialog>
+
+    </div>
+
+    
+</body>
+</html>

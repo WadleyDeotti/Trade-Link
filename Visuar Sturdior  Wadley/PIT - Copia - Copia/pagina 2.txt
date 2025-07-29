@@ -1,0 +1,32 @@
+if(this.dataset.type === 'fornecedor') {
+                    docField.innerHTML = `
+                        <button type="submit" class="submit-btn" onclick="verificarDadoCpf()">CONCLUIR</button>
+                    `;
+                } else {
+                    docField.innerHTML = `
+                        <button type="submit" class="submit-btn" onclick="verificarDadoCnpj()">CONCLUIR</button>
+                    `;
+                }
+
+if (teste === 18) {
+        alert("CNPJ Válido");
+        window.location.href = "pagina2.html";
+    } else {
+        alert("CNPJ Inválido");
+
+    }
+
+if (teste < 14) {
+        docField.innerHTML = `
+            <div class="alert alert-danger" role="alert">
+                CNPJ inválido! Verifique os dados e tente novamente.
+            </div>
+        `;
+    } else {
+        docField.innerHTML = `
+            <div class="alert alert-success" role="alert">
+                CNPJ válido! Dados enviados com sucesso.
+            </div>
+        `;
+
+    }
