@@ -1,0 +1,194 @@
+body{
+    background-color: #172B4B;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+}
+#principal{
+    background-color: #B2C8F7;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    width: 100%;
+    max-width: 1600px;
+}
+#perfil{
+background-color: #38528B;
+    border-radius: 10px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+#produto{
+    background-color: #596375;
+    width: 100%;
+    /*box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); */
+}
+#pfp{
+    box-sizing: border-box;
+    width: 282px;
+    height: 272px;
+    padding: 20px;
+}
+#foto{
+    width: 100%;
+    height: 100%;
+    border: solid;
+    border-radius: 10px;
+}
+#foto:hover{
+    opacity: 60%;
+    background-color: #172B4B;
+}
+#banner{
+    box-sizing: border-box;
+    width: 1200px;
+    height: 272px;
+    padding: 20px;
+}
+#bannerfoto{
+    width: 100%;
+    height: 100%;
+    border: solid;
+    border-radius: 10px;
+}
+#bannerfoto:hover{
+    opacity: 60%;
+    background-color: #172B4B;
+}
+.labelregis{
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #172B4B;
+}
+.inputregis{
+    width: 94%;
+    padding: 10px 12px;
+    border: 1px solid #E9FFFF;
+    border-radius: 6px;
+    font-size: 14px;
+    background-color: #E9FFFF;
+}
+.formGroup {
+    margin-bottom: 15px;
+}
+#superior{
+    background-color: #B2C8F7;
+    border-radius: 00px;
+    padding: 30px;
+    width: 100%;
+    max-width: 400px;
+}
+#descricao{
+    background-color: #B2C8F7;
+    border-radius: 00px;
+    padding: 30px;
+    width: 100%;
+    max-width: 1200px;
+}
+#inputDesc{
+    box-sizing: border-box;
+    width: 100%;
+    height: 114px;
+    padding: 10px 12px;
+    border: 1px solid #E9FFFF;
+    border-radius: 6px;
+    font-size: 14px;
+    background-color: #E9FFFF;
+}
+#parteum{
+    display: flex;
+    flex-direction: row;
+}
+#inferior{
+    background-color: #B2C8F7;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+}
+#produtos {
+    display: flex;
+    flex-direction: row;
+    padding: 20px;
+    width: 100%;
+    overflow-x: auto; /* Habilita o scroll horizontal */
+    scroll-behavior: smooth; /* Scroll suave */
+    gap: 20px; /* Espaço entre os produtos */
+    white-space: nowrap; /* Impede quebra de linha */
+    
+    /* Esconde a barra de scroll visualmente */
+    scrollbar-width: none; /* Para Firefox */
+    &::-webkit-scrollbar {
+        display: none; /* Para Chrome, Safari e Edge */
+    }
+}
+#addProduto{
+    display: flex;
+    justify-content: start;
+    box-sizing: border-box;
+    padding: 20px;
+}
+#testeaddprod{
+    max-width: 200px;
+    max-height: 200px;
+}
+#imgaddprod{
+    width: 163px;
+    height: 163px;
+    border: solid;
+    border-radius: 10px;
+}
+#imgaddprod:hover{
+    opacity: 100%;
+    background-color: #99abd1;
+}
+.teste1 {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0; /* Impede que os itens encolham */
+}
+.prod1 {
+    box-sizing: border-box;
+    width: 200px;
+    height: 200px;
+    padding: 20px;
+    flex-shrink: 0; /* Mantém o tamanho fixo */
+}
+.imgProd1 {
+    width: 100%;
+    height: 100%;
+    border: solid;
+    border-radius: 10px;
+    object-fit: cover; /* Garante que a imagem preencha o espaço sem distorcer */
+}
+.imgProd1:hover{
+    opacity: 60%;
+    background-color: #99abd1;
+}
+.labelProd {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #172B4B;
+    text-align: center;
+    white-space: normal; /* Permite quebra de linha apenas para o texto */
+}
+#labelAddProd{
+    display: block;
+    margin-bottom: 5px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #172B4B;
+    text-align: center;
+}
+
+
