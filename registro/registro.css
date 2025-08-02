@@ -8,7 +8,7 @@ body{
     margin: 0;
     padding: 20px;
 }
-#login{
+#register{
     background-color: #B2C8F7;
     border-radius: 10px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -25,6 +25,26 @@ body{
     width: 100%;
     max-width: 500px;
 } */
+.typeOption.selected {
+    background-color: #172B4B;
+    color: #E9FFFF;
+    font-weight: 500;
+}
+.typeOption {
+    flex: 1;
+    padding: 12px;
+    text-align: center;
+    cursor: pointer;
+    background-color: #E9FFFF;
+    transition: all 0.2s;
+}
+.typeSelector {
+    display: flex;
+    margin-bottom: 20px;
+    border: 1px solid #E9FFFF;
+    border-radius: 8px;
+    overflow: hidden;
+}
 .formGroup {
     margin-bottom: 15px;
 }
@@ -68,5 +88,120 @@ body{
 }
 
 .submit-btn:hover {
-    background-color: #112649;
+    background-color: #0c1c38;
 }
+/* Botão para abrir o modal */
+        .abrir-modal {
+            background-color: #172B4B;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .abrir-modal:hover {
+            background-color: #3a5bef;
+        }
+
+        /* Estilização do dialog */
+        dialog {
+            border: none;
+            border-radius: 12px;
+            padding: 0;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            animation: fadeIn 0.3s ease-out;
+            background-color: #E9FFFF;
+        }
+
+        /* Backdrop do dialog (fundo escuro) */
+        dialog::backdrop {
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(2px);
+        }
+
+        /* Animação de abertura */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* Cabeçalho do modal */
+        .modal-cabecalho {
+            padding: 20px 24px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-cabecalho h2 {
+            margin: 0;
+            font-size: 20px;
+            color: #333;
+        }
+
+        .fechar-modal {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #777;
+            padding: 0;
+            line-height: 1;
+        }
+
+        .fechar-modal:hover {
+            color: #333;
+        }
+
+        /* Corpo do modal */
+        .modal-corpo {
+            padding: 24px;
+        }
+
+        .modal-corpo p {
+            margin: 0 0 16px 0;
+            color: #555;
+        }
+
+        /* Rodapé do modal */
+        .modal-rodape {
+            padding: 16px 24px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        .modal-btn {
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .modal-btn-primario {
+            background-color: #172B4B;
+            color: white;
+            border: none;
+        }
+
+        .modal-btn-primario:hover {
+            background-color: #0c1c38;
+        }
+
+        .modal-btn-secundario {
+            background-color: #E9FFFF;
+            border: 1px solid #ddd;
+            color: #555;
+        }
+
+        .modal-btn-secundario:hover {
+            background-color: #def3f3;
+        }
