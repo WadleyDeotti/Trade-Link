@@ -1,0 +1,26 @@
+body{
+    background-color: #B2C8F7;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+}
+.loginTem {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #172B4B;
+}
+.loginSend {
+    color: #172B4B;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.loginSend:hover {
+    color: #0c1c38;
+}
