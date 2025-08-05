@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logar</title>
+    <link rel="stylesheet" href="/css/login.css">
+    <script src="/JavaScript/login.js" defer></script>
+</head>
+<body>
+    <form id="login">
+        <div class="formGroup" id="campoTroca">
+            <p class="labelregis">CPF/CNPJ:</p>
+            <input type="text" class="inputregis" id="inputTroca" placeholder="XXX.XXX.XXX-XX ou XX.XXX.XXX/0001-XX" 
+               oninput="mascaraCpfCnpj()" maxlength="18">
+        </div>
+        <div class="formGroup">
+            <p class="labelregis">Senha:</p>
+            <input class="inputregis" type="password" placeholder="Digite sua senha">
+        </div>
+        <div class="loginTem">
+            Não tem uma conta? <a id="loginSend" href="/views/registro.ejs">Registre-se</a>
+        </div>
+        <div id="buttonTocra">
+            <button type="submit" class="submit-btn" onclick="verificarDado()">CONCLUIR</button>
+        </div>
+    </div>
+</body>
+</html>
