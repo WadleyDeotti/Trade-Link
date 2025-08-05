@@ -22,6 +22,28 @@ app.get('/', (req, res) => {
     res.render('registro'); 
 });
 
+//interpreta uma troca de paginas automaticamente 
+
+const criarRotasAutomaticas = () => {
+    const pastaViews = path.join(__dirname, "views");
+    const arquivos = fs.readdirSync(pastaViews);
+
+    arquivos.forEach(arquivo => {
+        if (arquivo.endsWith(".ejs")) {
+            let nomePagina = arquivo.replace(".ejs", "");
+            let rota = nomePagina === "index" ? "/" : `/${nomePagina}`;
+
+            app.get(rota, (req, res) => {
+                res.render(nomePagina);
+            });
+
+            console.log(`Rota criada: ${rota} → ${arquivo}`);
+        }
+    });
+};
+
+criarRotasAutomaticas();
+
 
 //n tem database - corrigir dps
 
