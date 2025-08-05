@@ -1,0 +1,167 @@
+:root{
+  --bg:#B2C8F7;   /* fundo principal */
+  --top:#38528B;  /* barra superior */
+  --panel:#7e8aa1;/* painel do carrossel */
+  --card:#172B4B; /* cartão produto (interno) */
+  --muted:#596270;
+  --accent:#38528B;
+  --pad:20px;
+  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--bg);
+  color:#111;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+/* TOPBAR */
+.topbar{
+  background:var(--top);
+  padding:18px calc(var(--pad) * .7);
+  display:flex;
+  justify-content:center;
+  box-shadow:0 2px 0 rgba(0,0,0,.2);
+}
+.search-wrap{
+  position:relative;
+  width:min(1100px,92%);
+}
+.search{
+  width:100%;
+  padding:12px 44px 12px 18px;
+  border-radius:10px;
+  border:none;
+  background:rgba(255,255,255,.08);
+  color:#fff;
+  font-size:15px;
+}
+.search::placeholder{color:rgba(255,255,255,.6)}
+.magn{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:#fff;}
+
+/* LAYOUT */
+.container{max-width:1100px;margin:22px auto;padding:0 18px 60px}
+.section{margin-bottom:28px}
+.section h2{margin:6px 0 12px;font-weight:600}
+
+/* CAROUSEL - container centralizado */
+.carousel-wrap {
+  position:relative;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  justify-content:center; /* mantém o conjunto centralizado */
+}
+.carousel-wrap.centered{justify-content:center}
+.carousel-wrap.small .carousel{padding:12px 6px}
+
+/* arrows (posicionadas dentro do wrap) */
+.arrow{
+  background:none;border:none;font-size:30px;cursor:pointer;padding:8px 10px;
+  user-select:none;color:#0b1b2b;
+}
+.arrow:disabled{opacity:.18;cursor:default}
+
+/* CAROUSEL - track por transform (sem scrollbar) */
+.carousel{
+  width:min(900px,82%);
+  max-width:100%;
+  overflow:hidden; /* remove scrollbars visíveis */
+  border-radius:10px;
+  background:linear-gradient(180deg, rgba(0,0,0,.02), rgba(0,0,0,.01));
+  padding:18px;
+  display:block;
+}
+.carousel .track{
+  display:flex;
+  gap:16px;
+  transition:transform .36s ease;
+  will-change:transform;
+  align-items:center;
+}
+
+/* produto grande (cards retangulares) */
+.card.large{
+  min-width:260px;
+  height:150px;
+  border-radius:10px;
+  background:var(--panel);
+  padding:14px;
+  box-shadow: inset 0 6px 0 rgba(0,0,0,.04);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex:0 0 auto;
+}
+.card.large::before{
+  content:"";
+  display:block;
+  width:86%;
+  height:78%;
+  background:var(--card);
+  border-radius:8px;
+}
+
+/* grid de imagens (other products) - placeholders com figcaption centralizado */
+.grid-3{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:30px;
+  align-items:start;
+  max-width:900px;
+  margin:18px auto 0;
+}
+.figure{background:transparent;border-radius:10px;overflow:hidden;text-align:center;display:flex;flex-direction:column;align-items:center}
+.img-placeholder{
+  width:100%;
+  max-width:320px;
+  height:180px;
+  border-radius:10px;
+  background:linear-gradient(180deg,#6e7580,#535a66);
+  box-shadow:inset 0 8px 0 rgba(255,255,255,.03);
+}
+.figure figcaption{margin-top:12px;font-size:15px;color:var(--muted);text-align:center}
+.figure .small{display:block;margin-top:6px;color:#7a8797;font-size:13px}
+
+/* fornecedores (círculos) */
+.suppliers h3{text-align:center;margin-bottom:12px;font-weight:600}
+.carousel-wrap.small .carousel{width:min(900px,82%);padding:18px}
+.supplier{
+  width:120px;flex:0 0 auto;text-align:center;display:flex;flex-direction:column;align-items:center;
+}
+.avatar{
+  width:96px;height:96px;border-radius:50%;
+  background:linear-gradient(180deg, #6e7580,#535a66);margin:0 auto 8px;
+  box-shadow:inset 0 6px 0 rgba(255,255,255,.02)
+}
+.supplier small{display:block;color:var(--muted);font-size:12px}
+
+/* footer */
+.site-footer{background:var(--top);color:#fff;padding:18px 0 8px;margin-top:24px}
+.footer-inner{max-width:1100px;margin:0 auto;display:flex;gap:28px;padding:18px;flex-wrap:wrap}
+.footer-inner .contacts,.footer-inner .about{flex:1;min-width:240px}
+.footer-inner h4{margin:0 0 8px}
+.socials a{display:inline-block;margin-right:12px;color:#dfe9ff;font-size:14px;text-decoration:none}
+.site-footer p{color:#e8eefc}
+.site-footer .copyright{max-width:1100px;margin:6px auto 0;padding:12px 18px;font-size:13px;color:#dfe9ff}
+
+/* responsive */
+@media (max-width:900px){
+  .grid-3{grid-template-columns:repeat(2,1fr)}
+  .card.large{min-width:220px}
+  .supplier{width:96px}
+  .carousel{width:92%}
+}
+@media (max-width:600px){
+  .topbar{padding:14px}
+  .grid-3{grid-template-columns:1fr;gap:18px}
+  .search-wrap{width:100%}
+  .card.large{min-width:180px;height:120px}
+  .avatar{width:76px;height:76px}
+  .arrow{font-size:22px}
+  .carousel{padding:12px}
+  .carousel-wrap{gap:6px}
+}
+

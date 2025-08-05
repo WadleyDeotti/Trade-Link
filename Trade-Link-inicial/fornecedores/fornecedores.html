@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fornecedor</title>
+    <link rel="stylesheet" href="fornecedores.css">
+</head>
+<body>
+    <!-- Barra Lateral -->
+    <div id="sidebar">
+        <button class="sidebar-btn" id="btnConfig">
+            <span class="icon">⚙️</span>
+            <span class="text"><a class="loginSend" href="/configuracoes/configuracoes.html">Configurações</a></span>
+        </button>
+    </div>
+
+    <!-- Header -->
+    <header id="main-header">
+        <div id="profile-dropdown">
+            <button id="profile-btn">
+                <img src="images/foto.jpg" alt="Perfil" id="profile-pic">
+            </button>
+            <div id="dropdown-menu">
+                <div class="dropdown-item">Seu Nome</div>
+                <div class="dropdown-item">Perfil</div>
+                <div class="dropdown-item">Log Out</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Conteúdo Principal - AGORA É UM FORM -->
+    <form id="principal" method="POST" action="">
+        <div id="perfil">
+            <div id="pfp">
+                <img src="images/foto.jpg" alt="Foto de Perfil" id="foto">
+                <input type="hidden" id="profile-image-input" name="profile_image">
+            </div>
+            <div id="banner">
+                <img src="images/hq720.jpg" alt="Banner" id="bannerfoto">
+                <input type="hidden" id="banner-image-input" name="banner_image">
+            </div>
+        </div>
+        
+        <div id="produto">
+            <div>
+                <div id="parteum">
+                    <div id="superior">
+                        <div class="formGroup">
+                            <label for="fornecedor-nome" class="labelregis">Nome:</label>
+                            <input id="fornecedor-nome" name="nome" class="inputregis" type="text" placeholder="Nome do fornecedor" required>
+                        </div>
+                        <div class="formGroup">
+                            <label for="fornecedor-local" class="labelregis">Local:</label>
+                            <input id="fornecedor-local" name="localizacao" class="inputregis" type="text" placeholder="Localização" required>
+                        </div>
+                    </div>
+                    <div id="descricao">
+                        <label for="inputDesc" class="labelregis">Descrição:</label>
+                        <textarea id="inputDesc" name="descricao" placeholder="Descreva seu negócio" required></textarea>
+                    </div>
+                </div>
+                
+                <div id="inferior">
+                    <div id="addProduto">
+                        <button type="button" id="adicionarproduto">
+                            <img src="images/addsimbol.png" alt="Adicionar produto" id="imgaddprod">
+                            <p id="labelAddProd">Adicionar Produto</p>
+                        </button>
+                    </div>
+                    <div id="produtos">
+                        <!-- Produtos serão adicionados dinamicamente via JS -->
+                        <!-- Cada produto será um campo hidden com os dados em JSON -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="formGroup" style="text-align: center; margin-top: 20px;">
+            <button type="submit" id="submit-btn">Salvar Alterações</button>
+        </div>
+    </form>
+
+    <!-- Modais -->
+    <div id="image-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Alterar Imagem</h2>
+            <input type="file" id="image-upload" accept="image/*">
+            <button id="confirm-image">Confirmar</button>
+        </div>
+    </div>
+
+    <div id="product-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Adicionar Produto</h2>
+            <div class="formGroup">
+                <label class="labelregis">Nome:</label>
+                <input type="text" id="product-name" class="inputregis" placeholder="Nome do produto">
+            </div>
+            <div class="image-upload-area" id="product-image-upload">
+                <p>Clique para adicionar imagem</p>
+            </div>
+            <button id="confirm-product" disabled>Concluir</button>
+        </div>
+    </div>
+
+    <div id="edit-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Editar Produto</h2>
+            <div class="formGroup">
+                <label class="labelregis">Nome:</label>
+                <input type="text" id="edit-product-name" class="inputregis">
+            </div>
+            <div class="image-upload-area" id="edit-image-upload">
+                <img id="current-product-image" src="" alt="Imagem do Produto">
+            </div>
+            <div class="modal-buttons">
+                <button id="save-changes">Salvar</button>
+                <button id="delete-product" class="delete-btn">Deletar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="fornecedores.js"></script>
+</body>
+</html>
