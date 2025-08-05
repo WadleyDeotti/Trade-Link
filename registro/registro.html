@@ -8,42 +8,46 @@
     <script src="registro.js" defer></script>
 </head>
 <body>
-
-    <div id="register">
+    <form id="register" method="POST" action="">
+        <input type="hidden" id="tipoCadastro" name="tipo_cadastro" value="fornecedor">
+        
         <p>Escolha seu tipo de cadastro</p>
         <div class="typeSelector">
             <div class="typeOption selected" data-type="fornecedor">Fornecedor</div>
             <div class="typeOption" data-type="empresa">Empresa</div>
         </div>
+        
         <div class="formGroup">
-            <p class="labelregis">Nome:</p>
-            <input class="inputregis" type="text" placeholder="Seu nome completo">
+            <label for="nomeCompleto" class="labelregis">Nome:</label>
+            <input id="nomeCompleto" name="nome_completo" class="inputregis" type="text" placeholder="Seu nome completo" required>
         </div>
+        
         <div class="formGroup">
-            <p class="labelregis">Email:</p>
-            <input class="inputregis" type="email" placeholder="seu@email.com">
+            <label for="email" class="labelregis">Email:</label>
+            <input id="email" name="email" class="inputregis" type="email" placeholder="seu@email.com" required>
         </div>
+        
         <div class="formGroup">
-            <p class="labelregis">Telefone:</p>
-            <input type="text" class="inputregis" id="inputTel" placeholder="(XX) XXXXX-XXXX" 
-               maxlength="15" oninput="mascaraTelefone()">
+            <label for="telefone" class="labelregis">Telefone:</label>
+            <input id="telefone" name="telefone" type="text" class="inputregis" placeholder="(XX) XXXXX-XXXX" 
+               maxlength="15" oninput="mascaraTelefone(this)" required>
         </div>
+        
         <div id="campoTroca">
             <div class="formGroup">
-                <p class="labelregis">CPF:</p>
-                <input type="text" class="inputregis" id="inputCpf" placeholder="XXX.XXX.XXX-XX" 
-                   maxlength="14" oninput="mascaraCpf()">
+                <label for="cpf" class="labelregis">CPF:</label>
+                <input id="cpf" name="cpf" type="text" class="inputregis" placeholder="XXX.XXX.XXX-XX" 
+                   maxlength="14" oninput="mascaraCpf(this)" required>
             </div>
             
-            <!-- Checkboxes -->
             <div class="checkboxGroup">
-                <input type="checkbox" id="termosCheckbox" class="customCheckbox">
+                <input type="checkbox" id="termosCheckbox" name="aceita_termos" class="customCheckbox" required>
                 <label for="termosCheckbox" class="checkboxLabel">
                     Li e aceito os <span class="linkModal" data-modal="termosDialog">Termos de Serviço</span>
                 </label>
             </div>
             <div class="checkboxGroup">
-                <input type="checkbox" id="privacidadeCheckbox" class="customCheckbox">
+                <input type="checkbox" id="privacidadeCheckbox" name="aceita_privacidade" class="customCheckbox" required>
                 <label for="privacidadeCheckbox" class="checkboxLabel">
                     Li e aceito a <span class="linkModal" data-modal="privacidadeDialog">Política de Privacidade</span>
                 </label>
@@ -57,9 +61,8 @@
             </div>
             <button type="submit" class="submit-btn" id="submit-btn" disabled>CONCLUIR</button>
         </div>
-    </div>
+    </form>
     
-    <!-- Modal principal para validação -->
     <dialog id="meuDialog">
         <div class="modal-cabecalho">
             <h2>Validação</h2>
@@ -73,7 +76,6 @@
         </div>
     </dialog>
 
-    <!-- Modal para Termos -->
     <dialog id="termosDialog">
         <div class="modal-cabecalho">
             <h2>Termos de Serviço</h2>
@@ -94,7 +96,6 @@
         </div>
     </dialog>
 
-    <!-- Modal para Privacidade -->
     <dialog id="privacidadeDialog">
         <div class="modal-cabecalho">
             <h2>Política de Privacidade</h2>

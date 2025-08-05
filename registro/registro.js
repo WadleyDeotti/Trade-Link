@@ -1,41 +1,33 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Elementos do formulário
+    const formRegister = document.getElementById('register');
     const typeOptions = document.querySelectorAll('.typeOption');
+    const tipoCadastroInput = document.getElementById('tipoCadastro');
     const docField = document.getElementById('campoTroca');
     const submitBtn = document.getElementById('submit-btn');
-    
-    // Elementos das checkboxes
-    const termosCheckbox = document.getElementById('termosCheckbox');
-    const privacidadeCheckbox = document.getElementById('privacidadeCheckbox');
-    
-    // Modais
-    const mainDialog = document.getElementById('meuDialog');
-    const termosDialog = document.getElementById('termosDialog');
-    const privacidadeDialog = document.getElementById('privacidadeDialog');
-    const resultado = document.getElementById('resultado');
-    const confirmarModal = document.getElementById('confirmarModal');
     
     // Alternância entre Fornecedor/Empresa
     typeOptions.forEach(option => {
         option.addEventListener('click', function() {
             typeOptions.forEach(opt => opt.classList.remove('selected'));
             this.classList.add('selected');
+            tipoCadastroInput.value = this.dataset.type;
             
             if (this.dataset.type === 'fornecedor') {
                 docField.innerHTML = `
                     <div class="formGroup">
-                        <p class="labelregis">CPF:</p>
-                        <input type="text" class="inputregis" id="inputCpf" placeholder="XXX.XXX.XXX-XX" 
-                            maxlength="14" oninput="mascaraCpf()">
+                        <label for="cpf" class="labelregis">CPF:</label>
+                        <input id="cpf" name="cpf" type="text" class="inputregis" placeholder="XXX.XXX.XXX-XX" 
+                            maxlength="14" oninput="mascaraCpf(this)" required>
                     </div>
                     <div class="checkboxGroup">
-                        <input type="checkbox" id="termosCheckbox" class="customCheckbox">
+                        <input type="checkbox" id="termosCheckbox" name="aceita_termos" class="customCheckbox" required>
                         <label for="termosCheckbox" class="checkboxLabel">
                             Li e aceito os <span class="linkModal" data-modal="termosDialog">Termos de Serviço</span>
                         </label>
                     </div>
                     <div class="checkboxGroup">
-                        <input type="checkbox" id="privacidadeCheckbox" class="customCheckbox">
+                        <input type="checkbox" id="privacidadeCheckbox" name="aceita_privacidade" class="customCheckbox" required>
                         <label for="privacidadeCheckbox" class="checkboxLabel">
                             Li e aceito a <span class="linkModal" data-modal="privacidadeDialog">Política de Privacidade</span>
                         </label>
@@ -48,24 +40,21 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                     <button type="submit" class="submit-btn" id="submit-btn" disabled>CONCLUIR</button>
                 `;
-                
-                // Reatribuir eventos após mudar o HTML
-                setupCheckboxes();
             } else {
                 docField.innerHTML = `
                     <div class="formGroup">
-                        <p class="labelregis">CNPJ:</p>
-                        <input type="text" class="inputregis" id="inputCnpj" placeholder="XX.XXX.XXX/XXXX-XX" 
-                            maxlength="18" oninput="mascaraCnpj()">
+                        <label for="cnpj" class="labelregis">CNPJ:</label>
+                        <input id="cnpj" name="cnpj" type="text" class="inputregis" placeholder="XX.XXX.XXX/XXXX-XX" 
+                            maxlength="18" oninput="mascaraCnpj(this)" required>
                     </div>
                     <div class="checkboxGroup">
-                        <input type="checkbox" id="termosCheckbox" class="customCheckbox">
+                        <input type="checkbox" id="termosCheckbox" name="aceita_termos" class="customCheckbox" required>
                         <label for="termosCheckbox" class="checkboxLabel">
                             Li e aceito os <span class="linkModal" data-modal="termosDialog">Termos de Serviço</span>
                         </label>
                     </div>
                     <div class="checkboxGroup">
-                        <input type="checkbox" id="privacidadeCheckbox" class="customCheckbox">
+                        <input type="checkbox" id="privacidadeCheckbox" name="aceita_privacidade" class="customCheckbox" required>
                         <label for="privacidadeCheckbox" class="checkboxLabel">
                             Li e aceito a <span class="linkModal" data-modal="privacidadeDialog">Política de Privacidade</span>
                         </label>
@@ -78,15 +67,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                     <button type="submit" class="submit-btn" id="submit-btn" disabled>CONCLUIR</button>
                 `;
-                
-                // Reatribuir eventos após mudar o HTML
-                setupCheckboxes();
             }
+            
+            // Reatribuir eventos após mudar o HTML
+            setupForm();
         });
     });
 
-    // Configurar checkboxes e modais
-    function setupCheckboxes() {
+    // Configurar formulário
+    function setupForm() {
         const termosCheckbox = document.getElementById('termosCheckbox');
         const privacidadeCheckbox = document.getElementById('privacidadeCheckbox');
         const submitBtn = document.getElementById('submit-btn');
@@ -94,16 +83,14 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Verificar estado das checkboxes
         function verificarCheckboxes() {
-            if (termosCheckbox.checked && privacidadeCheckbox.checked) {
-                submitBtn.disabled = false;
-            } else {
-                submitBtn.disabled = true;
-            }
+            submitBtn.disabled = !(termosCheckbox.checked && privacidadeCheckbox.checked);
         }
         
         // Eventos das checkboxes
-        termosCheckbox.addEventListener('change', verificarCheckboxes);
-        privacidadeCheckbox.addEventListener('change', verificarCheckboxes);
+        if (termosCheckbox && privacidadeCheckbox) {
+            termosCheckbox.addEventListener('change', verificarCheckboxes);
+            privacidadeCheckbox.addEventListener('change', verificarCheckboxes);
+        }
         
         // Eventos dos links dos modais
         modalLinks.forEach(link => {
@@ -113,22 +100,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById(modalId).showModal();
             });
         });
-        
-        // Evento do botão submit
-        submitBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            const selectedType = document.querySelector('.typeOption.selected').dataset.type;
-            
-            if (selectedType === 'fornecedor') {
-                validarCPF();
-            } else {
-                validarCNPJ();
-            }
-        });
     }
     
     // Inicializar configurações
-    setupCheckboxes();
+    setupForm();
     
     // Eventos para fechar modais
     document.querySelectorAll('.fechar-modal, .fechar-modal-btn').forEach(btn => {
@@ -146,28 +121,52 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Confirmar modal principal
-    confirmarModal.addEventListener('click', function() {
-        mainDialog.close();
+    // Evento de submit do formulário
+    formRegister.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Validar CPF ou CNPJ antes de enviar
+        let isValid = false;
+        const resultado = document.getElementById('resultado');
+        
+        if (tipoCadastroInput.value === 'fornecedor') {
+            isValid = validarCPF(document.getElementById('cpf'));
+        } else {
+            isValid = validarCNPJ(document.getElementById('cnpj'));
+        }
+        
+        if (!isValid) {
+            resultado.textContent = tipoCadastroInput.value === 'fornecedor' ? 'CPF inválido!' : 'CNPJ inválido!';
+            resultado.style.color = '#d9534f';
+            document.getElementById('meuDialog').showModal();
+            return;
+        }
+        
+        // Se todas as validações passarem
+        resultado.textContent = 'Cadastro realizado com sucesso!';
+        resultado.style.color = '#5cb85c';
+        document.getElementById('meuDialog').showModal();
+        
+        // Aqui você pode enviar o formulário para o backend
+        console.log('Dados do formulário:', new FormData(formRegister));
+        // formRegister.submit(); // Descomente esta linha para enviar o formulário
     });
 });
 
 // Funções de máscara
-function mascaraTelefone() {
-    const telefone = document.getElementById("inputTel");
-    let value = telefone.value.replace(/\D/g, '').slice(0, 11);
+function mascaraTelefone(input) {
+    let value = input.value.replace(/\D/g, '').slice(0, 11);
     let inputFormat = '';
     
     if (value.length > 0) inputFormat = `(${value.substring(0, 2)}`;
     if (value.length > 2) inputFormat += `) ${value.substring(2, 7)}`;
     if (value.length > 7) inputFormat += `-${value.substring(7, 11)}`;
     
-    telefone.value = inputFormat;
+    input.value = inputFormat;
 }
 
-function mascaraCpf() {
-    const cpf = document.getElementById("inputCpf");
-    let value = cpf.value.replace(/\D/g, '').slice(0, 11);
+function mascaraCpf(input) {
+    let value = input.value.replace(/\D/g, '').slice(0, 11);
     let valorFormatado = '';
     
     if (value.length > 0) valorFormatado = value.substring(0, 3);
@@ -175,12 +174,11 @@ function mascaraCpf() {
     if (value.length > 6) valorFormatado += '.' + value.substring(6, 9);
     if (value.length > 9) valorFormatado += '-' + value.substring(9, 11);
     
-    cpf.value = valorFormatado;
+    input.value = valorFormatado;
 }
 
-function mascaraCnpj() {
-    const cnpj = document.getElementById("inputCnpj");
-    let value = cnpj.value.replace(/\D/g, '').slice(0, 14);
+function mascaraCnpj(input) {
+    let value = input.value.replace(/\D/g, '').slice(0, 14);
     let valorFormatado = '';
     
     if (value.length > 0) valorFormatado = value.substring(0, 2);
@@ -189,19 +187,15 @@ function mascaraCnpj() {
     if (value.length > 8) valorFormatado += '/' + value.substring(8, 12);
     if (value.length > 12) valorFormatado += '-' + value.substring(12, 14);
     
-    cnpj.value = valorFormatado;
+    input.value = valorFormatado;
 }
 
 // Funções de validação
-function validarCPF() {
-    const cpf = document.getElementById('inputCpf').value.replace(/\D/g, '');
-    const resultado = document.getElementById('resultado');
+function validarCPF(cpfInput) {
+    const cpf = cpfInput.value.replace(/\D/g, '');
     
     if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) {
-        resultado.textContent = 'CPF inválido!';
-        resultado.style.color = '#d9534f';
-        meuDialog.showModal();
-        return;
+        return false;
     }
     
     // Cálculo dos dígitos verificadores
@@ -211,10 +205,7 @@ function validarCPF() {
     if (resto === 10 || resto === 11) resto = 0;
     
     if (resto !== parseInt(cpf.charAt(9))) {
-        resultado.textContent = 'CPF inválido!';
-        resultado.style.color = '#d9534f';
-        meuDialog.showModal();
-        return;
+        return false;
     }
     
     soma = 0;
@@ -222,27 +213,14 @@ function validarCPF() {
     resto = (soma * 10) % 11;
     if (resto === 10 || resto === 11) resto = 0;
     
-    if (resto !== parseInt(cpf.charAt(10))) {
-        resultado.textContent = 'CPF inválido!';
-        resultado.style.color = '#d9534f';
-        meuDialog.showModal();
-        return;
-    }
-    
-    resultado.textContent = 'Cadastro realizado com sucesso!';
-    resultado.style.color = '#5cb85c';
-    meuDialog.showModal();
+    return resto === parseInt(cpf.charAt(10));
 }
 
-function validarCNPJ() {
-    const cnpj = document.getElementById('inputCnpj').value.replace(/\D/g, '');
-    const resultado = document.getElementById('resultado');
+function validarCNPJ(cnpjInput) {
+    const cnpj = cnpjInput.value.replace(/\D/g, '');
     
     if (cnpj.length !== 14 || /^(\d)\1{13}$/.test(cnpj)) {
-        resultado.textContent = 'CNPJ inválido!';
-        resultado.style.color = '#d9534f';
-        meuDialog.showModal();
-        return;
+        return false;
     }
     
     // Cálculo dos dígitos verificadores
@@ -259,10 +237,7 @@ function validarCNPJ() {
     
     let resultado1 = soma % 11 < 2 ? 0 : 11 - (soma % 11);
     if (resultado1 !== parseInt(digitos.charAt(0))) {
-        resultado.textContent = 'CNPJ inválido!';
-        resultado.style.color = '#d9534f';
-        meuDialog.showModal();
-        return;
+        return false;
     }
     
     tamanho = tamanho + 1;
@@ -276,14 +251,5 @@ function validarCNPJ() {
     }
     
     let resultado2 = soma % 11 < 2 ? 0 : 11 - (soma % 11);
-    if (resultado2 !== parseInt(digitos.charAt(1))) {
-        resultado.textContent = 'CNPJ inválido!';
-        resultado.style.color = '#d9534f';
-        meuDialog.showModal();
-        return;
-    }
-    
-    resultado.textContent = 'Cadastro realizado com sucesso!';
-    resultado.style.color = '#5cb85c';
-    meuDialog.showModal();
+    return resultado2 === parseInt(digitos.charAt(1));
 }
