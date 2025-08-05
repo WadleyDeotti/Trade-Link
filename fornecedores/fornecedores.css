@@ -109,7 +109,7 @@ body {
     background-color: rgba(255, 255, 255, 0.1);
 }
 
-/* Conteúdo Principal */
+/* Formulário Principal */
 #principal {
     background-color: #B2C8F7;
     border-radius: 10px;
@@ -118,6 +118,9 @@ body {
     width: 100%;
     max-width: 1600px;
     margin-top: 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
 #perfil {
@@ -140,6 +143,7 @@ body {
     width: 282px;
     height: 272px;
     padding: 20px;
+    position: relative;
 }
 
 #foto {
@@ -161,6 +165,7 @@ body {
     width: calc(100% - 282px);
     height: 272px;
     padding: 20px;
+    position: relative;
 }
 
 #bannerfoto {
@@ -308,6 +313,7 @@ body {
     gap: 20px;
     white-space: nowrap;
     scrollbar-width: none;
+    position: relative;
 }
 
 #produtos::-webkit-scrollbar {
@@ -357,6 +363,22 @@ body {
     text-align: center;
     white-space: normal;
     max-width: 180px;
+}
+
+/* Botão de Submit */
+#submit-btn {
+    padding: 12px 24px;
+    background-color: #38528B;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+#submit-btn:hover {
+    background-color: #2a3d6b;
+    transform: scale(1.02);
 }
 
 /* Modais */

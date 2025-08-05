@@ -29,14 +29,16 @@
         </div>
     </header>
 
-    <!-- Conteúdo Principal -->
-    <div id="principal">
+    <!-- Conteúdo Principal - AGORA É UM FORM -->
+    <form id="principal" method="POST" action="">
         <div id="perfil">
             <div id="pfp">
                 <img src="images/foto.jpg" alt="Foto de Perfil" id="foto">
+                <input type="hidden" id="profile-image-input" name="profile_image">
             </div>
             <div id="banner">
                 <img src="images/hq720.jpg" alt="Banner" id="bannerfoto">
+                <input type="hidden" id="banner-image-input" name="banner_image">
             </div>
         </div>
         
@@ -45,34 +47,39 @@
                 <div id="parteum">
                     <div id="superior">
                         <div class="formGroup">
-                            <p class="labelregis">Nome:</p>
-                            <input class="inputregis" type="text" placeholder="Nome do fornecedor">
+                            <label for="fornecedor-nome" class="labelregis">Nome:</label>
+                            <input id="fornecedor-nome" name="nome" class="inputregis" type="text" placeholder="Nome do fornecedor" required>
                         </div>
                         <div class="formGroup">
-                            <p class="labelregis">Local:</p>
-                            <input class="inputregis" type="text" placeholder="Localização">
+                            <label for="fornecedor-local" class="labelregis">Local:</label>
+                            <input id="fornecedor-local" name="localizacao" class="inputregis" type="text" placeholder="Localização" required>
                         </div>
                     </div>
                     <div id="descricao">
-                        <p class="labelregis">Descrição:</p>
-                        <textarea id="inputDesc" placeholder="Descreva seu negócio"></textarea>
+                        <label for="inputDesc" class="labelregis">Descrição:</label>
+                        <textarea id="inputDesc" name="descricao" placeholder="Descreva seu negócio" required></textarea>
                     </div>
                 </div>
                 
                 <div id="inferior">
                     <div id="addProduto">
-                        <button id="adicionarproduto">
+                        <button type="button" id="adicionarproduto">
                             <img src="images/addsimbol.png" alt="Adicionar produto" id="imgaddprod">
                             <p id="labelAddProd">Adicionar Produto</p>
                         </button>
                     </div>
                     <div id="produtos">
                         <!-- Produtos serão adicionados dinamicamente via JS -->
+                        <!-- Cada produto será um campo hidden com os dados em JSON -->
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+
+        <div class="formGroup" style="text-align: center; margin-top: 20px;">
+            <button type="submit" id="submit-btn">Salvar Alterações</button>
+        </div>
+    </form>
 
     <!-- Modais -->
     <div id="image-modal" class="modal">

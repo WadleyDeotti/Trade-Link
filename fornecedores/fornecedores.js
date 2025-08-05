@@ -13,6 +13,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const editModal = document.getElementById('edit-modal');
     const closeButtons = document.querySelectorAll('.close');
     
+    // Elementos do formulário principal
+    const formPrincipal = document.getElementById('principal');
+    const profileImageInput = document.getElementById('profile-image-input');
+    const bannerImageInput = document.getElementById('banner-image-input');
+    
     // Elementos para upload de imagem
     const foto = document.getElementById('foto');
     const bannerfoto = document.getElementById('bannerfoto');
@@ -94,10 +99,11 @@ document.addEventListener('DOMContentLoaded', function() {
             reader.onload = function(event) {
                 if (currentImageType === 'profile') {
                     foto.src = event.target.result;
-                    // Atualiza também a foto do header
                     document.getElementById('profile-pic').src = event.target.result;
+                    profileImageInput.value = event.target.result;
                 } else {
                     bannerfoto.src = event.target.result;
+                    bannerImageInput.value = event.target.result;
                 }
             };
             
@@ -106,7 +112,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     confirmImage.addEventListener('click', function() {
-        // Aqui você pode adicionar lógica para salvar no servidor
         imageModal.style.display = 'none';
         alert('Imagem atualizada com sucesso!');
     });
@@ -148,6 +153,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const reader = new FileReader();
         reader.onload = function(event) {
+            // Criar elemento visual
             const productHTML = `
                 <div class="teste1" data-id="${productId}">
                     <div class="prod1"><img src="${event.target.result}" alt="${productName}" class="imgProd1"></div>
@@ -157,6 +163,20 @@ document.addEventListener('DOMContentLoaded', function() {
             
             produtosContainer.insertAdjacentHTML('beforeend', productHTML);
             
+            // Criar campo hidden com os dados do produto
+            const productData = {
+                id: productId,
+                nome: productName,
+                imagem: event.target.result
+            };
+            
+            const productInput = document.createElement('input');
+            productInput.type = 'hidden';
+            productInput.name = 'produtos[]';
+            productInput.value = JSON.stringify(productData);
+            productInput.dataset.productId = productId;
+            produtosContainer.appendChild(productInput);
+            
             // Resetar o formulário
             productNameInput.value = '';
             productImageUpload.innerHTML = '<p>Clique para adicionar imagem</p>';
@@ -165,7 +185,7 @@ document.addEventListener('DOMContentLoaded', function() {
             productModal.style.display = 'none';
             
             // Adicionar evento de clique para edição
-            const newProduct = produtosContainer.lastElementChild;
+            const newProduct = produtosContainer.querySelector(`.teste1[data-id="${productId}"]`);
             newProduct.addEventListener('click', function() {
                 const imgSrc = this.querySelector('.imgProd1').src;
                 const name = this.querySelector('.labelProd').textContent;
@@ -181,7 +201,7 @@ document.addEventListener('DOMContentLoaded', function() {
         currentProductId = id;
         document.getElementById('edit-product-name').value = name;
         document.getElementById('current-product-image').src = imageSrc;
-        editImageFile = null; // Resetar a imagem de edição
+        editImageFile = null;
         editModal.style.display = 'block';
     }
 
@@ -211,10 +231,15 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('save-changes').addEventListener('click', function() {
         const newName = document.getElementById('edit-product-name').value.trim();
         const productElement = document.querySelector(`.teste1[data-id="${currentProductId}"]`);
+        const productInput = document.querySelector(`input[data-product-id="${currentProductId}"]`);
         
-        if (productElement) {
-            // Atualizar nome
+        if (productElement && productInput) {
+            // Atualizar nome visual
             productElement.querySelector('.labelProd').textContent = newName;
+            
+            // Atualizar dados no campo hidden
+            const productData = JSON.parse(productInput.value);
+            productData.nome = newName;
             
             // Atualizar imagem se foi alterada
             if (editImageFile) {
@@ -222,8 +247,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 reader.onload = function(event) {
                     productElement.querySelector('.imgProd1').src = event.target.result;
                     productElement.querySelector('.imgProd1').alt = newName;
+                    productData.imagem = event.target.result;
+                    productInput.value = JSON.stringify(productData);
                 };
                 reader.readAsDataURL(editImageFile);
+            } else {
+                productInput.value = JSON.stringify(productData);
             }
             
             editModal.style.display = 'none';
@@ -235,31 +264,21 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('delete-product').addEventListener('click', function() {
         if (confirm('Tem certeza que deseja deletar este produto?')) {
             const productElement = document.querySelector(`.teste1[data-id="${currentProductId}"]`);
-            if (productElement) {
+            const productInput = document.querySelector(`input[data-product-id="${currentProductId}"]`);
+            if (productElement && productInput) {
                 productElement.remove();
+                productInput.remove();
                 editModal.style.display = 'none';
                 alert('Produto deletado com sucesso!');
             }
         }
     });
 
-    // Adicionar eventos de clique para os produtos existentes (se houver)
-    document.querySelectorAll('.teste1').forEach(product => {
-        if (!product.dataset.id) {
-            // Adiciona ID para produtos existentes que não têm
-            product.dataset.id = Date.now().toString();
-        }
-        
-        product.addEventListener('click', function(e) {
-            // Verifica se o clique foi na imagem ou no nome
-            if (e.target.closest('.prod1') || e.target.classList.contains('labelProd')) {
-                const id = product.dataset.id;
-                const name = product.querySelector('.labelProd').textContent;
-                const imgSrc = product.querySelector('.imgProd1').src;
-                
-                openEditModal(id, name, imgSrc);
-            }
-        });
+    // Event listener para o envio do formulário
+    formPrincipal.addEventListener('submit', function(e) {
+        e.preventDefault();
+        console.log('Formulário pronto para ser enviado:', new FormData(formPrincipal));
+        // formPrincipal.submit(); // Descomente esta linha quando o backend estiver pronto
     });
 
     // Carregar produtos existentes (simulação)
@@ -272,6 +291,8 @@ document.addEventListener('DOMContentLoaded', function() {
         
         sampleProducts.forEach(product => {
             const productId = Date.now().toString();
+            
+            // Criar elemento visual
             const productHTML = `
                 <div class="teste1" data-id="${productId}">
                     <div class="prod1"><img src="${product.image}" alt="${product.name}" class="imgProd1"></div>
@@ -280,6 +301,28 @@ document.addEventListener('DOMContentLoaded', function() {
             `;
             
             produtosContainer.insertAdjacentHTML('beforeend', productHTML);
+            
+            // Criar campo hidden
+            const productData = {
+                id: productId,
+                nome: product.name,
+                imagem: product.image
+            };
+            
+            const productInput = document.createElement('input');
+            productInput.type = 'hidden';
+            productInput.name = 'produtos[]';
+            productInput.value = JSON.stringify(productData);
+            productInput.dataset.productId = productId;
+            produtosContainer.appendChild(productInput);
+            
+            // Adicionar evento de clique
+            const newProduct = produtosContainer.querySelector(`.teste1[data-id="${productId}"]`);
+            newProduct.addEventListener('click', function() {
+                const imgSrc = this.querySelector('.imgProd1').src;
+                const name = this.querySelector('.labelProd').textContent;
+                openEditModal(productId, name, imgSrc);
+            });
         });
     }
     
