@@ -1,26 +1,226 @@
-body{
-    background-color: #B2C8F7;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
+body {
     margin: 0;
-    padding: 20px;
-}
-.loginTem {
-    text-align: center;
-    margin-top: 20px;
-    font-size: 14px;
-    color: #172B4B;
-}
-.loginSend {
-    color: #172B4B;
-    text-decoration: none;
-    font-weight: 500;
-    transition: color 0.2s;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
 }
 
-.loginSend:hover {
-    color: #0c1c38;
+.config-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 240px;
+    background-color: #172B4B;
+    color: white;
+    padding: 20px 0;
+}
+
+.sidebar-title {
+    padding: 0 20px;
+    margin-bottom: 30px;
+    font-size: 18px;
+    color: #B2C8F7;
+}
+
+.sidebar-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.sidebar-item:hover {
+    background-color: #2a3d6b;
+}
+
+.sidebar-item.active {
+    background-color: #38528B;
+    border-left: 4px solid #B2C8F7;
+}
+
+.item-icon {
+    margin-right: 10px;
+    font-size: 18px;
+}
+
+.item-text {
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.content-area {
+    flex: 1;
+    padding: 30px;
+    background-color: white;
+    border-left: 1px solid #e0e0e0;
+}
+
+.content-section {
+    display: none;
+}
+
+.content-section.active {
+    display: block;
+}
+
+.section-title {
+    color: #172B4B;
+    margin-top: 0;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.section-content {
+    max-width: 600px;
+}
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #172B4B;
+}
+
+.form-group input[type="text"],
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.profile-pic-container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.profile-pic {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #B2C8F7;
+}
+
+.change-pic-btn {
+    padding: 8px 16px;
+    background-color: #38528B;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.change-pic-btn:hover {
+    background-color: #2a3d6b;
+}
+
+.save-btn {
+    padding: 12px 24px;
+    background-color: #172B4B;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.save-btn:hover {
+    background-color: #0c1c38;
+}
+
+.privacy-option,
+.notification-option,
+.language-option,
+.help-option {
+    margin-bottom: 30px;
+}
+
+.privacy-option h3,
+.notification-option h3,
+.language-option h3,
+.help-option h3 {
+    margin-top: 0;
+    color: #38528B;
+}
+
+.radio-group,
+.checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.radio-group label,
+.checkbox-group label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.help-option ul {
+    padding-left: 20px;
+}
+
+.help-option a {
+    color: #38528B;
+    text-decoration: none;
+}
+
+.help-option a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .config-container {
+        flex-direction: column;
+    }
+    
+    .sidebar {
+        width: 100%;
+        display: flex;
+        overflow-x: auto;
+        padding: 10px 0;
+    }
+    
+    .sidebar-title {
+        display: none;
+    }
+    
+    .sidebar-item {
+        flex-direction: column;
+        min-width: 100px;
+        padding: 10px;
+        text-align: center;
+    }
+    
+    .item-icon {
+        margin-right: 0;
+        margin-bottom: 5px;
+    }
+    
+    .content-area {
+        padding: 20px;
+    }
 }
