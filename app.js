@@ -1,60 +1,59 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const fs = require('fs');
-const path = require('path');
+const express = require("express");
+const path = require("path");
 
 const app = express();
-const port = 6969;
 
-// Configurações ejs
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }));
+app.use(session({
+  secret: "chave-secreta",
+  resave: false,
+  saveUninitialized: false
+}));
 
-//carregar css js e imagens
-app.use(express.static(path.join(__dirname, "public")));
+app.set('view engine','ejs');
+app.set('views',path.join(__dirname,'views'));
 
+app.use(express.urlencoded({extended:true}));
 
-//falta configurar a parte de manter login, n esquecer porra !!!!!!!!!!!!!!!!!!!!
+app.use(express.static(path.join(__dirname,'public')));
 
-//mudar oq ta escrito para abrir a pagina
+const usuarioRoutes = require('./routes/usuarioRoutes');
+
 app.get('/', (req, res) => {
-    res.render('registro'); 
+  res.render('login');
 });
 
-//interpreta uma troca de paginas automaticamente 
-
-const criarRotasAutomaticas = () => {
-    const pastaViews = path.join(__dirname, "views");
-    const arquivos = fs.readdirSync(pastaViews);
-
-    arquivos.forEach(arquivo => {
-        if (arquivo.endsWith(".ejs")) {
-            let nomePagina = arquivo.replace(".ejs", "");
-            let rota = nomePagina === "index" ? "/" : `/${nomePagina}`;
-
-            app.get(rota, (req, res) => {
-                res.render(nomePagina);
-            });
-
-            console.log(`Rota criada: ${rota} → ${arquivo}`);
-        }
-    });
-};
-
-criarRotasAutomaticas();
-
-
-//n tem database - corrigir dps
-
-// Carrega automaticamente todas as rotas da pasta /routes
-// const routesPath = path.join(__dirname, 'routes');
-// fs.readdirSync(routesPath).forEach(file => {
-//     const route = require(path.join(routesPath, file));
-//     const routeName = '/' + file.replace('.js', '');
-//     app.use(routeName, route);
-// });
-
-app.listen(port, () => {
-    console.log(`Servidor rodando em http://localhost:${port}`);
+app.get("/", (req, res) => {
+  if (!req.session.querySQL) return res.redirect("/login");
+  res.render("fornecedores")
 });
+
+app.get('/:pagina', (req, res) => {
+  const pagina = req.params.pagina;
+
+  res.render(pagina, (err, html) => {
+    if (err) {
+      // Se a view não existir, mostra erro 404
+      return res.status(404).send('Página não encontrada');
+    }
+    res.send(html);
+  });
+});
+
+app.use('/',usuarioRoutes);
+
+app.use((req,res)=> {
+res.status(404).send('pagina não encontrada');
+});
+
+app.use((err,req,res,next) =>{
+
+console.error(err.stack);
+res.status(500).send('erro interno do servidor');
+});
+
+const PORT = process.env.PORT || 6969;
+app.listen(PORT, () => {
+  console.log(`Servidor rodando na porta ${PORT}`);
+  console.log(`http://localhost:${PORT}`)
+})

@@ -8,22 +8,25 @@
     <script src="/JavaScript/login.js" defer></script>
 </head>
 <body>
-    <form id="login">
-        <div class="formGroup" id="campoTroca">
-            <p class="labelregis">CPF/CNPJ:</p>
-            <input type="text" class="inputregis" id="inputTroca" placeholder="XXX.XXX.XXX-XX ou XX.XXX.XXX/0001-XX" 
-               oninput="mascaraCpfCnpj()" maxlength="18">
+    <form id="login" method="POST" action="/logar">
+        <div class="formGroup">
+            <label for="documento" class="labelregis">CPF/CNPJ:</label>
+            <input type="text" class="inputregis" id="documento" name="documento" 
+                   placeholder="XXX.XXX.XXX-XX ou XX.XXX.XXX/0001-XX" 
+                   oninput="formatarDocumento(this)" maxlength="18" required>
         </div>
         <div class="formGroup">
-            <p class="labelregis">Senha:</p>
-            <input class="inputregis" type="password" placeholder="Digite sua senha">
+            <label for="senha" class="labelregis">Senha:</label>
+            <input id="senha" name="senha" class="inputregis" type="password" 
+                   placeholder="Digite sua senha" required minlength="6">
         </div>
         <div class="loginTem">
-            Não tem uma conta? <a id="loginSend" href="registro">Registre-se</a>
+            Não tem uma conta? <a class="loginSend" href="/registro">Registre-se</a>
         </div>
-        <div id="buttonTocra">
-            <button type="submit" class="submit-btn" onclick="verificarDado()">CONCLUIR</button>
+        <div class="loginTem">
+            <a class="loginSend" href="/fornecedores">Fornecedores</a>
         </div>
-    </div>
+        <button type="submit" class="submit-btn">ENTRAR</button>
+    </form>
 </body>
 </html>
