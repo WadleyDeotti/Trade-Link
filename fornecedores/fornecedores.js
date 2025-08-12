@@ -34,10 +34,32 @@ document.addEventListener('DOMContentLoaded', function() {
     const confirmProduct = document.getElementById('confirm-product');
     
     // Variáveis globais
-    let currentImageType = ''; // 'profile' ou 'banner'
+    let currentImageType = '';
     let currentProductId = null;
     let productImageFile = null;
     let editImageFile = null;
+
+    // Função para resetar o scroll dos modais
+    function resetModalScroll(modal) {
+        if (modal) {
+            const modalBody = modal.querySelector('.modal-body');
+            if (modalBody) {
+                modalBody.scrollTop = 0;
+            }
+        }
+    }
+
+    // Fechar modais ao pressionar ESC
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            const modals = [imageModal, productModal, viewModal, editModal];
+            const openModal = modals.find(modal => modal.style.display === 'block');
+            
+            if (openModal) {
+                openModal.style.display = 'none';
+            }
+        }
+    });
 
     // Barra lateral - alternar expansão
     btnConfig.addEventListener('click', function() {
@@ -64,16 +86,19 @@ document.addEventListener('DOMContentLoaded', function() {
     foto.addEventListener('click', function() {
         currentImageType = 'profile';
         imageModal.style.display = 'block';
+        resetModalScroll(imageModal);
     });
 
     bannerfoto.addEventListener('click', function() {
         currentImageType = 'banner';
         imageModal.style.display = 'block';
+        resetModalScroll(imageModal);
     });
 
     // Modal de adicionar produto
     addProdutoBtn.addEventListener('click', function() {
         productModal.style.display = 'block';
+        resetModalScroll(productModal);
     });
 
     // Fechar modais
@@ -267,6 +292,7 @@ document.addEventListener('DOMContentLoaded', function() {
             };
             
             viewModal.style.display = 'block';
+            resetModalScroll(viewModal);
         }
     }
 
@@ -289,6 +315,7 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('current-product-image').src = productData.imagem;
             
             editModal.style.display = 'block';
+            resetModalScroll(editModal);
         }
     }
 

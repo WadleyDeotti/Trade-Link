@@ -83,90 +83,106 @@
     <!-- Modal de Imagem -->
     <div id="image-modal" class="modal">
         <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Alterar Imagem</h2>
-            <input type="file" id="image-upload" accept="image/*">
-            <button id="confirm-image">Confirmar</button>
+            <div class="modal-header">
+                <h2>Alterar Imagem</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <input type="file" id="image-upload" accept="image/*">
+            </div>
+            <div class="modal-footer">
+                <button id="confirm-image">Confirmar</button>
+            </div>
         </div>
     </div>
 
     <!-- Modal de Adicionar Produto -->
     <div id="product-modal" class="modal">
         <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Adicionar Produto</h2>
-            <div class="formGroup">
-                <label class="labelregis">Nome:</label>
-                <input type="text" id="product-name" class="inputregis" placeholder="Nome do produto" required>
+            <div class="modal-header">
+                <h2>Adicionar Produto</h2>
+                <span class="close">&times;</span>
             </div>
-            <div class="formGroup">
-                <label class="labelregis">Marca:</label>
-                <input type="text" id="product-brand" class="inputregis" placeholder="Marca do produto" required>
-            </div>
-            <div class="formGroup">
-                <label class="labelregis">Categoria:</label>
-                <select id="product-category" class="inputregis" required>
-                    <option value="">Selecione uma categoria</option>
-                    <option value="Eletrônicos">Eletrônicos</option>
-                    <option value="Vestuário">Vestuário</option>
-                    <option value="Alimentos">Alimentos</option>
-                    <option value="Brinquedos">Brinquedos</option>
-                    <option value="Outros">Outros</option>
-                </select>
-            </div>
-            <div class="formGroup">
-                <label class="labelregis">Formato:</label>
-                <input type="text" id="product-format" class="inputregis" placeholder="Formato do produto" required>
-            </div>
-            <div class="form-row">
-                <div class="formGroup half-width">
-                    <label class="labelregis">Peso (kg):</label>
-                    <input type="number" step="0.01" id="product-weight" class="inputregis" placeholder="0.00" required>
+            <div class="modal-body scrollable">
+                <div class="formGroup">
+                    <label class="labelregis">Nome:</label>
+                    <input type="text" id="product-name" class="inputregis" placeholder="Nome do produto" required>
                 </div>
-                <div class="formGroup half-width">
-                    <label class="labelregis">Preço (R$):</label>
-                    <input type="number" step="0.01" id="product-price" class="inputregis" placeholder="0.00" required>
+                <div class="formGroup">
+                    <label class="labelregis">Marca:</label>
+                    <input type="text" id="product-brand" class="inputregis" placeholder="Marca do produto" required>
+                </div>
+                <div class="formGroup">
+                    <label class="labelregis">Categoria:</label>
+                    <select id="product-category" class="inputregis" required>
+                        <option value="">Selecione uma categoria</option>
+                        <option value="Eletrônicos">Eletrônicos</option>
+                        <option value="Vestuário">Vestuário</option>
+                        <option value="Alimentos">Alimentos</option>
+                        <option value="Brinquedos">Brinquedos</option>
+                        <option value="Outros">Outros</option>
+                    </select>
+                </div>
+                <div class="formGroup">
+                    <label class="labelregis">Formato:</label>
+                    <input type="text" id="product-format" class="inputregis" placeholder="Formato do produto" required>
+                </div>
+                <div class="form-row">
+                    <div class="formGroup half-width">
+                        <label class="labelregis">Peso (kg):</label>
+                        <input type="number" step="0.01" id="product-weight" class="inputregis" placeholder="0.00" required>
+                    </div>
+                    <div class="formGroup half-width">
+                        <label class="labelregis">Preço (R$):</label>
+                        <input type="number" step="0.01" id="product-price" class="inputregis" placeholder="0.00" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="formGroup third-width">
+                        <label class="labelregis">Altura (cm):</label>
+                        <input type="number" id="product-height" class="inputregis" placeholder="0" required>
+                    </div>
+                    <div class="formGroup third-width">
+                        <label class="labelregis">Largura (cm):</label>
+                        <input type="number" id="product-width" class="inputregis" placeholder="0" required>
+                    </div>
+                    <div class="formGroup third-width">
+                        <label class="labelregis">Comprimento (cm):</label>
+                        <input type="number" id="product-length" class="inputregis" placeholder="0" required>
+                    </div>
+                </div>
+                <div class="image-upload-area" id="product-image-upload">
+                    <p>Clique para adicionar imagem</p>
                 </div>
             </div>
-            <div class="form-row">
-                <div class="formGroup third-width">
-                    <label class="labelregis">Altura (cm):</label>
-                    <input type="number" id="product-height" class="inputregis" placeholder="0" required>
-                </div>
-                <div class="formGroup third-width">
-                    <label class="labelregis">Largura (cm):</label>
-                    <input type="number" id="product-width" class="inputregis" placeholder="0" required>
-                </div>
-                <div class="formGroup third-width">
-                    <label class="labelregis">Comprimento (cm):</label>
-                    <input type="number" id="product-length" class="inputregis" placeholder="0" required>
-                </div>
+            <div class="modal-footer">
+                <button id="confirm-product" disabled>Concluir</button>
             </div>
-            <div class="image-upload-area" id="product-image-upload">
-                <p>Clique para adicionar imagem</p>
-            </div>
-            <button id="confirm-product" disabled>Concluir</button>
         </div>
     </div>
 
     <!-- Modal de Visualização do Produto -->
     <div id="view-modal" class="modal">
         <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Detalhes do Produto</h2>
-            <div class="product-info">
-                <img id="view-product-image" src="" alt="Imagem do Produto" class="product-image-large">
-                <div class="product-details">
-                    <p><strong>Nome:</strong> <span id="view-product-name"></span></p>
-                    <p><strong>Marca:</strong> <span id="view-product-brand"></span></p>
-                    <p><strong>Categoria:</strong> <span id="view-product-category"></span></p>
-                    <p><strong>Formato:</strong> <span id="view-product-format"></span></p>
-                    <p><strong>Peso:</strong> <span id="view-product-weight"></span> kg</p>
-                    <p><strong>Preço:</strong> R$ <span id="view-product-price"></span></p>
-                    <p><strong>Dimensões:</strong> <span id="view-product-dimensions"></span></p>
+            <div class="modal-header">
+                <h2>Detalhes do Produto</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body scrollable">
+                <div class="product-info">
+                    <img id="view-product-image" src="" alt="Imagem do Produto" class="product-image-large">
+                    <div class="product-details">
+                        <p><strong>Nome:</strong> <span id="view-product-name"></span></p>
+                        <p><strong>Marca:</strong> <span id="view-product-brand"></span></p>
+                        <p><strong>Categoria:</strong> <span id="view-product-category"></span></p>
+                        <p><strong>Formato:</strong> <span id="view-product-format"></span></p>
+                        <p><strong>Peso:</strong> <span id="view-product-weight"></span> kg</p>
+                        <p><strong>Preço:</strong> R$ <span id="view-product-price"></span></p>
+                        <p><strong>Dimensões:</strong> <span id="view-product-dimensions"></span></p>
+                    </div>
                 </div>
             </div>
-            <div class="modal-buttons">
+            <div class="modal-footer">
                 <button id="edit-product">Editar</button>
                 <button id="delete-product" class="delete-btn">Deletar</button>
             </div>
@@ -176,58 +192,62 @@
     <!-- Modal de Edição do Produto -->
     <div id="edit-modal" class="modal">
         <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Editar Produto</h2>
-            <div class="formGroup">
-                <label class="labelregis">Nome:</label>
-                <input type="text" id="edit-product-name" class="inputregis" required>
+            <div class="modal-header">
+                <h2>Editar Produto</h2>
+                <span class="close">&times;</span>
             </div>
-            <div class="formGroup">
-                <label class="labelregis">Marca:</label>
-                <input type="text" id="edit-product-brand" class="inputregis" required>
-            </div>
-            <div class="formGroup">
-                <label class="labelregis">Categoria:</label>
-                <select id="edit-product-category" class="inputregis" required>
-                    <option value="Eletrônicos">Eletrônicos</option>
-                    <option value="Vestuário">Vestuário</option>
-                    <option value="Alimentos">Alimentos</option>
-                    <option value="Brinquedos">Brinquedos</option>
-                    <option value="Outros">Outros</option>
-                </select>
-            </div>
-            <div class="formGroup">
-                <label class="labelregis">Formato:</label>
-                <input type="text" id="edit-product-format" class="inputregis" required>
-            </div>
-            <div class="form-row">
-                <div class="formGroup half-width">
-                    <label class="labelregis">Peso (kg):</label>
-                    <input type="number" step="0.01" id="edit-product-weight" class="inputregis" required>
+            <div class="modal-body scrollable">
+                <div class="formGroup">
+                    <label class="labelregis">Nome:</label>
+                    <input type="text" id="edit-product-name" class="inputregis" required>
                 </div>
-                <div class="formGroup half-width">
-                    <label class="labelregis">Preço (R$):</label>
-                    <input type="number" step="0.01" id="edit-product-price" class="inputregis" required>
+                <div class="formGroup">
+                    <label class="labelregis">Marca:</label>
+                    <input type="text" id="edit-product-brand" class="inputregis" required>
+                </div>
+                <div class="formGroup">
+                    <label class="labelregis">Categoria:</label>
+                    <select id="edit-product-category" class="inputregis" required>
+                        <option value="Eletrônicos">Eletrônicos</option>
+                        <option value="Vestuário">Vestuário</option>
+                        <option value="Alimentos">Alimentos</option>
+                        <option value="Brinquedos">Brinquedos</option>
+                        <option value="Outros">Outros</option>
+                    </select>
+                </div>
+                <div class="formGroup">
+                    <label class="labelregis">Formato:</label>
+                    <input type="text" id="edit-product-format" class="inputregis" required>
+                </div>
+                <div class="form-row">
+                    <div class="formGroup half-width">
+                        <label class="labelregis">Peso (kg):</label>
+                        <input type="number" step="0.01" id="edit-product-weight" class="inputregis" required>
+                    </div>
+                    <div class="formGroup half-width">
+                        <label class="labelregis">Preço (R$):</label>
+                        <input type="number" step="0.01" id="edit-product-price" class="inputregis" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="formGroup third-width">
+                        <label class="labelregis">Altura (cm):</label>
+                        <input type="number" id="edit-product-height" class="inputregis" required>
+                    </div>
+                    <div class="formGroup third-width">
+                        <label class="labelregis">Largura (cm):</label>
+                        <input type="number" id="edit-product-width" class="inputregis" required>
+                    </div>
+                    <div class="formGroup third-width">
+                        <label class="labelregis">Comprimento (cm):</label>
+                        <input type="number" id="edit-product-length" class="inputregis" required>
+                    </div>
+                </div>
+                <div class="image-upload-area" id="edit-image-upload">
+                    <img id="current-product-image" src="" alt="Imagem do Produto">
                 </div>
             </div>
-            <div class="form-row">
-                <div class="formGroup third-width">
-                    <label class="labelregis">Altura (cm):</label>
-                    <input type="number" id="edit-product-height" class="inputregis" required>
-                </div>
-                <div class="formGroup third-width">
-                    <label class="labelregis">Largura (cm):</label>
-                    <input type="number" id="edit-product-width" class="inputregis" required>
-                </div>
-                <div class="formGroup third-width">
-                    <label class="labelregis">Comprimento (cm):</label>
-                    <input type="number" id="edit-product-length" class="inputregis" required>
-                </div>
-            </div>
-            <div class="image-upload-area" id="edit-image-upload">
-                <img id="current-product-image" src="" alt="Imagem do Produto">
-            </div>
-            <div class="modal-buttons">
+            <div class="modal-footer">
                 <button id="save-changes">Salvar</button>
                 <button id="cancel-edit" class="delete-btn">Cancelar</button>
             </div>
