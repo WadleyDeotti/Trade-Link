@@ -1,12 +1,13 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Elementos do formulário
     const formRegister = document.getElementById('register');
     const typeOptions = document.querySelectorAll('.typeOption');
     const tipoCadastroInput = document.getElementById('tipoCadastro');
     const docField = document.getElementById('campoTroca');
     const submitBtn = document.getElementById('submit-btn');
-    
-    // Alternância entre Fornecedor/Empresa
+    const togglePasswordButtons = document.querySelectorAll('.toggle-password');
+    const senhaInput = document.getElementById('senha');
+    const confirmarSenhaInput = document.getElementById('confirmarSenha');
+
     typeOptions.forEach(option => {
         option.addEventListener('click', function() {
             typeOptions.forEach(opt => opt.classList.remove('selected'));
@@ -69,30 +70,27 @@ document.addEventListener('DOMContentLoaded', function() {
                 `;
             }
             
-            // Reatribuir eventos após mudar o HTML
             setupForm();
         });
     });
 
-    // Configurar formulário
     function setupForm() {
         const termosCheckbox = document.getElementById('termosCheckbox');
         const privacidadeCheckbox = document.getElementById('privacidadeCheckbox');
         const submitBtn = document.getElementById('submit-btn');
         const modalLinks = document.querySelectorAll('.linkModal');
+        const togglePasswordButtons = document.querySelectorAll('.toggle-password');
         
-        // Verificar estado das checkboxes
         function verificarCheckboxes() {
-            submitBtn.disabled = !(termosCheckbox.checked && privacidadeCheckbox.checked);
+            submitBtn.disabled = !(termosCheckbox && termosCheckbox.checked && 
+                                 privacidadeCheckbox && privacidadeCheckbox.checked);
         }
         
-        // Eventos das checkboxes
         if (termosCheckbox && privacidadeCheckbox) {
             termosCheckbox.addEventListener('change', verificarCheckboxes);
             privacidadeCheckbox.addEventListener('change', verificarCheckboxes);
         }
         
-        // Eventos dos links dos modais
         modalLinks.forEach(link => {
             link.addEventListener('click', function(e) {
                 e.preventDefault();
@@ -100,19 +98,30 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById(modalId).showModal();
             });
         });
+        
+        togglePasswordButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const input = this.parentElement.querySelector('input');
+                const icon = this.querySelector('svg');
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    icon.innerHTML = '<path d="M12 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-4.5c-5 0-9.27 3.11-11 7.5 1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5m0 10a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5z"/>';
+                } else {
+                    input.type = 'password';
+                    icon.innerHTML = '<path d="M12 9a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0-4.5c5 0 9.27 3.11 11 7.5-1.73 4.39-6 7.5-11 7.5S2.73 16.39 1 12c1.73-4.39 6-7.5 11-7.5M3.18 12a9.821 9.821 0 0 0 17.64 0 9.821 9.821 0 0 0-17.64 0z"/>';
+                }
+            });
+        });
     }
     
-    // Inicializar configurações
     setupForm();
     
-    // Eventos para fechar modais
     document.querySelectorAll('.fechar-modal, .fechar-modal-btn').forEach(btn => {
         btn.addEventListener('click', function() {
             this.closest('dialog').close();
         });
     });
     
-    // Fechar modais ao clicar no backdrop
     document.querySelectorAll('dialog').forEach(dialog => {
         dialog.addEventListener('click', function(e) {
             if (e.target === this) {
@@ -121,11 +130,25 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Evento de submit do formulário
     formRegister.addEventListener('submit', function(e) {
         e.preventDefault();
         
-        // Validar CPF ou CNPJ antes de enviar
+        if (senhaInput.value !== confirmarSenhaInput.value) {
+            const resultado = document.getElementById('resultado');
+            resultado.textContent = 'As senhas não coincidem!';
+            resultado.style.color = '#d9534f';
+            document.getElementById('meuDialog').showModal();
+            return;
+        }
+        
+        if (senhaInput.value.length < 8) {
+            const resultado = document.getElementById('resultado');
+            resultado.textContent = 'A senha deve ter pelo menos 8 caracteres!';
+            resultado.style.color = '#d9534f';
+            document.getElementById('meuDialog').showModal();
+            return;
+        }
+        
         let isValid = false;
         const resultado = document.getElementById('resultado');
         
@@ -142,28 +165,13 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
-        // Se todas as validações passarem
         resultado.textContent = 'Cadastro realizado com sucesso!';
         resultado.style.color = '#5cb85c';
         document.getElementById('meuDialog').showModal();
         
-        // Aqui você pode enviar o formulário para o backend
         console.log('Dados do formulário:', new FormData(formRegister));
-        // formRegister.submit(); // Descomente esta linha para enviar o formulário
     });
 });
-
-// Funções de máscara
-function mascaraTelefone(input) {
-    let value = input.value.replace(/\D/g, '').slice(0, 11);
-    let inputFormat = '';
-    
-    if (value.length > 0) inputFormat = `(${value.substring(0, 2)}`;
-    if (value.length > 2) inputFormat += `) ${value.substring(2, 7)}`;
-    if (value.length > 7) inputFormat += `-${value.substring(7, 11)}`;
-    
-    input.value = inputFormat;
-}
 
 function mascaraCpf(input) {
     let value = input.value.replace(/\D/g, '').slice(0, 11);
@@ -190,7 +198,6 @@ function mascaraCnpj(input) {
     input.value = valorFormatado;
 }
 
-// Funções de validação
 function validarCPF(cpfInput) {
     const cpf = cpfInput.value.replace(/\D/g, '');
     
@@ -198,7 +205,6 @@ function validarCPF(cpfInput) {
         return false;
     }
     
-    // Cálculo dos dígitos verificadores
     let soma = 0;
     for (let i = 0; i < 9; i++) soma += parseInt(cpf.charAt(i)) * (10 - i);
     let resto = (soma * 10) % 11;
@@ -223,7 +229,6 @@ function validarCNPJ(cnpjInput) {
         return false;
     }
     
-    // Cálculo dos dígitos verificadores
     let tamanho = cnpj.length - 2;
     let numeros = cnpj.substring(0, tamanho);
     let digitos = cnpj.substring(tamanho);

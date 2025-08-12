@@ -43,6 +43,7 @@ body {
 
 .formGroup {
     margin-bottom: 15px;
+    position: relative;
 }
 
 .labelregis {
@@ -66,6 +67,35 @@ body {
 .inputregis:focus {
     border-color: #38528B;
     outline: none;
+}
+
+.password-container {
+    position: relative;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.eye-icon {
+    fill: #172B4B;
+    transition: fill 0.2s;
+}
+
+.toggle-password:hover .eye-icon {
+    fill: #0c1c38;
 }
 
 .loginTem {
