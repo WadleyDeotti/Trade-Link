@@ -1,45 +1,77 @@
 document.addEventListener('DOMContentLoaded', function() {
     const formLogin = document.getElementById('login');
-    
+    const togglePasswordButtons = document.querySelectorAll('.toggle-password');
+    const senhaInput = document.getElementById('senha');
+    const documentoInput = document.getElementById('documento');
+    const dialog = document.getElementById('meuDialog');
+    const resultado = document.getElementById('resultado');
+    const confirmarModal = document.getElementById('confirmarModal');
+    const fecharModal = document.getElementById('fecharModal');
+
+    togglePasswordButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const input = this.parentElement.querySelector('input');
+            const icon = this.querySelector('svg');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.innerHTML = '<path d="M12 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-4.5c-5 0-9.27 3.11-11 7.5 1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5m0 10a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5z"/>';
+            } else {
+                input.type = 'password';
+                icon.innerHTML = '<path d="M12 9a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0-4.5c5 0 9.27 3.11 11 7.5-1.73 4.39-6 7.5-11 7.5S2.73 16.39 1 12c1.73-4.39 6-7.5 11-7.5M3.18 12a9.821 9.821 0 0 0 17.64 0 9.821 9.821 0 0 0-17.64 0z"/>';
+            }
+        });
+    });
+
+    confirmarModal.addEventListener('click', function() {
+        dialog.close();
+    });
+
+    fecharModal.addEventListener('click', function() {
+        dialog.close();
+    });
+
+    dialog.addEventListener('click', function(e) {
+        if (e.target === this) {
+            this.close();
+        }
+    });
+
     formLogin.addEventListener('submit', function(e) {
         e.preventDefault();
         
-        // Validar documento
-        const documentoInput = document.getElementById('documento');
         const documento = documentoInput.value.replace(/\D/g, '');
         const isCpf = documento.length <= 11;
         
         if (isCpf && !validarCPF(documentoInput)) {
-            alert('Por favor, insira um CPF válido');
+            resultado.textContent = 'Por favor, insira um CPF válido';
+            resultado.style.color = '#d9534f';
+            dialog.showModal();
             documentoInput.focus();
             return;
         }
         
         if (!isCpf && !validarCNPJ(documentoInput)) {
-            alert('Por favor, insira um CNPJ válido');
+            resultado.textContent = 'Por favor, insira um CNPJ válido';
+            resultado.style.color = '#d9534f';
+            dialog.showModal();
             documentoInput.focus();
             return;
         }
         
-        // Validar senha
-        const senhaInput = document.getElementById('senha');
         if (senhaInput.value.length < 6) {
-            alert('A senha deve ter pelo menos 6 caracteres');
+            resultado.textContent = 'A senha deve ter pelo menos 6 caracteres';
+            resultado.style.color = '#d9534f';
+            dialog.showModal();
             senhaInput.focus();
             return;
         }
         
-        // Se todas as validações passarem
-        console.log('Dados do formulário:', {
-            documento: documentoInput.value,
-            senha: senhaInput.value
-        });
+        resultado.textContent = 'Login realizado com sucesso! Redirecionando...';
+        resultado.style.color = '#5cb85c';
+        dialog.showModal();
         
-        // Simular envio (substitua por formLogin.submit() em produção)
         setTimeout(() => {
-            alert('Login realizado com sucesso! Redirecionando...');
-            // window.location.href = '/dashboard.html'; // Descomente para redirecionar
-        }, 500);
+        }, 2000);
     });
 });
 
@@ -47,12 +79,12 @@ function formatarDocumento(input) {
     let value = input.value.replace(/\D/g, '');
     let formattedValue = '';
     
-    if (value.length <= 11) { // CPF
+    if (value.length <= 11) {
         if (value.length > 0) formattedValue = value.substring(0, 3);
         if (value.length > 3) formattedValue += '.' + value.substring(3, 6);
         if (value.length > 6) formattedValue += '.' + value.substring(6, 9);
         if (value.length > 9) formattedValue += '-' + value.substring(9, 11);
-    } else { // CNPJ
+    } else {
         if (value.length > 0) formattedValue = value.substring(0, 2);
         if (value.length > 2) formattedValue += '.' + value.substring(2, 5);
         if (value.length > 5) formattedValue += '.' + value.substring(5, 8);
@@ -70,7 +102,6 @@ function validarCPF(cpfInput) {
         return false;
     }
     
-    // Cálculo dos dígitos verificadores
     let soma = 0;
     for (let i = 0; i < 9; i++) soma += parseInt(cpf.charAt(i)) * (10 - i);
     let resto = (soma * 10) % 11;
@@ -95,7 +126,6 @@ function validarCNPJ(cnpjInput) {
         return false;
     }
     
-    // Cálculo dos dígitos verificadores
     let tamanho = cnpj.length - 2;
     let numeros = cnpj.substring(0, tamanho);
     let digitos = cnpj.substring(tamanho);

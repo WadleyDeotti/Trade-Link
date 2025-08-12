@@ -20,6 +20,7 @@ body {
 
 .formGroup {
     margin-bottom: 15px;
+    position: relative;
 }
 
 .labelregis {
@@ -45,6 +46,35 @@ body {
     border-color: #38528B;
     outline: none;
     box-shadow: 0 0 0 2px rgba(56, 82, 139, 0.2);
+}
+
+.password-container {
+    position: relative;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.eye-icon {
+    fill: #172B4B;
+    transition: fill 0.2s;
+}
+
+.toggle-password:hover .eye-icon {
+    fill: #0c1c38;
 }
 
 .loginTem {
@@ -93,6 +123,87 @@ body {
     background-color: #596375;
     cursor: not-allowed;
     opacity: 0.7;
+}
+
+dialog {
+    border: none;
+    border-radius: 12px;
+    padding: 0;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    animation: fadeIn 0.3s ease-out;
+    background-color: #E9FFFF;
+}
+
+dialog::backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(2px);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.modal-cabecalho {
+    padding: 20px 24px;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-cabecalho h2 {
+    margin: 0;
+    font-size: 20px;
+    color: #172B4B;
+}
+
+.fechar-modal {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #777;
+    padding: 0;
+    line-height: 1;
+    transition: color 0.2s;
+}
+
+.fechar-modal:hover {
+    color: #333;
+}
+
+.modal-corpo {
+    padding: 24px;
+    color: #172B4B;
+}
+
+.modal-rodape {
+    padding: 16px 24px;
+    border-top: 1px solid #ddd;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.modal-btn {
+    padding: 10px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.modal-btn-primario {
+    background-color: #172B4B;
+    color: white;
+    border: none;
+}
+
+.modal-btn-primario:hover {
+    background-color: #0c1c38;
 }
 
 @media (max-width: 480px) {
