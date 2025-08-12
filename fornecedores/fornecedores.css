@@ -1,4 +1,3 @@
-/* Estilos Gerais */
 body {
     background-color: #172B4B;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -11,7 +10,6 @@ body {
     position: relative;
 }
 
-/* Barra Lateral */
 #sidebar {
     position: fixed;
     left: 0;
@@ -62,7 +60,6 @@ body {
     text-decoration: none;
 }
 
-/* Header */
 #main-header {
     position: fixed;
     top: 0;
@@ -114,7 +111,6 @@ body {
     background-color: rgba(255, 255, 255, 0.1);
 }
 
-/* Formulário Principal */
 #principal {
     background-color: #B2C8F7;
     border-radius: 10px;
@@ -187,7 +183,6 @@ body {
     opacity: 0.8;
 }
 
-/* Formulários */
 .labelregis {
     display: block;
     margin-bottom: 5px;
@@ -254,7 +249,6 @@ body {
     flex-direction: row;
 }
 
-/* Área de Produtos */
 #inferior {
     background-color: #B2C8F7;
     display: flex;
@@ -325,7 +319,6 @@ body {
     display: none;
 }
 
-/* Estilos para os cards de produto */
 .produto-card {
     background: white;
     border-radius: 10px;
@@ -367,7 +360,6 @@ body {
     margin-bottom: 3px;
 }
 
-/* Botão de Submit */
 #submit-btn {
     padding: 12px 24px;
     background-color: #38528B;
@@ -384,7 +376,6 @@ body {
     transform: scale(1.02);
 }
 
-/* Modais */
 .modal {
     display: none;
     position: fixed;
@@ -465,7 +456,6 @@ body {
     color: #38528B;
 }
 
-/* Estilos para o conteúdo dos modais */
 .image-upload-area {
     width: 100%;
     height: 200px;
@@ -496,7 +486,6 @@ body {
     object-fit: contain;
 }
 
-/* Estilos para a modal de visualização */
 .product-info {
     display: flex;
     flex-direction: column;
@@ -524,7 +513,6 @@ body {
     color: #38528B;
 }
 
-/* Form rows para agrupar inputs */
 .form-row {
     display: flex;
     gap: 15px;
@@ -582,7 +570,6 @@ button:disabled {
     background-color: #4a5568;
 }
 
-/* Responsividade */
 @media (max-width: 1200px) {
     #perfil {
         flex-direction: column;
