@@ -36,7 +36,7 @@ exports.cadastrar = (req, res) => {
 }; 
 
 
-exports.login=(req,res)=>{
+exports.logar=(req,res)=>{
 const {documento,senha}= req.body;
 const login = documento ?documento.replace(/\D/g, ''):'';
 if(login && login.length ===11){
