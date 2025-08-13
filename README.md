@@ -25,5 +25,5 @@ O **Trade Link** é uma plataforma digital que conecta **empresas e fornecedores
 - **Iago Teles** – Front-end  
 - **Wadley Deotti** – Front-end  
 - **Ítalo Vilarino** – Banco de Dados  
-- **Brigas** – Back-end  
+- **Guilherme Pires** – Back-end  
 - **Gustavo Guerra** – Back-end
