@@ -351,7 +351,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 altura: 15, 
                 largura: 8, 
                 comprimento: 6, 
-                imagem: 'images/labubu.webp' 
+                imagem: 'imagens/imagens-fornecedores/labubu.webp' 
             },
             { 
                 nome: 'Kit 120 Caneta', 
@@ -363,7 +363,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 altura: 25, 
                 largura: 18, 
                 comprimento: 5, 
-                imagem: 'images/kit120canetinha.webp' 
+                imagem: 'imagens/imagens-fornecedores/kit120canetinha.webp' 
             },
             { 
                 nome: 'Bobbie Goods', 
@@ -375,7 +375,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 altura: 20, 
                 largura: 15, 
                 comprimento: 8, 
-                imagem: 'images/bobbiegoods.jpeg' 
+                imagem: 'imagens/imagens-fornecedores/bobbiegoods.jpeg' 
             }
         ];
         sampleProducts.forEach(product => {
