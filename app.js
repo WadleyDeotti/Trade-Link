@@ -20,7 +20,7 @@ app.use(express.static(path.join(__dirname,'public')));
 const usuarioRoutes = require('./routes/usuarioRoutes');
 
 app.get('/', (req, res) => {
-  res.render('login');
+  res.render('registro');
 });
 
 app.get("/", (req, res) => {
@@ -52,7 +52,7 @@ console.error(err.stack);
 res.status(500).send('erro interno do servidor');
 });
 
-const PORT = process.env.PORT || 6969;
+const PORT = process.env.PORT || 6767;
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
   console.log(`http://localhost:${PORT}`)
