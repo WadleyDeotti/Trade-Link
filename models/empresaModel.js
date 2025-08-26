@@ -1,25 +1,23 @@
-const mysql = require('mysql2');
-
-const conexao = mysql.createConnection({
- host:"localhost",
- user:"root",
-password:"zasx",
-database:"pit"
-});
-
-conexao.connect(err=>{
-    if(err){
-        console.error('Erro ao conectar ao db ',err);
-        return;
-    }
-    console.log("conectado à db")
-
-})
-
-module.exports = {
-    inserirEmpresa:(empresa,callback)=>{
-        const sql = "insert into empresas(nome_fantasia,razao_social,cnpj,email) values (?,?,?,?)";
-        const valores = [empresa.nome_fantasia, empresa.razao_social,empresa.cnpj,empresa.email];
-        conexao.query(sql,valores,callback);
-    }
+class Empresa {
+  constructor({ 
+    id_empresa = null, 
+    nome_fantasia, 
+    razao_social, 
+    cnpj, 
+    email, 
+    telefone = null, 
+    endereco = null, 
+    data_cadastro = null 
+  }) {
+    this.id_empresa = id_empresa;
+    this.nome_fantasia = nome_fantasia;
+    this.razao_social = razao_social;
+    this.cnpj = cnpj;
+    this.email = email;
+    this.telefone = telefone;
+    this.endereco = endereco;
+    this.data_cadastro = data_cadastro;
+  }
 }
+
+module.exports = Empresa;

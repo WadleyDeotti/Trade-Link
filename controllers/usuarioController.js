@@ -1,4 +1,4 @@
-const usuario = require('../models/usuarioModel');
+const usuario = require('../repository/usuarioRepository');
 const bycript = require('bcrypt')
 
 exports.cadastrar = (req, res) => {

@@ -1,4 +1,5 @@
-const empresa = require('../models/empresaModel');
+const empresa = require('../repository/empresaRepository');
+
 
 
 exports.formCadastro = (req,res) =>{
