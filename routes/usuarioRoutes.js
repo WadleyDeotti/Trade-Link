@@ -1,11 +1,20 @@
 const express = require("express");
 const router = express.Router();
-const usuarioController = require("../controllers/usuarioController");
+const loginController = require("../controllers/loginController");
+
+// GETs
+router.get("/configuracoes", (req, res) => res.render("configuracoes"));
+router.get("/registro", (req, res) => res.render("regisgtro"));
+router.get("/login", (req, res) => {
+  const erro = req.session.erro;
+  delete req.session.erro; 
+  res.render("login", { erro: erro || null });
+});
+
+// POSTs
+router.post("/cadastro", loginController.cadastrar);
+router.post("/login", loginController.logar);
 
 
-router.post('/cadastro',usuarioController.cadastrar);
-
-
-router.post('/logar',usuarioController.logar);
 
 module.exports = router;

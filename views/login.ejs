@@ -8,7 +8,7 @@
     <script src="/JavaScript/login.js" defer></script>
 </head>
 <body>
-    <form id="login" method="POST" action="">
+    <form id="login" method="POST" action="login">
         <div class="formGroup">
             <label for="documento" class="labelregis">CPF/CNPJ:</label>
             <input type="text" class="inputregis" id="documento" name="documento" 
@@ -37,6 +37,10 @@
         </div>
         <button type="submit" class="submit-btn">ENTRAR</button>
     </form>
+
+<% if (erro) { %>
+  <p style="color:red;"><%= erro %></p>
+<% } %>
 
     <dialog id="meuDialog">
         <div class="modal-cabecalho">
