@@ -34,10 +34,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         </label>
                     </div>
                     <div class="loginTem">
-                        Já tem uma conta? <a class="loginSend" href="/login/login.html">LOGIN</a>
+                        Já tem uma conta? <a class="loginSend" href="login">LOGIN</a>
                     </div>
                     <div class="loginTem">
-                        <a class="loginSend" href="/fornecedores/fornecedores.html">Fornecedores</a>
+                        <a class="loginSend" href="fornecedores">Fornecedores</a>
                     </div>
                     <button type="submit" class="submit-btn" id="submit-btn" disabled>CONCLUIR</button>
                 `;
@@ -61,10 +61,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         </label>
                     </div>
                     <div class="loginTem">
-                        Já tem uma conta? <a class="loginSend" href="/login/login.html">LOGIN</a>
+                        Já tem uma conta? <a class="loginSend" href="login">LOGIN</a>
                     </div>
                     <div class="loginTem">
-                        <a class="loginSend" href="/fornecedores/fornecedores.html">Fornecedores</a>
+                        <a class="loginSend" href="fornecedores">Fornecedores</a>
                     </div>
                     <button type="submit" class="submit-btn" id="submit-btn" disabled>CONCLUIR</button>
                 `;
