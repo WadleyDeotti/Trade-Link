@@ -82,3 +82,4 @@ exports.logar = (req, res) => {
         res.render("login", { erro: "Documento inválido" });
     }
 };
+

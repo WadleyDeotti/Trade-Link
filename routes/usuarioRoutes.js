@@ -12,10 +12,13 @@ router.get("/login", (req, res) => {
 });
 router.get("/fornecedores",(req,res)=>res.render("fornecedores"));
 
-// POSTs
-router.post("/cadastro", loginController.cadastrar);
-router.post("/login", loginController.logar);
 
+
+
+// POSTs
+router.post("/registro", loginController.cadastrar);
+router.post("/login", loginController.logar);
+router.post("/cadastro_produtos", CadastroController.produtos);
 
 
 module.exports = router;
