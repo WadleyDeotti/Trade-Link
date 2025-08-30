@@ -20,11 +20,20 @@ conexao.connect(err=>{
 
 module.exports = {
     buscarCNPJ:(cnpj,callback)=>{
-        const sql ="select cnpj,senha from empresas where cnpj = ?";
+        const sql ="select cnpj,senha,email from empresas where cnpj = ?";
         conexao.query(sql,[cnpj],(err,resultado)=>{
             if(err){return callback(err);}
             const empresas= resultado.map(row => new empresa(row));
             callback(null,empresas);
+        });
+    },
+
+    buscarCPF:(cpf,callback)=>{
+        const sql = "select cpf,senha,email from fornecedores where cpf = ?";
+        conexao.query(sql,[cpf],(err,resultado)=>{
+            if(err){return callback(err);}
+            const fornecedores = resultado.map(row => new fornecedor(row));
+            callback(null,fornecedores);
         });
     },
 
@@ -42,13 +51,33 @@ module.exports = {
         conexao.query(sql,valores,callback);
     },
 
-    buscarCPF:(cpf,callback)=>{
-        const sql = "select cpf,senha from fornecedores where cpf = ?";
-        conexao.query(sql,[cpf],(err,resultado)=>{
-            if(err){return callback(err);}
-            const fornecedores = resultado.map(row => new fornecedor(row));
-            callback(null,fornecedores);
-        });
-    },
-    
+    salvarTokenE: (empresa, callback) => {
+    const sql = "update empresas set token_redefinicao=?, expira_token=? where cnpj=?";
+    const valores = [empresa.token_redefinicao, empresa.expira_token, empresa.cnpj];
+    conexao.query(sql, valores, callback);
+},
+
+salvarTokenF: (fornecedor, callback) => {
+    const sql = "update fornecedores set token_redefinicao=?, expira_token=? where cpf=?";
+    const valores = [fornecedor.token_redefinicao, fornecedor.expira_token, fornecedor.cpf];
+    conexao.query(sql, valores, callback);
+},
+
+procurarTokenE: (token, callback) => {
+    const sql = "select * from empresas where token_redefinicao=?";
+    conexao.query(sql, [token], (err, resultado) => {
+        if (err) return callback(err);
+        // Se não tiver classe Empresa definida, retorna o objeto puro
+        callback(null, resultado.length > 0 ? resultado[0] : null);
+    });
+},
+
+procurarTokenF: (token, callback) => {
+    const sql = "select * from fornecedores where token_redefinicao=?";
+    conexao.query(sql, [token], (err, resultado) => {
+        if (err) return callback(err);
+        callback(null, resultado.length > 0 ? resultado[0] : null);
+    });
+}
+
 };

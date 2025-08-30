@@ -1,5 +1,6 @@
 const usuario = require('../repository/usuarioRepository');
 const bcrypt  = require('bcrypt')
+const nodeMailer = require('nodemailer');
 
 exports.cadastrar = (req, res) => {
   const usuario = req.body;
@@ -13,7 +14,7 @@ exports.cadastrar = (req, res) => {
     }, (err, resultado) => {
       if (err) {
         console.error(err);
-        return res.status(500).send("Erro ao cadastrar");
+        return res.status(500).send("Erro ao cadastrar"); // trocar pro metodo de enviar msg de erro
       }
       req.session.usuario = { 
         id: resultado.id,
@@ -30,7 +31,7 @@ exports.cadastrar = (req, res) => {
     }, (err, resultado) => {
       if (err) {
         console.error(err);
-        return res.status(500).send("Erro ao cadastrar");
+        return res.status(500).send("Erro ao cadastrar"); // trocar pro metodo de enviar msg de erro
       }
       req.session.usuario = { 
         id: resultado.id,
@@ -39,7 +40,7 @@ exports.cadastrar = (req, res) => {
       res.render('fornecedores');
     });
   } else {
-    res.send("Dados inválidos");
+    res.send("Dados inválidos"); // trocar pro metodo de enviar msg de erro
   }
 }; 
 
@@ -50,8 +51,8 @@ exports.logar = (req, res) => {
 
     if (documento && documento.length === 11) {
         usuario.buscarCPF(documento, (err, fornecedor) => {
-            if (err) return res.status(500).render("login", { erro: "Erro no servidor" });
-            if (fornecedor.length === 0) return res.render("login", { erro: "Usuário não encontrado" });
+            if (err) return res.status(500).render("login", { mensagem: "Erro no servidor" });
+            if (fornecedor.length === 0) return res.render("login", { mensagem: "Usuário não encontrado" });
 
             bcrypt.compare(senha, fornecedor[0].senha, (erro, mesmaSenha) => {
                 if (mesmaSenha) {
@@ -81,4 +82,111 @@ exports.logar = (req, res) => {
     } else {
         res.render("login", { erro: "Documento inválido" });
     }
+};
+
+exports.redefinirSenha = (req, res) => {
+  const documento = req.body.documento.replace(/\D/g, "");
+
+  if (documento && documento.length === 11) {
+    usuario.buscarCPF(documento, (err, fornecedor) => {
+      if (err) return res.status(500).render("login", { mensagem: "Erro no servidor" });
+      if (!fornecedor || fornecedor.length === 0) {
+        return res.render("login", { mensagem: "Usuário não encontrado" });
+      }
+
+      // gerar token
+      const token = crypto.randomBytes(20).toString("hex");
+      const expira = new Date(Date.now() + 3600000); // 1h
+
+      usuario.salvarTokenF({ documento, token, expira }, (err2) => {
+        if (err2) return res.status(500).render("login", { mensagem: "Erro no servidor" });
+
+        // enviar email
+        const transporter = nodeMailer.createTransport({
+          service: "Gmail",
+          auth: {
+            user: "", // email
+            pass: ""  // senha / app password
+          }
+        });
+
+        const link = `http://localhost:6767/atualizarSenha/${token}`;
+        transporter.sendMail({
+          to: fornecedor[0].email,
+          from: "",
+          subject: "Trade Link - Redefinição de senha",
+          html: `<p>Clique no link para redefinir sua senha:</p>
+                 <a href="${link}">${link}</a>`
+        });
+
+        res.render("login", { mensagem: "Link de redefinição enviado ao seu email" });
+      });
+    });
+  } else if (documento && documento.length === 14) {
+    usuario.buscarCNPJ(documento, (err, empresa) => {
+      if (err) return res.status(500).render("login", { mensagem: "Erro no servidor" });
+      if (!empresa || empresa.length === 0) {
+        return res.render("login", { mensagem: "Usuário não encontrado" });
+      }
+
+      const token = crypto.randomBytes(20).toString("hex");
+      const expira = new Date(Date.now() + 3600000);
+
+      usuario.salvarTokenE({ 
+  cnpj: documento, 
+  token_redefinicao: token, 
+  expira_token: expira 
+}, (err2) => {
+        if (err2) return res.status(500).render("login", { mensagem: "Erro no servidor" });
+
+        const transporter = nodeMailer.createTransport({
+          service: "Gmail",
+          auth: {
+            user: "",
+            pass: ""
+          }
+        });
+
+        const link = `http://localhost:6767/atualizarSenha/${token}`;
+        transporter.sendMail({
+          to: empresa[0].email,
+          from: "",
+          subject: "Trade Link - Redefinição de senha",
+          html: `<p>Clique no link para redefinir sua senha:</p>
+                 <a href="${link}">${link}</a>`
+        });
+
+        res.render("login", { mensagem: "Link de redefinição enviado ao seu email" });
+      });
+    });
+  }
+};
+
+exports.formResetarSenha = (req, res) => {
+  const { token } = req.params;
+
+  usuario.buscarPorToken(token, (err, user) => {
+    if (err || !user || user.reset_expira < new Date()) {
+      return res.render("login", { mensagem: "Token inválido ou expirado" });
+    }
+    res.render("resetarSenha", { token });
+  });
+};
+
+exports.resetarSenha = (req, res) => {
+  const { token } = req.params;
+  const { senha } = req.body;
+
+  usuario.buscarPorToken(token, (err, user) => {
+    if (err || !user || user.reset_expira < new Date()) {
+      return res.render("login", { mensagem: "Token inválido ou expirado" });
+    }
+
+    const senhaHash = bcrypt.hashSync(senha, 10);
+    usuario.atualizarSenha(user.id, senhaHash, (err2) => {
+      if (err2) return res.status(500).render("login", { mensagem: "Erro ao atualizar senha" });
+
+      res.render("login", { mensagem: "Senha alterada com sucesso!" });
+    });
+  });
 };
