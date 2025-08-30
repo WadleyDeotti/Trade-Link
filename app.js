@@ -1,60 +1,49 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const fs = require('fs');
-const path = require('path');
-
+const express = require("express");
+const path = require("path");
+const session = require("express-session")
 const app = express();
-const port = 6969;
 
-// Configurações ejs
-app.set('view engine', 'ejs');
+app.use(express.urlencoded({ extended: true }));
+app.use(session({
+  secret: "chave-secreta",
+  resave: false,
+  saveUninitialized: false,
+   cookie: { maxAge: 1000 * 60 * 60 * 24 * 365 * 10 }
+}));
+
+app.set('view engine','ejs');
 app.set('views', path.join(__dirname, 'views'));
-app.use(bodyParser.urlencoded({ extended: true }));
 
-//carregar css js e imagens
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.urlencoded({extended:true}));
 
+app.use(express.static(path.join(__dirname,'public')));
 
-//falta configurar a parte de manter login, n esquecer porra !!!!!!!!!!!!!!!!!!!!
-
-//mudar oq ta escrito para abrir a pagina
 app.get('/', (req, res) => {
-    res.render('registro'); 
+  if(req.session.usuario){
+    if(req.session.usuario.cnpj){
+      res.render('empresa');
+    res.render('fornecedores');
+  }}else{
+    res.render('registro');}
 });
 
-//interpreta uma troca de paginas automaticamente 
+const usuarioRoutes = require('./routes/usuarioRoutes');
 
-const criarRotasAutomaticas = () => {
-    const pastaViews = path.join(__dirname, "views");
-    const arquivos = fs.readdirSync(pastaViews);
+app.use('/',usuarioRoutes);
 
-    arquivos.forEach(arquivo => {
-        if (arquivo.endsWith(".ejs")) {
-            let nomePagina = arquivo.replace(".ejs", "");
-            let rota = nomePagina === "index" ? "/" : `/${nomePagina}`;
-
-            app.get(rota, (req, res) => {
-                res.render(nomePagina);
-            });
-
-            console.log(`Rota criada: ${rota} → ${arquivo}`);
-        }
-    });
-};
-
-criarRotasAutomaticas();
-
-
-//n tem database - corrigir dps
-
-// Carrega automaticamente todas as rotas da pasta /routes
-// const routesPath = path.join(__dirname, 'routes');
-// fs.readdirSync(routesPath).forEach(file => {
-//     const route = require(path.join(routesPath, file));
-//     const routeName = '/' + file.replace('.js', '');
-//     app.use(routeName, route);
-// });
-
-app.listen(port, () => {
-    console.log(`Servidor rodando em http://localhost:${port}`);
+app.use((req,res)=> {
+res.status(404).send('pagina não encontrada');
 });
+
+app.use((err,req,res,next) =>{
+console.error(err.stack);
+res.status(500).send('erro interno do servidor');
+});
+
+const PORT = process.env.PORT || 6767;
+app.listen(PORT, () => {
+  console.log(`Servidor rodando na porta ${PORT}`);
+  console.log(`http://localhost:${PORT}`);
+  console.log('Pressione Ctrl+C para encerrar o servidor.');
+  console.log('wallahi im cooking');
+})

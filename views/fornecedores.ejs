@@ -1,106 +1,252 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perfil</title>
-    <link rel="stylesheet" href="/css/fornecedores.css">
-    <script src="/JavaScript/fornecedores.js"></script>
+    <title>Fornecedor</title>
+    <link rel="stylesheet" href="css/fornecedores.css">
+    <script src="JavaScript/fornecedores.js" defer></script>
 </head>
 <body>
+    <div id="sidebar">
+        <button class="sidebar-btn" id="btnConfig">
+            <span class="icon">⚙️</span>
+            <span class="text"><a class="loginSend" href="configuracoes">Configurações</a></span>
+        </button>
+    </div>
 
-    <div id="principal">
-        
-        <div id="perfil">
-            <div id="pfp">
-                <img src="/imagens/imagens-fornecedores/foto.jpg" alt="" id="foto">
-            </div>
-            <div id="banner">
-                <img src="/imagens/imagens-fornecedores/hq720.jpg" alt="" id="bannerfoto">
+    <header id="main-header">
+        <div id="profile-dropdown">
+            <button id="profile-btn">
+                <img src="/imagens/imagens-fornecedores/foto.jpg" alt="Perfil" id="profile-pic">
+            </button>
+            <div id="dropdown-menu">
+                <div class="dropdown-item">Seu Nome</div>
+                <div class="dropdown-item">Perfil</div>
+                <div class="dropdown-item">Log Out</div>
             </div>
         </div>
+    </header>
+
+    <form id="principal" method="POST" action="">
+        <div id="perfil">
+            <div id="pfp">
+                <img src="/imagens/imagens-fornecedores/foto.jpg" alt="Foto de Perfil" id="foto">
+                <input type="hidden" id="profile-image-input" name="profile_image">
+            </div>
+            <div id="banner">
+                <img src="/imagens/imagens-fornecedores/hq720.jpg" alt="Banner" id="bannerfoto">
+                <input type="hidden" id="banner-image-input" name="banner_image">
+            </div>
+        </div>
+        
         <div id="produto">
             <div>
                 <div id="parteum">
                     <div id="superior">
                         <div class="formGroup">
-                            <p class="labelregis">Nome:</p>
-                            <input class="inputregis" type="text">
+                            <label for="fornecedor-nome" class="labelregis">Nome:</label>
+                            <input id="fornecedor-nome" name="nome" class="inputregis" type="text" placeholder="Nome do fornecedor" required>
                         </div>
                         <div class="formGroup">
-                            <p class="labelregis">Local:</p>
-                            <input class="inputregis" type="text">
+                            <label for="fornecedor-local" class="labelregis">Local:</label>
+                            <input id="fornecedor-local" name="localizacao" class="inputregis" type="text" placeholder="Localização" required>
                         </div>
                     </div>
                     <div id="descricao">
-                        <p class="labelregis">Descrição:</p>
-                        <input type="text" id="inputDesc">
+                        <label for="inputDesc" class="labelregis">Descrição:</label>
+                        <textarea id="inputDesc" name="descricao" placeholder="Descreva seu negócio" required></textarea>
                     </div>
                 </div>
+                
                 <div id="inferior">
                     <div id="addProduto">
-                        <div id="testeaddprod"><img src="/imagens/imagens-fornecedores/addsimbol.png" alt="" id="imgaddprod">
-                        <p id="labelAddProd">Adicionar Produto</p></div>
+                        <button type="button" id="adicionarproduto">
+                            <img src="/imagens/imagens-fornecedores/addsimbol.png" alt="Adicionar produto" id="imgaddprod">
+                            <p id="labelAddProd">Adicionar Produto</p>
+                        </button>
                     </div>
                     <div id="produtos">
-                        <div class="teste1">
-                            <div class="prod1"><img src="/imagens/imagens-fornecedores/labubu.webp" alt="" class="imgProd1"></div>
-                            <p class="labelProd">Labubu</p>
-                        </div>
-                        <div class="teste1">
-                            <div class="prod1"><img src="/imagens/imagens-fornecedores/kit120canetinha.webp" alt="" class="imgProd1"></div>
-                            <p class="labelProd">Kit 120 Caneta</p>
-                        </div>
-                        <div class="teste1">
-                            <div class="prod1"><img src="/imagens/imagens-fornecedores/bobbiegoods.jpeg" alt="" class="imgProd1"></div>
-                            <p class="labelProd">Bobbie Goods</p>
-                        </div>
-                        <div class="teste1">
-                            <div class="prod1"><img src="/imagens/imagens-fornecedores//Imagem do WhatsApp de 2025-07-28 à(s) 11.54.01_abf293a9.jpg" alt="" class="imgProd1"></div>
-                            <p class="labelProd">Henrique</p>
-                        </div>
-                        <div class="teste1">
-                            <div class="prod1"><img src="/imagens/imagens-fornecedores//i_m_bi_production_blanks_vdbwo35fw6qtflw9kezw_1565806151,c_104_131_830x,bc_000000,s_630,q_90.jpg" alt="" class="imgProd1"></div>
-                            <p class="labelProd">Produto 1</p>
-                        </div>
-                        <div class="teste1">
-                            <div class="prod1"><img src="/imagens/imagens-fornecedores//i_m_bi_production_blanks_vdbwo35fw6qtflw9kezw_1565806151,c_104_131_830x,bc_000000,s_630,q_90.jpg" alt="" class="imgProd1"></div>
-                            <p class="labelProd">Produto 2</p>
-                        </div>
-                        <div class="teste1">
-                            <div class="prod1"><img src="/imagens/imagens-fornecedores//i_m_bi_production_blanks_vdbwo35fw6qtflw9kezw_1565806151,c_104_131_830x,bc_000000,s_630,q_90.jpg" alt="" class="imgProd1"></div>
-                            <p class="labelProd">Produto 3</p>
-                        </div>
-                        <div class="teste1">
-                            <div class="prod1"><img src="/imagens/imagens-fornecedores//i_m_bi_production_blanks_vdbwo35fw6qtflw9kezw_1565806151,c_104_131_830x,bc_000000,s_630,q_90.jpg" alt="" class="imgProd1"></div>
-                            <p class="labelProd">Produto 4</p>
-                        </div>
-                        <div class="teste1">
-                            <div class="prod1"><img src="/imagens/imagens-fornecedores//i_m_bi_production_blanks_vdbwo35fw6qtflw9kezw_1565806151,c_104_131_830x,bc_000000,s_630,q_90.jpg" alt="" class="imgProd1"></div>
-                            <p class="labelProd">Produto 5</p>
-                        </div>
-                        <div class="teste1">
-                            <div class="prod1"><img src="/imagens/imagens-fornecedores//i_m_bi_production_blanks_vdbwo35fw6qtflw9kezw_1565806151,c_104_131_830x,bc_000000,s_630,q_90.jpg" alt="" class="imgProd1"></div>
-                            <p class="labelProd">Produto 6</p>
-                        </div>
-                        <div class="teste1">
-                            <div class="prod1"><img src="/imagens/imagens-fornecedores//i_m_bi_production_blanks_vdbwo35fw6qtflw9kezw_1565806151,c_104_131_830x,bc_000000,s_630,q_90.jpg" alt="" class="imgProd1"></div>
-                            <p class="labelProd">Produto 7</p>
-                        </div>
-                        <div class="teste1">
-                            <div class="prod1"><img src="/imagens/imagens-fornecedores//i_m_bi_production_blanks_vdbwo35fw6qtflw9kezw_1565806151,c_104_131_830x,bc_000000,s_630,q_90.jpg" alt="" class="imgProd1"></div>
-                            <p class="labelProd">Produto 8</p>
-                        </div>
-                        <div class="teste1">
-                            <div class="prod1"><img src="/imagens/imagens-fornecedores//i_m_bi_production_blanks_vdbwo35fw6qtflw9kezw_1565806151,c_104_131_830x,bc_000000,s_630,q_90.jpg" alt="" class="imgProd1"></div>
-                            <p class="labelProd">Produto 9</p>
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
+        <div class="formGroup" style="text-align: center; margin-top: 20px;">
+            <button type="submit" id="submit-btn">Salvar Alterações</button>
+        </div>
+    </form>
+
+    <div id="image-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Alterar Imagem</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <input type="file" id="image-upload" accept="image/*">
+            </div>
+            <div class="modal-footer">
+                <button id="confirm-image">Confirmar</button>
+            </div>
+        </div>
     </div>
-    
+
+    <div id="product-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Adicionar Produto</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body scrollable">
+                <div class="formGroup">
+                    <label class="labelregis">Nome:</label>
+                    <input type="text" id="product-name" class="inputregis" placeholder="Nome do produto" required>
+                </div>
+                <div class="formGroup">
+                    <label class="labelregis">Marca:</label>
+                    <input type="text" id="product-brand" class="inputregis" placeholder="Marca do produto" required>
+                </div>
+                <div class="formGroup">
+                    <label class="labelregis">Categoria:</label>
+                    <select id="product-category" class="inputregis" required>
+                        <option value="">Selecione uma categoria</option>
+                        <option value="Eletrônicos">Eletrônicos</option>
+                        <option value="Vestuário">Vestuário</option>
+                        <option value="Alimentos">Alimentos</option>
+                        <option value="Brinquedos">Brinquedos</option>
+                        <option value="Outros">Outros</option>
+                    </select>
+                </div>
+                <div class="formGroup">
+                    <label class="labelregis">Formato:</label>
+                    <input type="text" id="product-format" class="inputregis" placeholder="Formato do produto" required>
+                </div>
+                <div class="form-row">
+                    <div class="formGroup half-width">
+                        <label class="labelregis">Peso (kg):</label>
+                        <input type="number" step="0.01" id="product-weight" class="inputregis" placeholder="0.00" required>
+                    </div>
+                    <div class="formGroup half-width">
+                        <label class="labelregis">Preço (R$):</label>
+                        <input type="number" step="0.01" id="product-price" class="inputregis" placeholder="0.00" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="formGroup third-width">
+                        <label class="labelregis">Altura (cm):</label>
+                        <input type="number" id="product-height" class="inputregis" placeholder="0" required>
+                    </div>
+                    <div class="formGroup third-width">
+                        <label class="labelregis">Largura (cm):</label>
+                        <input type="number" id="product-width" class="inputregis" placeholder="0" required>
+                    </div>
+                    <div class="formGroup third-width">
+                        <label class="labelregis">Comprimento (cm):</label>
+                        <input type="number" id="product-length" class="inputregis" placeholder="0" required>
+                    </div>
+                </div>
+                <div class="image-upload-area" id="product-image-upload">
+                    <p>Clique para adicionar imagem</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="confirm-product" disabled>Concluir</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="view-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Detalhes do Produto</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body scrollable">
+                <div class="product-info">
+                    <img id="view-product-image" src="" alt="Imagem do Produto" class="product-image-large">
+                    <div class="product-details">
+                        <p><strong>Nome:</strong> <span id="view-product-name"></span></p>
+                        <p><strong>Marca:</strong> <span id="view-product-brand"></span></p>
+                        <p><strong>Categoria:</strong> <span id="view-product-category"></span></p>
+                        <p><strong>Formato:</strong> <span id="view-product-format"></span></p>
+                        <p><strong>Peso:</strong> <span id="view-product-weight"></span> kg</p>
+                        <p><strong>Preço:</strong> R$ <span id="view-product-price"></span></p>
+                        <p><strong>Dimensões:</strong> <span id="view-product-dimensions"></span></p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="edit-product">Editar</button>
+                <button id="delete-product" class="delete-btn">Deletar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="edit-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Editar Produto</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body scrollable">
+                <div class="formGroup">
+                    <label class="labelregis">Nome:</label>
+                    <input type="text" id="edit-product-name" class="inputregis" required>
+                </div>
+                <div class="formGroup">
+                    <label class="labelregis">Marca:</label>
+                    <input type="text" id="edit-product-brand" class="inputregis" required>
+                </div>
+                <div class="formGroup">
+                    <label class="labelregis">Categoria:</label>
+                    <select id="edit-product-category" class="inputregis" required>
+                        <option value="Eletrônicos">Eletrônicos</option>
+                        <option value="Vestuário">Vestuário</option>
+                        <option value="Alimentos">Alimentos</option>
+                        <option value="Brinquedos">Brinquedos</option>
+                        <option value="Outros">Outros</option>
+                    </select>
+                </div>
+                <div class="formGroup">
+                    <label class="labelregis">Formato:</label>
+                    <input type="text" id="edit-product-format" class="inputregis" required>
+                </div>
+                <div class="form-row">
+                    <div class="formGroup half-width">
+                        <label class="labelregis">Peso (kg):</label>
+                        <input type="number" step="0.01" id="edit-product-weight" class="inputregis" required>
+                    </div>
+                    <div class="formGroup half-width">
+                        <label class="labelregis">Preço (R$):</label>
+                        <input type="number" step="0.01" id="edit-product-price" class="inputregis" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="formGroup third-width">
+                        <label class="labelregis">Altura (cm):</label>
+                        <input type="number" id="edit-product-height" class="inputregis" required>
+                    </div>
+                    <div class="formGroup third-width">
+                        <label class="labelregis">Largura (cm):</label>
+                        <input type="number" id="edit-product-width" class="inputregis" required>
+                    </div>
+                    <div class="formGroup third-width">
+                        <label class="labelregis">Comprimento (cm):</label>
+                        <input type="number" id="edit-product-length" class="inputregis" required>
+                    </div>
+                </div>
+                <div class="image-upload-area" id="edit-image-upload">
+                    <img id="current-product-image" src="" alt="Imagem do Produto">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="save-changes">Salvar</button>
+                <button id="cancel-edit" class="delete-btn">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="Javascript/fornecedores.js"></script>
 </body>
 </html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configurações</title>
+    <link rel="stylesheet" href="css/configuracoes.css">
+</head>
+<body>
+    <div class="config-container">
+        <div class="sidebar">
+            <h2 class="sidebar-title">CONFIGURAÇÕES</h2>
+            <div class="sidebar-item active" data-target="conta">
+                <span class="item-icon">Ico</span>
+                <span class="item-text">Conta</span>
+            </div>
+            <div class="sidebar-item" data-target="privacidade">
+                <span class="item-icon">Ico</span>
+                <span class="item-text">Privacidade</span>
+            </div>
+            <div class="sidebar-item" data-target="notificacoes">
+                <span class="item-icon">Ico</span>
+                <span class="item-text">Notificações</span>
+            </div>
+            <div class="sidebar-item" data-target="idioma">
+                <span class="item-icon">Ico</span>
+                <span class="item-text">Idioma</span>
+            </div>
+            <div class="sidebar-item" data-target="ajuda">
+                <span class="item-icon">Ico</span>
+                <span class="item-text">Ajuda</span>
+            </div>
+        </div>
+
+        <div class="content-area">
+            <div class="content-section active" id="conta">
+                <h2 class="section-title">CONFIGURAÇÕES DA CONTA</h2>
+                <div class="section-content">
+                    <div class="form-group">
+                        <label>Foto de perfil:</label>
+                        <div class="profile-pic-container">
+                            <img src="images/default-profile.jpg" alt="Foto de perfil" class="profile-pic">
+                            <button class="change-pic-btn">Alterar</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="username">Nome de usuário:</label>
+                        <input type="text" id="username" value="usuário123">
+                    </div>
+                    <div class="form-group">
+                        <label for="bio">Descrição:</label>
+                        <textarea id="bio" rows="4" placeholder="Uma breve descrição sobre você..."></textarea>
+                    </div>
+                    <button class="save-btn">Salvar Alterações</button>
+                </div>
+            </div>
+
+            <div class="content-section" id="privacidade">
+                <h2 class="section-title">CONFIGURAÇÕES DE PRIVACIDADE</h2>
+                <div class="section-content">
+                    <div class="privacy-option">
+                        <h3>Visibilidade do Perfil</h3>
+                        <div class="radio-group">
+                            <label>
+                                <input type="radio" name="visibility" checked>
+                                Público
+                            </label>
+                            <label>
+                                <input type="radio" name="visibility">
+                                Somente amigos
+                            </label>
+                            <label>
+                                <input type="radio" name="visibility">
+                                Privado
+                            </label>
+                        </div>
+                    </div>
+                    <div class="privacy-option">
+                        <h3>Controle de Dados</h3>
+                        <div class="checkbox-group">
+                            <label>
+                                <input type="checkbox" checked>
+                                Permitir compartilhamento de dados anônimos
+                            </label>
+                            <label>
+                                <input type="checkbox" checked>
+                                Mostrar atividade recente
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-section" id="notificacoes">
+                <h2 class="section-title">CONFIGURAÇÕES DE NOTIFICAÇÕES</h2>
+                <div class="section-content">
+                    <div class="notification-option">
+                        <h3>Tipos de Notificação</h3>
+                        <div class="checkbox-group">
+                            <label>
+                                <input type="checkbox" checked>
+                                Mensagens diretas
+                            </label>
+                            <label>
+                                <input type="checkbox" checked>
+                                Menções
+                            </label>
+                            <label>
+                                <input type="checkbox">
+                                Atualizações do sistema
+                            </label>
+                        </div>
+                    </div>
+                    <div class="notification-option">
+                        <h3>Preferências</h3>
+                        <div class="checkbox-group">
+                            <label>
+                                <input type="checkbox">
+                                Somente notificações importantes
+                            </label>
+                            <label>
+                                <input type="checkbox" checked>
+                                Notificações por email
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-section" id="idioma">
+                <h2 class="section-title">CONFIGURAÇÕES DE IDIOMA</h2>
+                <div class="section-content">
+                    <div class="language-option">
+                        <label for="language-select">Idioma:</label>
+                        <select id="language-select">
+                            <option value="pt-br" selected>Português (Brasil)</option>
+                            <option value="en-us">English (US)</option>
+                            <option value="es-es">Español</option>
+                        </select>
+                    </div>
+                    <div class="language-option">
+                        <h3>Formato de Data/Hora</h3>
+                        <div class="radio-group">
+                            <label>
+                                <input type="radio" name="datetime-format" checked>
+                                24 horas (DD/MM/AAAA)
+                            </label>
+                            <label>
+                                <input type="radio" name="datetime-format">
+                                12 horas (MM/DD/AAAA)
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-section" id="ajuda">
+                <h2 class="section-title">AJUDA E SUPORTE</h2>
+                <div class="section-content">
+                    <div class="help-option">
+                        <h3>Documentação</h3>
+                        <p>Consulte nossa <a href="#">documentação completa</a> para tirar dúvidas sobre o uso da plataforma.</p>
+                    </div>
+                    <div class="help-option">
+                        <h3>Contato</h3>
+                        <p>Entre em contato com nosso suporte: <a href="mailto:suporte@empresa.com">suporte@tradelink.com</a></p>
+                    </div>
+                    <div class="help-option">
+                        <h3>Termos e Políticas</h3>
+                        <ul>
+                            <li><a href="#">Termos de Serviço</a></li>
+                            <li><a href="#">Política de Privacidade</a></li>
+                            <li><a href="#">Diretrizes da Comunidade</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="JavaScript/configuracoes.js"></script>
+</body>
+</html>
