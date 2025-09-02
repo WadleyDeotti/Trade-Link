@@ -130,47 +130,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    formRegister.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        if (senhaInput.value !== confirmarSenhaInput.value) {
-            const resultado = document.getElementById('resultado');
-            resultado.textContent = 'As senhas não coincidem!';
-            resultado.style.color = '#d9534f';
-            document.getElementById('meuDialog').showModal();
-            return;
-        }
-        
-        if (senhaInput.value.length < 8) {
-            const resultado = document.getElementById('resultado');
-            resultado.textContent = 'A senha deve ter pelo menos 8 caracteres!';
-            resultado.style.color = '#d9534f';
-            document.getElementById('meuDialog').showModal();
-            return;
-        }
-        
-        let isValid = false;
-        const resultado = document.getElementById('resultado');
-        
-        if (tipoCadastroInput.value === 'fornecedor') {
-            isValid = validarCPF(document.getElementById('cpf'));
-        } else {
-            isValid = validarCNPJ(document.getElementById('cnpj'));
-        }
-        
-        if (!isValid) {
-            resultado.textContent = tipoCadastroInput.value === 'fornecedor' ? 'CPF inválido!' : 'CNPJ inválido!';
-            resultado.style.color = '#d9534f';
-            document.getElementById('meuDialog').showModal();
-            return;
-        }
-        
-        resultado.textContent = 'Cadastro realizado com sucesso!';
-        resultado.style.color = '#5cb85c';
-        document.getElementById('meuDialog').showModal();
-        
-        console.log('Dados do formulário:', new FormData(formRegister));
-    });
+    
 });
 
 function mascaraCpf(input) {

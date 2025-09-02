@@ -20,7 +20,7 @@ conexao.connect(err=>{
 
 module.exports = {
     buscarCNPJ:(cnpj,callback)=>{
-        const sql ="select cnpj,senha,email from empresas where cnpj = ?";
+        const sql ="select cnpj,senha_hash,email from empresas where cnpj = ?";
         conexao.query(sql,[cnpj],(err,resultado)=>{
             if(err){return callback(err);}
             const empresas= resultado.map(row => new empresa(row));
@@ -29,7 +29,7 @@ module.exports = {
     },
 
     buscarCPF:(cpf,callback)=>{
-        const sql = "select cpf,senha,email from fornecedores where cpf = ?";
+        const sql = "select cpf,senha_hash,email from fornecedores where cpf = ?";
         conexao.query(sql,[cpf],(err,resultado)=>{
             if(err){return callback(err);}
             const fornecedores = resultado.map(row => new fornecedor(row));
@@ -39,15 +39,15 @@ module.exports = {
 
 
     inserirEmpresa:(empresa,callback)=>{
-        const sql = "insert into empresas(nome_fantasia,razao_social,cnpj,email,senha) values (?,?,?,?,?)";
-        const valores = [empresa.nome_fantasia, empresa.razao_social,empresa.cnpj,empresa.email,empresa.senha];
+        const sql = "insert into empresas(nome_fantasia,cnpj,email,senha_hash) values (?,?,?,?)";
+        const valores = [empresa.nome_fantasia,empresa.cnpj,empresa.email,empresa.senha];
         conexao.query(sql,valores,callback);
     },
 
     
     inserirFornecedor:(fornecedor,callback)=>{
-        const sql = "insert into fornecedor(nome_fantasia,razao_social,cpf,email,senha) values (?,?,?,?,?)";
-        const valores=[fornecedor.nome_fantasia,fornecedor.razao_social,fornecedor.cpf,fornecedor.email,fornecedor.senha];
+        const sql = "insert into fornecedores(nome_fantasia,cpf,email,senha_hash) values (?,?,?,?)";
+        const valores=[fornecedor.nome_fantasia,fornecedor.cpf,fornecedor.email,fornecedor.senha];
         conexao.query(sql,valores,callback);
     },
 

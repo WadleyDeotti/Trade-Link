@@ -3,9 +3,9 @@ class Fornecedor {
     id_fornecedor = null, 
     nome_fantasia, 
     razao_social, 
-    cnpj, 
+    cpf, 
     email, 
-    senha,
+    senha_hash,
     telefone = null, 
     endereco = null, 
     data_cadastro = null 
@@ -13,9 +13,9 @@ class Fornecedor {
     this.id_fornecedor = id_fornecedor;
     this.nome_fantasia = nome_fantasia;
     this.razao_social = razao_social;
-    this.cnpj = cnpj;
+    this.cpf = cpf;
     this.email = email;
-    this.senha = senha;
+    this.senha_hash = senha_hash;
     this.telefone = telefone;
     this.endereco = endereco;
     this.data_cadastro = data_cadastro;
