@@ -25,7 +25,7 @@ O **Trade Link** é uma plataforma digital que conecta **empresas e fornecedores
 - [x] **RF01** – O sistema deve permitir o cadastro de fornecedores.  
 - [x] **RF02** – O sistema deve permitir o cadastro de empreendedores.  
 - [x] **RF03** – O usuário deve poder realizar login e autenticação segura.  
-- [ ] **RF04** – O sistema deve permitir que fornecedores cadastrem seus produtos e serviços.  
+- [x] **RF04** – O sistema deve permitir que fornecedores cadastrem seus produtos e serviços.  
 - [ ] **RF05** – O sistema deve permitir que empreendedores pesquisem fornecedores por categoria.  
 - [ ] **RF06** – O sistema deve ter um mecanismo de busca eficiente.  
 - [ ] **RF07** – Os usuários devem poder enviar mensagens diretas para negociação.  
@@ -57,12 +57,15 @@ O **Trade Link** é uma plataforma digital que conecta **empresas e fornecedores
 
 ## Como executar
 
-1. Instalar dependências (se for a primeira vez):
+Para executar você deve baixar o node no site deles de acordo com a sua versão de desktop.
+Depois abrir o projeto e executar o comando abaixo que verifica a versão do node
+
 ```bash
 
-npm install
+node -v
 
 ```
+
 Pra executar é nescessario apenas fazer o comando:
 
 ```bash
