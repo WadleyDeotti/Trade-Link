@@ -5,7 +5,7 @@ class Empresa {
     razao_social, 
     cnpj, 
     email, 
-    senha,
+    senha_hash,
     telefone = null, 
     endereco = null, 
     data_cadastro = null 
@@ -15,7 +15,7 @@ class Empresa {
     this.razao_social = razao_social;
     this.cnpj = cnpj;
     this.email = email;
-    this.senha = senha;
+    this.senha_hash = senha_hash;
     this.telefone = telefone;
     this.endereco = endereco;
     this.data_cadastro = data_cadastro;
