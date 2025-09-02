@@ -57,24 +57,9 @@ O **Trade Link** é uma plataforma digital que conecta **empresas e fornecedores
 
 ## Como executar
 
-Para executar você deve baixar o node no site deles de acordo com a sua versão de desktop.
-Depois abrir o projeto e executar o comando abaixo que verifica a versão do node
+Para executar se deve baixar a extencion live server 
+e estar na pagina de login no script
 
-```bash
-
- node -v
-
-```
-
-Pra executar é nescessario apenas fazer o comando:
-
-```bash
-
-node app.js
-
-```
-
-Pra salvar qualquer informção é nescessario ter nosso Banco de dados de maneira local no mysqlworkbeanch 
 ---
 
 ## Grupo:
