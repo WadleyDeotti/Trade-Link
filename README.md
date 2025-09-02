@@ -62,7 +62,7 @@ Depois abrir o projeto e executar o comando abaixo que verifica a versão do nod
 
 ```bash
 
-node -v
+ node -v
 
 ```
 
@@ -73,6 +73,8 @@ Pra executar é nescessario apenas fazer o comando:
 node app.js
 
 ```
+
+Pra salvar qualquer informção é nescessario ter nosso Banco de dados de maneira local no mysqlworkbeanch 
 ---
 
 ## Grupo:
