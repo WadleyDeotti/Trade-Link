@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="stylesheet" href="/css/login.css">
-    <script src="/JavaScript/login.js" defer></script>
+    <link rel="stylesheet" href="login.css">
+    <script src="login.js" defer></script>
 </head>
 <body>
-    <form id="login" method="POST" action="login">
+    <form id="login" method="POST" action="">
         <div class="formGroup">
             <label for="documento" class="labelregis">CPF/CNPJ:</label>
             <input type="text" class="inputregis" id="documento" name="documento" 
@@ -30,17 +30,13 @@
         </div>
         
         <div class="loginTem">
-            Não tem uma conta? <a class="loginSend" href="registro">Registre-se</a>
+            Não tem uma conta? <a class="loginSend" href="/registro/registro.html">Registre-se</a>
         </div>
         <div class="loginTem">
-            <a class="loginSend" href="fornecedores">Fornecedores</a>
+            <a class="loginSend" href="/fornecedores/fornecedores.html">Fornecedores</a>
         </div>
         <button type="submit" class="submit-btn">ENTRAR</button>
     </form>
-
-<% if (erro) { %>
-  <p style="color:red;"><%= erro %></p>
-<% } %>
 
     <dialog id="meuDialog">
         <div class="modal-cabecalho">
