@@ -36,43 +36,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    formLogin.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const documento = documentoInput.value.replace(/\D/g, '');
-        const isCpf = documento.length <= 11;
-        
-        if (isCpf && !validarCPF(documentoInput)) {
-            resultado.textContent = 'Por favor, insira um CPF válido';
-            resultado.style.color = '#d9534f';
-            dialog.showModal();
-            documentoInput.focus();
-            return;
-        }
-        
-        if (!isCpf && !validarCNPJ(documentoInput)) {
-            resultado.textContent = 'Por favor, insira um CNPJ válido';
-            resultado.style.color = '#d9534f';
-            dialog.showModal();
-            documentoInput.focus();
-            return;
-        }
-        
-        if (senhaInput.value.length < 6) {
-            resultado.textContent = 'A senha deve ter pelo menos 6 caracteres';
-            resultado.style.color = '#d9534f';
-            dialog.showModal();
-            senhaInput.focus();
-            return;
-        }
-        
-        resultado.textContent = 'Login realizado com sucesso! Redirecionando...';
-        resultado.style.color = '#5cb85c';
-        dialog.showModal();
-        
-        setTimeout(() => {
-        }, 2000);
-    });
+    
 });
 
 function formatarDocumento(input) {
