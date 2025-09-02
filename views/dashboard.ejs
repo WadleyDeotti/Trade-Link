@@ -50,10 +50,10 @@
                         <div class="summary-icon"><i class="fas fa-hand-holding-usd"></i></div>
                         <div class="summary-content">
                             <span class="summary-label">Faturamento Total</span>
-                            <span class="summary-value" id="total-revenue"><%= dados.totalRevenue %></span>
+                            <span class="summary-value" id="total-revenue">0</span>
                             <div class="summary-trend positive">
                                 <i class="fas fa-arrow-up"></i>
-                                <span id="revenue-trend"><%= dados.revenueTrend %>%</span>
+                                <span id="revenue-trend">0%</span>
                             </div>
                         </div>
                     </div>
@@ -62,10 +62,10 @@
                         <div class="summary-icon"><i class="fas fa-shopping-cart"></i></div>
                         <div class="summary-content">
                             <span class="summary-label">Total de Pedidos</span>
-                            <span class="summary-value" id="total-orders"><%= dados.totalOrders %></span>
+                            <span class="summary-value" id="total-orders">0</span>
                             <div class="summary-trend positive">
                                 <i class="fas fa-arrow-up"></i>
-                                <span id="orders-trend"><%= dados.ordersTrend %>%</span>
+                                <span id="orders-trend">0%</span>
                             </div>
                         </div>
                     </div>
@@ -74,10 +74,10 @@
                         <div class="summary-icon"><i class="fas fa-truck"></i></div>
                         <div class="summary-content">
                             <span class="summary-label">Pedidos Pendentes</span>
-                            <span class="summary-value" id="pending-orders"><%= dados.pendingOrders %></span>
+                            <span class="summary-value" id="pending-orders">0</span>
                             <div class="summary-trend negative">
                                 <i class="fas fa-arrow-down"></i>
-                                <span id="pending-trend"><%= dados.pendingTrend %>%</span>
+                                <span id="pending-trend">0%</span>
                             </div>
                         </div>
                     </div>
@@ -86,10 +86,10 @@
                         <div class="summary-icon"><i class="fas fa-users"></i></div>
                         <div class="summary-content">
                             <span class="summary-label">Novos Clientes</span>
-                            <span class="summary-value" id="new-customers"><%= dados.newCustomers %></span>
+                            <span class="summary-value" id="new-customers">0</span>
                             <div class="summary-trend positive">
                                 <i class="fas fa-arrow-up"></i>
-                                <span id="customers-trend"><%= dados.customersTrend %>%</span>
+                                <span id="customers-trend">0%</span>
                             </div>
                         </div>
                     </div>
@@ -124,43 +124,15 @@
                             <canvas id="orders-chart"></canvas>
                         </div>
                     </div>
-
-                    <div class="chart-container">
-                        <div class="chart-header">
-                            <h3>Top Produtos</h3>
-                        </div>
-                        <div class="chart-content">
-                            <table class="charts-css bar show-labels data-spacing-10" id="products-chart">
-                                <caption>Top 5 Produtos por Vendas</caption>
-                                <tbody>
-                                    <tr>
-                                        <th scope="row">Cimento</th>
-                                        <td style="--size: 0.8;">R$ 12.450</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Tijolos</th>
-                                        <td style="--size: 0.65;">R$ 9.870</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Areia</th>
-                                        <td style="--size: 0.5;">R$ 7.640</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Tubos PVC</th>
-                                        <td style="--size: 0.4;">R$ 6.120</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Argamassa</th>
-                                        <td style="--size: 0.35;">R$ 5.380</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Passando dados do servidor para JS -->
+    <script>
+        const dashboardDataFromServer =  JSON.stringify(dados || {}) ;
+    </script>
 
     <!-- JS -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

@@ -7,13 +7,17 @@ const loginController = require("../controllers/loginController");
 router.get("/dashboard", (req, res) => res.render("dashboard"));
 
 // Registro
-router.get("/registro", (req, res) => res.render("registro"));
+router.get("/registro", (req, res) => {
+  const mensagem = req.session.mensagem;
+  delete req.session.mensagem; 
+  res.render("registro", { mensagem: mensagem || null });
+});
 
 // Login
 router.get("/login", (req, res) => {
-  const erro = req.session.erro;
-  delete req.session.erro; 
-  res.render("login", { erro: erro || null });
+  const mensagem = req.session.mensagem;
+  delete req.session.mensagem; 
+  res.render("login", { mensagem: mensagem || null });
 });
 
 // Fornecedores

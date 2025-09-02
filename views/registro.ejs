@@ -80,6 +80,9 @@
             </div>
             <button type="submit" class="submit-btn" id="submit-btn" disabled>CONCLUIR</button>
         </div>
+        <% if (mensagem) { %>
+  <p style="color:red;"><%= mensagem %></p>
+<% } %>
     </form>
 
     <!-- Modals -->
