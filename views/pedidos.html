@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pedidos e Vendas - TradeLink</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="../public/css/pedidos.css">
-<script src="../public/JavaScript/pedidos.js"></script>
+    <link rel="stylesheet" href="../css/pedidos.css">
 </head>
 <body>
     <div class="dashboard-container">
+        <!-- Sidebar -->
         <div class="sidebar">
             <div class="logo">
                 <img src="logo.png" alt="TradeLink">
@@ -26,6 +26,7 @@
             </nav>
         </div>
 
+        <!-- Main Content -->
         <div class="main-content">
             <header>
                 <h1><i class="fas fa-file-invoice"></i> Pedidos e Vendas</h1>
@@ -36,7 +37,7 @@
             </header>
 
             <div class="content">
-          
+                <!-- Filtros e Busca -->
                 <div class="filters">
                     <div class="filter-group">
                         <label for="status-filter"><i class="fas fa-filter"></i> Status:</label>
@@ -66,13 +67,13 @@
                         <button><i class="fas fa-search"></i></button>
                     </div>
                     
-              
+                    <!-- Botão temporário para adicionar pedido de teste -->
                     <button id="add-test-order" class="btn btn-primary">
                         <i class="fas fa-plus"></i> Adicionar Pedido Teste
                     </button>
                 </div>
 
-                
+                <!-- Tabela de Pedidos/Vendas -->
                 <div class="orders-table">
                     <table>
                         <thead>
@@ -86,12 +87,12 @@
                             </tr>
                         </thead>
                         <tbody id="orders-body">
-                       
+                            <!-- Os pedidos serão carregados aqui via JavaScript -->
                         </tbody>
                     </table>
                 </div>
 
-             
+                <!-- Paginação -->
                 <div class="pagination">
                     <button disabled><i class="fas fa-chevron-left"></i></button>
                     <span class="page-info">Página 1 de 1</span>
@@ -101,7 +102,7 @@
         </div>
     </div>
 
-   
+    <!-- Modal para Adicionar Pedido Teste (Temporário) -->
     <div id="test-order-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -152,7 +153,7 @@
         </div>
     </div>
 
-
+    <!-- Modal de Detalhes do Pedido -->
     <div id="order-detail-modal" class="modal">
         <div class="modal-content large">
             <div class="modal-header">
@@ -192,7 +193,7 @@
                                 </tr>
                             </thead>
                             <tbody id="order-products-body">
-                              
+                                <!-- Itens serão carregados aqui -->
                             </tbody>
                         </table>
                     </div>
@@ -213,6 +214,6 @@
         </div>
     </div>
 
-    
+    <script src="../JS/pedidos.js"></script>
 </body>
 </html>
