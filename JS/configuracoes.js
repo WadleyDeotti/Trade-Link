@@ -287,4 +287,10 @@ document.addEventListener('DOMContentLoaded', function() {
             toast.classList.remove('show');
         }, 3000);
     }
+    
+    // Ensure all DOM selectors, event listeners, and function calls are correctly referencing elements in the HTML file.
+    // Example:
+    document.getElementById("change-password-btn").addEventListener("click", () => {
+        // Logic for handling password change
+    });
 });
