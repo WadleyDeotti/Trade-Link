@@ -133,5 +133,50 @@
             <button class="modal-btn modal-btn-primario fechar-modal-btn">Entendi</button>
         </div>
     </dialog>
+    <!-- AUTO-INJECT:LS-FLOW -->
+<script>
+
+// AUTO-INJECT: Registro -> LocalStorage -> redirect
+(function(){
+  const form = document.getElementById("register");
+  if(form){
+    form.addEventListener("submit", function(e){
+      e.preventDefault();
+      const tipo = document.getElementById("tipoCadastro")?.value || "fornecedor";
+      const nome = document.getElementById("nomeCompleto")?.value || "";
+      const email = document.getElementById("email")?.value || "";
+      const senha = document.getElementById("senha")?.value || "";
+      const cpf = document.getElementById("cpf")?.value || "";
+      if(!nome || !email || !senha){
+        alert("Preencha nome, email e senha.");
+        return;
+      }
+      const payload = {
+        tipo_cadastro: tipo,
+        nome: nome,
+        nome_completo: nome,
+        email: email,
+        senha: senha,
+        cpf: cpf,
+        createdAt: new Date().toISOString()
+      };
+      localStorage.setItem("user", JSON.stringify(payload));
+      window.location.href = "../views/fornecedores.html";
+    });
+
+    // Botões de seleção de tipo (se existirem)
+    document.querySelectorAll(".typeOption").forEach(el => {
+      el.addEventListener("click", () => {
+        document.querySelectorAll(".typeOption").forEach(x => x.classList.remove("selected"));
+        el.classList.add("selected");
+        const type = el.getAttribute("data-type") || "fornecedor";
+        const hidden = document.getElementById("tipoCadastro");
+        if(hidden) hidden.value = type;
+      });
+    });
+  }
+})();
+
+</script>
 </body>
 </html>

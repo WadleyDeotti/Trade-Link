@@ -193,7 +193,9 @@
         <span id="toast-message">Operação realizada com sucesso!</span>
     </div>
 
-    <script src="fornecedores.js"></script>
+    <script src="../JS/fornecedores.js"></script>
+
+<!-- AUTO-INJECT:LS-FLOW -->
 
 <!-- AUTO-INJECT:LS-FLOW -->
 <script>
@@ -220,9 +222,9 @@
     if(data.email){
       tryFillByName("email", data.email);
     }
-    if(data.cpf_cnpj || data.documento){
-      tryFillByName("cpf_cnpj", data.cpf_cnpj || data.documento);
-      tryFillByName("documento", data.cpf_cnpj || data.documento);
+    if(data.cpf || data.documento){
+      tryFillByName("cpf", data.cpf || data.documento);
+      tryFillByName("documento", data.cpf || data.documento);
     }
     if(data.tipo_cadastro){
       tryFillByName("tipo_cadastro", data.tipo_cadastro);
