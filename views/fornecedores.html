@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfil do Fornecedor - TradeLink</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="../css/fornecedores.css">
+    <link rel="stylesheet" href="../public/css/fornecedores.css">
 </head>
 <body>
     <div class="dashboard-container">
@@ -193,7 +193,7 @@
         <span id="toast-message">Operação realizada com sucesso!</span>
     </div>
 
-    <script src="../JS/fornecedores.js"></script>
+    <script src="../public/JS/fornecedores.js"></script>
 
 <!-- AUTO-INJECT:LS-FLOW -->
 
@@ -244,7 +244,7 @@
       formData.forEach((v,k) => obj[k]=v);
       const merged = { ...(data||{}), ...obj, updatedAt: new Date().toISOString() };
       localStorage.setItem("user", JSON.stringify(merged));
-      alert("Perfil salvo localmente!");
+      alert("Perfil salvo!");
     });
   });
 })();
