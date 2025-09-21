@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro</title>
+    <link rel="stylesheet" href="registro.css">
+    <script src="registro.js" defer></script>
+</head>
+<body>
+    <form id="register" method="POST" action="">
+        <input type="hidden" id="tipoCadastro" name="tipo_cadastro" value="fornecedor">
+        
+        <p>Escolha seu tipo de cadastro</p>
+        <div class="typeSelector">
+            <div class="typeOption selected" data-type="fornecedor">Fornecedor</div>
+            <div class="typeOption" data-type="empresa">Empresa</div>
+        </div>
+        
+        <div class="formGroup">
+            <label for="nomeCompleto" class="labelregis">Nome:</label>
+            <input id="nomeCompleto" name="nome_completo" class="inputregis" type="text" placeholder="Seu nome completo" required>
+        </div>
+        
+        <div class="formGroup">
+            <label for="email" class="labelregis">Email:</label>
+            <input id="email" name="email" class="inputregis" type="email" placeholder="seu@email.com" required>
+        </div>
+        
+        <div class="formGroup">
+            <label for="telefone" class="labelregis">Telefone:</label>
+            <input id="telefone" name="telefone" type="text" class="inputregis" placeholder="(XX) XXXXX-XXXX" 
+               maxlength="15" oninput="mascaraTelefone(this)" required>
+        </div>
+        
+        <div id="campoTroca">
+            <div class="formGroup">
+                <label for="cpf" class="labelregis">CPF:</label>
+                <input id="cpf" name="cpf" type="text" class="inputregis" placeholder="XXX.XXX.XXX-XX" 
+                   maxlength="14" oninput="mascaraCpf(this)" required>
+            </div>
+            
+            <div class="checkboxGroup">
+                <input type="checkbox" id="termosCheckbox" name="aceita_termos" class="customCheckbox" required>
+                <label for="termosCheckbox" class="checkboxLabel">
+                    Li e aceito os <span class="linkModal" data-modal="termosDialog">Termos de Serviço</span>
+                </label>
+            </div>
+            <div class="checkboxGroup">
+                <input type="checkbox" id="privacidadeCheckbox" name="aceita_privacidade" class="customCheckbox" required>
+                <label for="privacidadeCheckbox" class="checkboxLabel">
+                    Li e aceito a <span class="linkModal" data-modal="privacidadeDialog">Política de Privacidade</span>
+                </label>
+            </div>
+            
+            <div class="loginTem">
+                Já tem uma conta? <a class="loginSend" href="/login/login.html">LOGIN</a>
+            </div>
+            <div class="loginTem">
+                <a class="loginSend" href="/fornecedores/fornecedores.html">Fornecedores</a>
+            </div>
+            <button type="submit" class="submit-btn" id="submit-btn" disabled>CONCLUIR</button>
+        </div>
+    </form>
+    
+    <dialog id="meuDialog">
+        <div class="modal-cabecalho">
+            <h2>Validação</h2>
+            <button class="fechar-modal" id="fecharModal">&times;</button>
+        </div>
+        <div class="modal-corpo">
+            <p id="resultado"></p>
+        </div>
+        <div class="modal-rodape">
+            <button class="modal-btn modal-btn-primario" id="confirmarModal">OK</button>
+        </div>
+    </dialog>
+
+    <dialog id="termosDialog">
+        <div class="modal-cabecalho">
+            <h2>Termos de Serviço</h2>
+            <button class="fechar-modal">&times;</button>
+        </div>
+        <div class="modal-corpo">
+            <h3>1. Aceitação dos Termos</h3>
+            <p>Ao acessar e usar este serviço, você concorda em cumprir estes termos de serviço.</p>
+            
+            <h3>2. Uso do Serviço</h3>
+            <p>Você concorda em usar o serviço apenas para fins legais e de acordo com estes Termos.</p>
+            
+            <h3>3. Conta do Usuário</h3>
+            <p>Você é responsável por manter a confidencialidade de sua conta e senha.</p>
+        </div>
+        <div class="modal-rodape">
+            <button class="modal-btn modal-btn-primario fechar-modal-btn">Entendi</button>
+        </div>
+    </dialog>
+
+    <dialog id="privacidadeDialog">
+        <div class="modal-cabecalho">
+            <h2>Política de Privacidade</h2>
+            <button class="fechar-modal">&times;</button>
+        </div>
+        <div class="modal-corpo">
+            <h3>1. Informações Coletadas</h3>
+            <p>Coletamos informações que você nos fornece ao se registrar em nosso serviço.</p>
+            
+            <h3>2. Uso das Informações</h3>
+            <p>Utilizamos suas informações para fornecer e melhorar nosso serviço.</p>
+            
+            <h3>3. Segurança</h3>
+            <p>Implementamos medidas de segurança para proteger suas informações.</p>
+        </div>
+        <div class="modal-rodape">
+            <button class="modal-btn modal-btn-primario fechar-modal-btn">Entendi</button>
+        </div>
+    </dialog>
+</body>
+</html>
