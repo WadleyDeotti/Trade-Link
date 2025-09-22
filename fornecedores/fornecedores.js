@@ -3,6 +3,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const formPerfil = document.getElementById('formPerfil');
     const passwordModal = document.getElementById('password-modal');
     const imageModal = document.getElementById('image-modal');
+    const productModal = document.getElementById('product-modal');
+    const productViewModal = document.getElementById('product-view-modal');
+    const deleteConfirmModal = document.getElementById('delete-confirm-modal');
     const closeModalButtons = document.querySelectorAll('.close');
     const toast = document.getElementById('toast');
     
@@ -14,6 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const profileDescription = document.getElementById('profile-description');
     const headerUserName = document.getElementById('header-user-name');
     const headerUserPic = document.getElementById('header-user-pic');
+    const productsCount = document.getElementById('products-count');
     
     // Botões
     const viewPasswordBtn = document.getElementById('view-password-btn');
@@ -33,6 +37,10 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentImageType = '';
     let imageFile = null;
     let isPasswordRevealed = false;
+    let products = [];
+    let currentProductIndex = 0;
+    let carouselInterval;
+    let editingProductId = null;
     
     // Senha padrão
     const DEFAULT_PASSWORD = "adminTL";
@@ -47,7 +55,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         loadProfileData();
+        loadProducts();
         setupEventListeners();
+        setupCarousel();
+        setupProductModal();
         
         // Adicionar botão de alterar senha se não existir
         if (!document.getElementById('change-password-btn')) {
@@ -68,17 +79,21 @@ document.addEventListener('DOMContentLoaded', function() {
     function setupEventListeners() {
         console.log('Configurando event listeners...');
         
-        // Event listeners para as imagens (avatar e banner)
-        avatarImage.addEventListener('click', function() {
-            console.log('Clicou na foto de perfil');
-            currentImageType = 'avatar';
-            showImageModal();
-        });
-        
-        bannerImage.addEventListener('click', function() {
-            console.log('Clicou no banner');
-            currentImageType = 'banner';
-            showImageModal();
+        // CORREÇÃO: Event listeners para as imagens (avatar e banner) - usando event delegation
+        document.addEventListener('click', function(e) {
+            // Verificar se o clique foi no avatar
+            if (e.target === avatarImage || e.target.closest('.profile-avatar')) {
+                console.log('Clicou na foto de perfil');
+                currentImageType = 'avatar';
+                showImageModal();
+            }
+            
+            // Verificar se o clique foi no banner
+            if (e.target === bannerImage || e.target.closest('.profile-banner')) {
+                console.log('Clicou no banner');
+                currentImageType = 'banner';
+                showImageModal();
+            }
         });
         
         // Botão de visualizar/ocultar senha
@@ -109,10 +124,24 @@ document.addEventListener('DOMContentLoaded', function() {
             if (event.target === imageModal) {
                 imageModal.style.display = 'none';
             }
+            if (event.target === productModal) {
+                productModal.style.display = 'none';
+            }
+            if (event.target === productViewModal) {
+                productViewModal.style.display = 'none';
+            }
+            if (event.target === deleteConfirmModal) {
+                deleteConfirmModal.style.display = 'none';
+            }
         });
         
-        // Upload de imagem
-        document.getElementById('image-upload').addEventListener('change', handleImageUpload);
+        // CORREÇÃO: Upload de imagem - usando event delegation
+        document.addEventListener('change', function(e) {
+            if (e.target && e.target.id === 'image-upload') {
+                handleImageUpload(e);
+            }
+        });
+        
         document.getElementById('save-image-btn').addEventListener('click', saveImage);
         document.getElementById('cancel-image-btn').addEventListener('click', function() {
             imageModal.style.display = 'none';
@@ -125,6 +154,264 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         
         console.log('Event listeners configurados com sucesso!');
+    }
+    
+    function setupCarousel() {
+        const prevButton = document.querySelector('.carousel-button-prev');
+        const nextButton = document.querySelector('.carousel-button-next');
+        
+        if (prevButton && nextButton) {
+            prevButton.addEventListener('click', () => moveCarousel(-1));
+            nextButton.addEventListener('click', () => moveCarousel(1));
+            
+            // Iniciar autoplay
+            startCarouselInterval();
+        }
+    }
+    
+    function moveCarousel(direction) {
+        const track = document.querySelector('.carousel-track');
+        if (!track || products.length === 0) return;
+        
+        currentProductIndex += direction;
+        
+        if (currentProductIndex < 0) {
+            currentProductIndex = products.length - 1;
+        } else if (currentProductIndex >= products.length) {
+            currentProductIndex = 0;
+        }
+        
+        updateCarousel();
+    }
+    
+    function updateCarousel() {
+        const track = document.querySelector('.carousel-track');
+        if (!track) return;
+        
+        const slideWidth = document.querySelector('.carousel-slide').offsetWidth + 15; // inclui gap
+        track.style.transform = `translateX(-${currentProductIndex * slideWidth}px)`;
+    }
+    
+    function startCarouselInterval() {
+        // Limpar intervalo anterior se existir
+        if (carouselInterval) {
+            clearInterval(carouselInterval);
+        }
+        
+        carouselInterval = setInterval(() => {
+            if (products.length > 1) {
+                moveCarousel(1);
+            }
+        }, 3000); // Muda a cada 3 segundos
+    }
+    
+    function setupProductModal() {
+        const addProductBtn = document.getElementById('add-product-btn');
+        const cancelProductBtn = document.getElementById('cancel-product-btn');
+        const saveProductBtn = document.getElementById('save-product-btn');
+        const productImageInput = document.getElementById('product-image');
+        
+        if (addProductBtn) {
+            addProductBtn.addEventListener('click', () => openProductModal());
+        }
+        
+        if (cancelProductBtn) {
+            cancelProductBtn.addEventListener('click', () => {
+                productModal.style.display = 'none';
+            });
+        }
+        
+        if (saveProductBtn) {
+            saveProductBtn.addEventListener('click', saveProduct);
+        }
+        
+        if (productImageInput) {
+            productImageInput.addEventListener('change', function(e) {
+                if (e.target.files.length > 0) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        document.getElementById('product-preview-img').src = event.target.result;
+                        document.getElementById('product-image-preview').style.display = 'block';
+                    };
+                    reader.readAsDataURL(e.target.files[0]);
+                }
+            });
+        }
+        
+        // Botões do modal de visualização
+        document.getElementById('close-product-btn').addEventListener('click', function() {
+            productViewModal.style.display = 'none';
+        });
+        
+        document.getElementById('edit-product-btn').addEventListener('click', function() {
+            productViewModal.style.display = 'none';
+            openProductModal(editingProductId);
+        });
+        
+        document.getElementById('delete-product-btn').addEventListener('click', function() {
+            productViewModal.style.display = 'none';
+            openDeleteConfirmModal(editingProductId);
+        });
+        
+        // Botões do modal de confirmação de exclusão
+        document.getElementById('cancel-delete-btn').addEventListener('click', function() {
+            deleteConfirmModal.style.display = 'none';
+        });
+        
+        document.getElementById('confirm-delete-btn').addEventListener('click', function() {
+            const productId = editingProductId;
+            products = products.filter(p => p.id !== productId);
+            saveProducts();
+            renderProducts();
+            deleteConfirmModal.style.display = 'none';
+            showToast('Produto excluído com sucesso!');
+        });
+    }
+    
+    function openProductModal(productId = null) {
+        const modal = document.getElementById('product-modal');
+        const title = document.getElementById('product-modal-title');
+        const form = document.getElementById('formProduct');
+        
+        editingProductId = productId;
+        
+        if (productId) {
+            title.textContent = 'Editar Produto';
+            const product = products.find(p => p.id === productId);
+            
+            if (product) {
+                document.getElementById('product-name').value = product.name;
+                document.getElementById('product-description').value = product.description;
+                document.getElementById('product-price').value = product.price;
+                document.getElementById('product-category').value = product.category;
+                
+                if (product.image) {
+                    document.getElementById('product-preview-img').src = product.image;
+                    document.getElementById('product-image-preview').style.display = 'block';
+                } else {
+                    document.getElementById('product-image-preview').style.display = 'none';
+                }
+            }
+        } else {
+            title.textContent = 'Adicionar Produto';
+            form.reset();
+            document.getElementById('product-image-preview').style.display = 'none';
+        }
+        
+        modal.style.display = 'flex';
+    }
+    
+    function saveProduct() {
+        const name = document.getElementById('product-name').value;
+        const description = document.getElementById('product-description').value;
+        const price = parseFloat(document.getElementById('product-price').value);
+        const category = document.getElementById('product-category').value;
+        const previewImg = document.getElementById('product-preview-img');
+        
+        if (!name || !description || !price || !category) {
+            showToast('Preencha todos os campos obrigatórios.', 'error');
+            return;
+        }
+        
+        const product = {
+            id: editingProductId || Date.now().toString(),
+            name,
+            description,
+            price,
+            category,
+            image: previewImg.src !== '#' ? previewImg.src : ''
+        };
+        
+        if (editingProductId) {
+            // Editar produto existente
+            const index = products.findIndex(p => p.id === editingProductId);
+            if (index !== -1) {
+                products[index] = product;
+            }
+        } else {
+            // Adicionar novo produto
+            products.push(product);
+        }
+        
+        saveProducts();
+        renderProducts();
+        document.getElementById('product-modal').style.display = 'none';
+        
+        showToast(`Produto ${editingProductId ? 'editado' : 'adicionado'} com sucesso!`);
+        editingProductId = null;
+    }
+    
+    function renderProducts() {
+        const track = document.querySelector('.carousel-track');
+        if (!track) return;
+        
+        track.innerHTML = '';
+        
+        if (products.length === 0) {
+            track.innerHTML = '<p style="text-align: center; width: 100%;">Nenhum produto cadastrado. Clique em "Adicionar Produto" para começar.</p>';
+            productsCount.textContent = '0';
+            return;
+        }
+        
+        products.forEach(product => {
+            const productElement = document.createElement('div');
+            productElement.className = 'carousel-slide';
+            productElement.innerHTML = `
+                <img src="${product.image || 'https://via.placeholder.com/250x150?text=Sem+Imagem'}" alt="${product.name}">
+                <h3>${product.name}</h3>
+                <p class="product-price">R$ ${product.price.toFixed(2)}</p>
+                <span class="product-category">${product.category}</span>
+            `;
+            
+            productElement.addEventListener('click', () => openProductView(product.id));
+            track.appendChild(productElement);
+        });
+        
+        productsCount.textContent = products.length;
+        
+        if (products.length > 0) {
+            updateCarousel();
+        }
+    }
+    
+    function openProductView(productId) {
+        const product = products.find(p => p.id === productId);
+        if (!product) return;
+        
+        const modal = document.getElementById('product-view-modal');
+        const content = document.getElementById('product-view-content');
+        const title = document.getElementById('product-view-title');
+        
+        editingProductId = productId;
+        title.textContent = product.name;
+        
+        content.innerHTML = `
+            <div style="text-align: center;">
+                <img src="${product.image || 'https://via.placeholder.com/300x200?text=Sem+Imagem'}" alt="${product.name}">
+                <p><strong>Descrição:</strong> ${product.description}</p>
+                <p><strong>Preço:</strong> R$ ${product.price.toFixed(2)}</p>
+                <p><strong>Categoria:</strong> ${product.category}</p>
+            </div>
+        `;
+        
+        modal.style.display = 'flex';
+    }
+    
+    function openDeleteConfirmModal(productId) {
+        editingProductId = productId;
+        deleteConfirmModal.style.display = 'flex';
+    }
+    
+    function loadProducts() {
+        const savedProducts = localStorage.getItem('tradeLinkProducts');
+        if (savedProducts) {
+            products = JSON.parse(savedProducts);
+            renderProducts();
+        }
+    }
+    
+    function saveProducts() {
+        localStorage.setItem('tradeLinkProducts', JSON.stringify(products));
     }
     
     function togglePasswordVisibility() {
@@ -251,10 +538,15 @@ document.addEventListener('DOMContentLoaded', function() {
         if (profileData.avatar) {
             avatarImage.src = profileData.avatar;
             headerUserPic.src = profileData.avatar;
+        } else {
+            avatarImage.src = 'images/foto.jpg';
+            headerUserPic.src = 'images/foto.jpg';
         }
         
         if (profileData.banner) {
             bannerImage.src = profileData.banner;
+        } else {
+            bannerImage.src = 'images/banner.jpg';
         }
     }
     
@@ -318,6 +610,7 @@ document.addEventListener('DOMContentLoaded', function() {
         imageModal.style.display = 'flex';
     }
     
+    // CORREÇÃO: Função handleImageUpload corrigida
     function handleImageUpload(e) {
         if (e.target.files.length > 0) {
             imageFile = e.target.files[0];
@@ -338,12 +631,18 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
+    // CORREÇÃO: Função saveImage corrigida
     function saveImage() {
-        if (!imageFile) {
+        const imageUpload = document.getElementById('image-upload');
+        
+        // Verificar se um arquivo foi selecionado
+        if (imageUpload.files.length === 0) {
             showToast('Selecione uma imagem primeiro.', 'error');
             return;
         }
         
+        // Usar o arquivo do input diretamente
+        const file = imageUpload.files[0];
         const reader = new FileReader();
         
         reader.onload = function(event) {
@@ -361,7 +660,7 @@ document.addEventListener('DOMContentLoaded', function() {
             showToast('Imagem atualizada com sucesso!');
         };
         
-        reader.readAsDataURL(imageFile);
+        reader.readAsDataURL(file);
     }
     
     function changePassword() {
@@ -403,10 +702,13 @@ document.addEventListener('DOMContentLoaded', function() {
     function closeAllModals() {
         passwordModal.style.display = 'none';
         imageModal.style.display = 'none';
+        productModal.style.display = 'none';
+        productViewModal.style.display = 'none';
+        deleteConfirmModal.style.display = 'none';
         
         // Remover qualquer modal de verificação
         document.querySelectorAll('.modal').forEach(modal => {
-            if (modal.id !== 'password-modal' && modal.id !== 'image-modal') {
+            if (!modal.id) {
                 modal.remove();
             }
         });

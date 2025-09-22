@@ -40,7 +40,7 @@
                 <!-- Banner e Avatar -->
                 <div class="profile-container">
                     <div class="profile-banner">
-                        <img id="banner-image" src="" alt="Banner">
+                        <img id="banner-image" src="images/banner.jpg" alt="Banner">
                     </div>
                     <div class="profile-info">
                         <div class="profile-avatar">
@@ -57,7 +57,7 @@
                             </p>
                             <div class="profile-stats">
                                 <div class="stat-item">
-                                    <span class="stat-value">15</span>
+                                    <span class="stat-value" id="products-count">0</span>
                                     <span class="stat-label">Produtos</span>
                                 </div>
                                 <div class="stat-item">
@@ -118,6 +118,29 @@
                         <div class="form-group">
                             <label for="fornecedor-descricao">Descreva seu negócio:</label>
                             <textarea id="fornecedor-descricao" name="descricao" placeholder="Descreva os produtos ou serviços que você oferece..." required></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Seção de Produtos -->
+                    <div class="form-section">
+                        <h2>Produtos do Fornecedor</h2>
+                        <div class="products-section">
+                            <div class="products-carousel">
+                                <button class="carousel-button carousel-button-prev">
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+                                <div class="carousel-container">
+                                    <div class="carousel-track">
+                                        <!-- Produtos serão adicionados aqui via JavaScript -->
+                                    </div>
+                                </div>
+                                <button class="carousel-button carousel-button-next">
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
+                            <button class="btn btn-primary" id="add-product-btn">
+                                <i class="fas fa-plus"></i> Adicionar Produto
+                            </button>
                         </div>
                     </div>
 
@@ -183,6 +206,84 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" id="cancel-image-btn">Cancelar</button>
                 <button type="button" class="btn btn-primary" id="save-image-btn">Salvar Imagem</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Adicionar/Editar Produto -->
+    <div id="product-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="product-modal-title">Adicionar Produto</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="formProduct">
+                    <div class="form-group">
+                        <label for="product-name">Nome do Produto:</label>
+                        <input id="product-name" type="text" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="product-description">Descrição:</label>
+                        <textarea id="product-description" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="product-price">Preço (R$):</label>
+                        <input id="product-price" type="number" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="product-category">Categoria:</label>
+                        <input id="product-category" type="text" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="product-image">Imagem do Produto:</label>
+                        <input type="file" id="product-image" accept="image/*">
+                        <div id="product-image-preview" style="margin-top: 10px; display: none;">
+                            <img id="product-preview-img" src="#" alt="Preview" style="max-width: 100%; max-height: 200px;">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancel-product-btn">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="save-product-btn">Salvar Produto</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Visualização/Edição do Produto -->
+    <div id="product-view-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="product-view-title">Detalhes do Produto</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="product-view-content">
+                    <!-- Conteúdo será preenchido via JavaScript -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="close-product-btn">Fechar</button>
+                <button type="button" class="btn btn-primary" id="edit-product-btn">Editar</button>
+                <button type="button" class="btn btn-danger" id="delete-product-btn">Excluir</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmação de Exclusão -->
+    <div id="delete-confirm-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Confirmar Exclusão</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p>Tem certeza que deseja excluir este produto?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancel-delete-btn">Cancelar</button>
+                <button type="button" class="btn btn-danger" id="confirm-delete-btn">Excluir</button>
             </div>
         </div>
     </div>
