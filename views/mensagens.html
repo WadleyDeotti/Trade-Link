@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mensagens - TradeLink</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../public/css/mensagens.css">
+    <script src="../public/JS/mensagens.js"></script>
+</head>
+<body>
+    <div class="dashboard-container">
+        
+        <div class="sidebar">
+            <div class="logo">
+                <img src="logo.png" alt="TradeLink">
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="dashboard.html"><i class="fas fa-home"></i> board</a></li>
+                    <li><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="fornecedores.html"><i class="fas fa-user"></i> Perfil</a></li>
+                    <li><a href="pedidos.html"><i class="fas fa-file-invoice"></i> Pedidos/Vendas</a></li>
+                    <li><a href="historico.html"><i class="fas fa-history"></i> Histórico</a></li>
+                    <li class="active"><a href="mensagens.html"><i class="fas fa-envelope"></i> Mensagens</a></li>
+                    <li><a href="configuracoes.html"><i class="fas fa-cog"></i> Configurações</a></li>
+                </ul>
+            </nav>
+        </div>
+
+        
+        <div class="main-content">
+            <header>
+                <h1><i class="fas fa-envelope"></i> Mensagens</h1>
+                <div class="user-info">
+                    <span>TradeLink</span>
+                    <img src="profile.jpg" alt="Usuário">
+                </div>
+            </header>
+
+            <div class="content">
+                <div class="messages-container">
+                    <!-- Lista de conversas -->
+                    <div class="conversations-list">
+                        <div class="conversations-header">
+                            <h2>Conversas</h2>
+                            <button class="btn btn-primary" id="new-conversation">
+                                <i class="fas fa-plus"></i> Nova Conversa
+                            </button>
+                        </div>
+                        
+                        <div class="search-conversations">
+                            <input type="text" placeholder="Buscar conversas..." id="search-conversations">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        
+                        <div class="conversations" id="conversations-list">
+                            <!-- As conversas serão carregadas aqui via JavaScript -->
+                        </div>
+                    </div>
+                    
+                    <!-- Área de conversa -->
+                    <div class="conversation-area">
+                        <div class="conversation-header">
+                            <div class="current-contact" id="current-contact">
+                                <div class="contact-avatar" id="contact-avatar-clickable">
+                                    <img src="https://ui-avatars.com/api/?name=TradeLink&background=38528D&color=fff" alt="TradeLink">
+                                </div>
+                                <div class="contact-info">
+                                    <div class="contact-name">Selecione uma conversa</div>
+                                    <div class="contact-status">Clique em uma conversa para começar</div>
+                                </div>
+                            </div>
+                            <div class="conversation-actions" id="conversation-actions" style="display: none;">
+                                <button class="btn-icon" title="Ligar">
+                                    <i class="fas fa-phone"></i>
+                                </button>
+                                <button class="btn-icon" title="Vide chamada">
+                                    <i class="fas fa-video"></i>
+                                </button>
+                                <button class="btn-icon" title="Informações" id="toggle-contact-info">
+                                    <i class="fas fa-info-circle"></i>
+                                </button>
+                                <button class="btn-icon" title="Editar conversa" id="edit-conversation">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="messages" id="messages-container">
+                            <div class="empty-conversation" id="empty-conversation">
+                                <i class="fas fa-comments"></i>
+                                <p>Selecione uma conversa para ver as mensagens</p>
+                            </div>
+                            <!-- As mensagens serão carregadas aqui via JavaScript -->
+                        </div>
+                        
+                        <div class="message-input-container" id="message-input-container" style="display: none;">
+                            <div class="message-input-actions">
+                                <button class="btn-icon" title="Anexar arquivo">
+                                    <i class="fas fa-paperclip"></i>
+                                </button>
+                                <button class="btn-icon" title="Emojis">
+                                    <i class="far fa-smile"></i>
+                                </button>
+                            </div>
+                            <div class="message-input">
+                                <textarea id="message-text" placeholder="Digite sua mensagem..." rows="1"></textarea>
+                            </div>
+                            <div class="message-send">
+                                <button id="send-message" class="btn-icon" title="Enviar mensagem">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Informações do contato (opcional) -->
+                    <div class="contact-info-panel" id="contact-info-panel">
+                        <div class="contact-info-header">
+                            <h3>Informações do Contato</h3>
+                            <button class="btn-icon close-info" id="close-contact-info">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="contact-details">
+                            <div class="contact-avatar-large">
+                                <img src="https://ui-avatars.com/api/?name=TradeLink&background=38528D&color=fff&size=80" alt="TradeLink" id="contact-avatar-large">
+                            </div>
+                            
+                            <div class="contact-name-large" id="contact-name-large">TradeLink</div>
+                            <div class="contact-company" id="contact-company">Sistema de Mensagens</div>
+                            
+                            <div class="contact-info-section">
+                                <h4>Informações de Contato</h4>
+                                <div class="contact-info-item">
+                                    <i class="fas fa-envelope"></i>
+                                    <span id="contact-email">contato@tradelink.com</span>
+                                    <button class="btn-icon edit-info" data-field="email">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </div>
+                                <div class="contact-info-item">
+                                    <i class="fas fa-phone"></i>
+                                    <span id="contact-phone">(11) 3456-7890</span>
+                                    <button class="btn-icon edit-info" data-field="phone">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </div>
+                                <div class="contact-info-item">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span id="contact-address">São Paulo, SP</span>
+                                    <button class="btn-icon edit-info" data-field="address">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="contact-info-section">
+                                <h4>Detalhes da Empresa</h4>
+                                <div class="contact-info-item">
+                                    <i class="fas fa-building"></i>
+                                    <span id="contact-company-name">TradeLink Ltda</span>
+                                    <button class="btn-icon edit-info" data-field="companyName">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </div>
+                                <div class="contact-info-item">
+                                    <i class="fas fa-id-card"></i>
+                                    <span id="contact-cnpj">CNPJ: 12.345.678/0001-90</span>
+                                    <button class="btn-icon edit-info" data-field="cnpj">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="contact-actions">
+                                <button class="btn btn-secondary">
+                                    <i class="fas fa-file-alt"></i> Ver Pedidos
+                                </button>
+                                <button class="btn btn-primary" id="edit-contact-profile">
+                                    <i class="fas fa-user-edit"></i> Editar Perfil
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <div id="new-conversation-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Nova Conversa</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="new-conversation-form">
+                    <div class="form-group">
+                        <label for="conversation-type">Tipo de Contato:</label>
+                        <select id="conversation-type" required>
+                            <option value="">Selecione o tipo</option>
+                            <option value="supplier">Fornecedor</option>
+                            <option value="client">Cliente</option>
+                            <option value="logistics">Logística</option>
+                            <option value="internal">Interno TradeLink</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="conversation-search">Buscar Contato:</label>
+                        <input type="text" id="conversation-search" placeholder="Digite o nome do contato">
+                    </div>
+                    
+                    <div class="contacts-list" id="contacts-list">
+                        <!-- Os contatos serão carregados aqui via JavaScript -->
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary close-modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Iniciar Conversa</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    
+    <div id="edit-conversation-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Editar Conversa</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="edit-conversation-form">
+                    <input type="hidden" id="edit-conversation-id">
+                    
+                    <div class="form-group">
+                        <label for="edit-conversation-name">Nome da Conversa:</label>
+                        <input type="text" id="edit-conversation-name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-conversation-notifications">Notificações:</label>
+                        <select id="edit-conversation-notifications">
+                            <option value="all">Todas as mensagens</option>
+                            <option value="mentions">Apenas menções</option>
+                            <option value="none">Nenhuma</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="edit-conversation-muted"> 
+                            <span class="checkmark"></span>
+                            Silenciar conversa
+                        </label>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-danger" id="delete-conversation">
+                            <i class="fas fa-trash"></i> Excluir Conversa
+                        </button>
+                        <button type="button" class="btn btn-secondary close-modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    
+    <div id="edit-contact-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Editar Perfil do Contato</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="edit-contact-form">
+                    <input type="hidden" id="edit-contact-id">
+                    
+                    <div class="form-group">
+                        <label for="edit-contact-avatar">URL do Avatar:</label>
+                        <input type="text" id="edit-contact-avatar" placeholder="https://...">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-contact-name">Nome:</label>
+                        <input type="text" id="edit-contact-name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-contact-company">Empresa:</label>
+                        <input type="text" id="edit-contact-company">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-contact-email">Email:</label>
+                        <input type="email" id="edit-contact-email">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-contact-phone">Telefone:</label>
+                        <input type="tel" id="edit-contact-phone">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-contact-address">Endereço:</label>
+                        <input type="text" id="edit-contact-address">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-contact-cnpj">CNPJ:</label>
+                        <input type="text" id="edit-contact-cnpj">
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary close-modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    
+    <div id="toast" class="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toast-message">Operação realizada com sucesso!</span>
+    </div>
+
+    <script src="mensagens.js"></script>
+</body>
+</html>
