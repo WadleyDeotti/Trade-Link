@@ -2,23 +2,22 @@ const express = require("express");
 const router = express.Router();
 const loginController = require("../controllers/loginController");
 
-// GETs
-router.get("/configuracoes", (req, res) => res.render("configuracoes"));
-router.get("/registro", (req, res) => res.render("registro"));
-router.get("/login", (req, res) => {
-  const erro = req.session.erro;
-  delete req.session.erro; 
-  res.render("login", { erro: erro || null });
+// ------------------- GETs -------------------
+// Dashboard
+router.get("/dashboard", (req, res) => res.render("dashboard"));
+
+// Registro
+router.get("/registro", (req, res) => {
+  const mensagem = req.session.mensagem;
+  delete req.session.mensagem; 
+  res.render("registro", { mensagem: mensagem || null });
 });
-router.get("/fornecedores",(req,res)=>res.render("fornecedores"));
+
+// Login
+router.get("/login", (req, res) => {
+  const mensagem = req.session.mensagem;
+  delete req.session.mensagem; 
+  res.render("login", { mensagem: mensagem || null });
+});
 
 
-
-
-// POSTs
-router.post("/registro", loginController.cadastrar);
-router.post("/login", loginController.logar);
-router.post("/cadastro_produtos", CadastroController.produtos);
-
-
-module.exports = router;

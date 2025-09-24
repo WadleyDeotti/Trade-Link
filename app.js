@@ -24,7 +24,10 @@ app.get('/', (req, res) => {
       res.render('empresa');
     res.render('fornecedores');
   }}else{
-    res.render('registro');}
+  const mensagem = req.session.mensagem;
+  delete req.session.mensagem; 
+  res.render("dashboard", { mensagem: mensagem || null }); //padrao registro mudar pra pagina q quer ver
+  }
 });
 
 const usuarioRoutes = require('./routes/usuarioRoutes');
