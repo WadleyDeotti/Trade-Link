@@ -9,14 +9,14 @@ router.get("/dashboard", (req, res) => res.render("dashboard"));
 // Registro
 router.get("/registro", (req, res) => {
   const mensagem = req.session.mensagem;
-  delete req.session.mensagem; 
+  delete req.session.mensagem;
   res.render("registro", { mensagem: mensagem || null });
 });
 
 // Login
 router.get("/login", (req, res) => {
   const mensagem = req.session.mensagem;
-  delete req.session.mensagem; 
+  delete req.session.mensagem;
   res.render("login", { mensagem: mensagem || null });
 });
 
@@ -37,9 +37,9 @@ router.get("/configuracoes", (req, res) => res.render("configuracoes"));
 
 // ------------------- POSTs -------------------
 // Cadastro
-router.post("/registro", loginController.cadastrar);
+// router.post("/registro", loginController.cadastrar);
 
-// Login
-router.post("/login", loginController.logar);
+// // Login
+// router.post("/login", loginController.logar);
 
 module.exports = router;
