@@ -19,6 +19,19 @@ conexao.connect(err=>{
 });
 
 module.exports = {
+    testeUsuario: (callback) => {
+    const sql = "select * from empresas where id_empresa = 1";
+    conexao.query(sql, (err, resultado) => {
+        if (err) {
+            return callback(err);
+        }
+        const empresas = resultado.map(row => new empresa(row));
+        callback(null, empresas); // ✅ null no primeiro argumento indica que não houve erro
+    });
+    
+},
+
+
     buscarCNPJ:(cnpj,callback)=>{
         const sql ="select cnpj,senha_hash,email from empresas where cnpj = ?";
         conexao.query(sql,[cnpj],(err,resultado)=>{

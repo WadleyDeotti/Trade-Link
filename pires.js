@@ -2,6 +2,7 @@ const express = require("express");
 const path = require("path");
 const session = require("express-session")
 const app = express();
+const repository = require('./repository/configuracoesRepository');
 
 app.use(express.urlencoded({ extended: true }));
 app.use(session({
@@ -19,16 +20,34 @@ app.use(express.urlencoded({extended:true}));
 app.use(express.static(path.join(__dirname,'public')));
 
 app.get('/', (req, res) => {
-  if(req.session.usuario){
-    if(req.session.usuario.cnpj){
-      res.render('empresa');
-    res.render('fornecedores');
-  }}else{
-  const mensagem = req.session.mensagem;
-  delete req.session.mensagem; 
-  res.render("configuracoes", { mensagem: mensagem || null }); //padrao registro mudar pra pagina q quer ver
-  }
+  repository.testeUsuario((err, empresas) => {
+    
+    if (err) {
+      // aqui encerra a requisição
+      return res.status(500).send('Erro ao buscar usuário');
+    }
+
+    // só aqui você salva na sessão
+    req.session.usuario = empresas;
+    console.log('Sessão salva:', req.session.usuario);
+
+    // redireciona só depois
+    res.redirect('/configuracoes');
+  });
 });
+
+
+// app.get('/', (req, res) => {
+//   if(req.session.usuario){
+//     if(req.session.usuario.cnpj){
+//       res.render('empresa');
+//     res.render('fornecedores');
+//   }}else{
+//   const mensagem = req.session.mensagem;
+//   delete req.session.mensagem; 
+//   res.render("configuracoes", { mensagem: mensagem || null }); //padrao registro mudar pra pagina q quer ver
+//   }
+// });
 
 const Rotas = require('./routes/configuracoesRoutes');
 
