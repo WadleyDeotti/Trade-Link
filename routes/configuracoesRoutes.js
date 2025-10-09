@@ -42,4 +42,7 @@ router.get("/configuracoes", (req, res) => res.render("configuracoes",{ usuario 
 // // Login
 // router.post("/login", loginController.logar);
 
+//salvar configurações
+router.post("/alterar", configuracoesController.salvarConfiguracoes);
+
 module.exports = router;

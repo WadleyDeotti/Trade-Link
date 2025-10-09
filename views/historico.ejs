@@ -3,342 +3,178 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Configurações - TradeLink</title>
+    <title>Histórico - TradeLink</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="css/configuracoes.css">
-    <script src="JS/configuracoes.js"></script>
+    <link rel="stylesheet" href="../public/css/historico.css">
 </head>
 <body>
     <div class="dashboard-container">
-        
+        <!-- Sidebar (igual à página de pedidos) -->
         <div class="sidebar">
             <div class="logo">
-                <img src="/fornecedores/logo.png" alt="TradeLink">
+                <img src="logo.png" alt="TradeLink">
             </div>
             <nav>
                 <ul>
-                    <li><a href="dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
-                    <li><a href="fornecedores"><i class="fas fa-user"></i> Perfil</a></li>
-                    <li><a href="pedidos"><i class="fas fa-file-invoice"></i> Pedidos/Vendas</a></li>
-                    <li class="active"><a href="historico"><i class="fas fa-history"></i> Histórico</a></li>
-                    <li><a href="mensagens"><i class="fas fa-envelope"></i> Mensagens</a></li>
-                    <li><a href="configuracoes"><i class="fas fa-cog"></i> Configurações</a></li>
+                    <li><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="fornecedores.html"><i class="fas fa-user"></i> Perfil</a></li>
+                    <li><a href="pedidos.html"><i class="fas fa-file-invoice"></i> Pedidos/Vendas</a></li>
+                    <li class="active"><a href="historico.html"><i class="fas fa-history"></i> Histórico</a></li>
+                    <li><a href="mensagens.html"><i class="fas fa-envelope"></i> Mensagens</a></li>
+                    <li><a href="configuracoes.html"><i class="fas fa-cog"></i> Configurações</a></li>
                 </ul>
             </nav>
         </div>
 
-        
+        <!-- Main Content -->
         <div class="main-content">
             <header>
-                <h1><i class="fas fa-cog"></i> Configurações</h1>
+                <h1><i class="fas fa-history"></i> Histórico de Compras/Vendas</h1>
                 <div class="user-info">
-                    <span id="header-user-name">TradeLink</span>
-                    <img id="header-user-pic" src="../fornecedores/profile.jpg" alt="Usuário">
+                    <span>Empresa XYZ</span>
+                    <img src="profile.jpg" alt="Usuário">
                 </div>
             </header>
 
             <div class="content">
-                
-                <div class="settings-nav">
-                    <button class="settings-nav-btn active" data-target="conta">
-                        <i class="fas fa-user"></i> Conta
-                    </button>
-                    <button class="settings-nav-btn" data-target="privacidade">
-                        <i class="fas fa-lock"></i> Privacidade
-                    </button>
-                    <button class="settings-nav-btn" data-target="notificacoes">
-                        <i class="fas fa-bell"></i> Notificações
-                    </button>
-                    <button class="settings-nav-btn" data-target="idioma">
-                        <i class="fas fa-globe"></i> Idioma
-                    </button>
-                    <button class="settings-nav-btn" data-target="ajuda">
-                        <i class="fas fa-question-circle"></i> Ajuda
-                    </button>
+                <!-- Filtros e Busca -->
+                <div class="filters">
+                    <div class="filter-group">
+                        <label for="year-filter"><i class="fas fa-calendar"></i> Ano:</label>
+                        <select id="year-filter">
+                            <option value="2023">2023</option>
+                            <option value="2022">2022</option>
+                            <option value="2021">2021</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="type-filter"><i class="fas fa-exchange-alt"></i> Tipo:</label>
+                        <select id="type-filter">
+                            <option value="all">Todos</option>
+                            <option value="purchase">Compras</option>
+                            <option value="sale">Vendas</option>
+                        </select>
+                    </div>
+                    
+                    <div class="search-group">
+                        <input type="text" placeholder="Buscar no histórico..." id="search-input">
+                        <button><i class="fas fa-search"></i></button>
+                    </div>
                 </div>
 
-                
-                <div class="settings-content">
-                    <form id="settings-form" method="POST">
-                        
-                        <div class="content-section active" id="conta">
-                            <h2 class="section-title"><i class="fas fa-user"></i> CONTA</h2>
-                            <div class="section-content">
-                                <div class="form-group">
-                                    <label>Informações da Conta:</label>
-                                    <div class="account-info">
-                                        <div class="info-item">
-                                            <span class="info-label">Nome:</span>
-                                            <span class="info-value" id="account-name">Carregando...</span>
-                                        </div>
-                                        <div class="info-item">
-                                            <span class="info-label">Email:</span>
-                                            <span class="info-value" id="account-email">Carregando...</span>
-                                        </div>
-                                        <div class="info-item">
-                                            <span class="info-label">CPF/CNPJ:</span>
-                                            <span class="info-value" id="account-cpf">Carregando...</span>
-                                        </div>
-                                        <div class="info-item">
-                                            <span class="info-label">Localização:</span>
-                                            <span class="info-value" id="account-location">Carregando...</span>
-                                        </div>
-                                        <div class="info-item">
-                                            <span class="info-label">Telefone:</span>
-                                            <span class="info-value" id="account-phone">Carregando...</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label>Alterar Senha:</label>
-                                    <div class="password-change">
-                                        <button type="button" class="btn btn-secondary" id="change-password-btn">
-                                            <i class="fas fa-key"></i> Alterar Senha
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
+                <!-- Resumo Financeiro -->
+                <div class="financial-summary">
+                    <div class="summary-card">
+                        <div class="summary-icon">
+                            <i class="fas fa-shopping-cart"></i>
                         </div>
+                        <div class="summary-content">
+                            <span class="summary-label">Total em Compras</span>
+                            <span class="summary-value" id="total-purchases">R$ 0,00</span>
+                        </div>
+                    </div>
+                    
+                    <div class="summary-card">
+                        <div class="summary-icon">
+                            <i class="fas fa-cash-register"></i>
+                        </div>
+                        <div class="summary-content">
+                            <span class="summary-label">Total em Vendas</span>
+                            <span class="summary-value" id="total-sales">R$ 0,00</span>
+                        </div>
+                    </div>
+                    
+                    <div class="summary-card">
+                        <div class="summary-icon">
+                            <i class="fas fa-balance-scale"></i>
+                        </div>
+                        <div class="summary-content">
+                            <span class="summary-label">Saldo</span>
+                            <span class="summary-value" id="balance">R$ 0,00</span>
+                        </div>
+                    </div>
+                </div>
 
-                        
-                        <div class="content-section" id="privacidade">
-                            <h2 class="section-title"><i class="fas fa-lock"></i> PRIVACIDADE</h2>
-                            <div class="section-content">
-                                <div class="privacy-option">
-                                    <h3><i class="fas fa-eye"></i> Visibilidade do Perfil</h3>
-                                    <div class="radio-group">
-                                        <label>
-                                            <input type="radio" name="visibility" value="public" checked>
-                                            <span class="radio-custom"></span>
-                                            Público (qualquer pessoa pode ver seu perfil)
-                                        </label>
-                                        <label>
-                                            <input type="radio" name="visibility" value="friends">
-                                            <span class="radio-custom"></span>
-                                            Somente amigos
-                                        </label>
-                                        <label>
-                                            <input type="radio" name="visibility" value="private">
-                                            <span class="radio-custom"></span>
-                                            Privado (apenas você)
-                                        </label>
-                                    </div>
-                                </div>
-                                
-                                <div class="privacy-option">
-                                    <h3><i class="fas fa-database"></i> Controle de Dados</h3>
-                                    <div class="checkbox-group">
-                                        <label>
-                                            <input type="checkbox" name="data_sharing" checked>
-                                            <span class="checkbox-custom"></span>
-                                            Permitir compartilhamento de dados anônimos
-                                        </label>
-                                        <label>
-                                            <input type="checkbox" name="show_activity" checked>
-                                            <span class="checkbox-custom"></span>
-                                            Mostrar atividade recente
-                                        </label>
-                                        <label>
-                                            <input type="checkbox" name="search_visibility">
-                                            <span class="checkbox-custom"></span>
-                                            Permitir que meu perfil apareça em buscas
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                <!-- Gráfico (placeholder para implementação real) -->
+                <div class="chart-container">
+                    <canvas id="history-chart"></canvas>
+                </div>
 
-                        
-                        <div class="content-section" id="notificacoes">
-                            <h2 class="section-title"><i class="fas fa-bell"></i> NOTIFICAÇÕES</h2>
-                            <div class="section-content">
-                                <div class="notification-option">
-                                    <h3><i class="fas fa-envelope-open-text"></i> Tipos de Notificação</h3>
-                                    <div class="checkbox-group">
-                                        <label>
-                                            <input type="checkbox" name="notify_messages" checked>
-                                            <span class="checkbox-custom"></span>
-                                            Mensagens diretas
-                                        </label>
-                                        <label>
-                                            <input type="checkbox" name="notify_mentions" checked>
-                                            <span class="checkbox-custom"></span>
-                                            Menções
-                                        </label>
-                                        <label>
-                                            <input type="checkbox" name="notify_updates">
-                                            <span class="checkbox-custom"></span>
-                                            Atualizações do sistema
-                                        </label>
-                                        <label>
-                                            <input type="checkbox" name="notify_comments">
-                                            <span class="checkbox-custom"></span>
-                                            Comentários em suas postagens
-                                        </label>
-                                    </div>
-                                </div>
-                                
-                                <div class="notification-option">
-                                    <h3><i class="fas fa-sliders-h"></i> Preferências</h3>
-                                    <div class="checkbox-group">
-                                        <label>
-                                            <input type="checkbox" name="important_only">
-                                            <span class="checkbox-custom"></span>
-                                            Somente notificações importantes
-                                        </label>
-                                        <label>
-                                            <input type="checkbox" name="email_notifications" checked>
-                                            <span class="checkbox-custom"></span>
-                                            Notificações por email
-                                        </label>
-                                        <label>
-                                            <input type="checkbox" name="push_notifications">
-                                            <span class="checkbox-custom"></span>
-                                            Notificações push
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                <!-- Tabela de Histórico -->
+                <div class="history-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Tipo</th>
+                                <th>Parceiro</th>
+                                <th>Valor</th>
+                                <th>Status</th>
+                                <th>Detalhes</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history-body">
+                            <!-- O histórico será carregado aqui via JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
 
-                        
-                        <div class="content-section" id="idioma">
-                            <h2 class="section-title"><i class="fas fa-globe"></i> IDIOMA</h2>
-                            <div class="section-content">
-                                <div class="language-option">
-                                    <label for="language-select"><i class="fas fa-language"></i> Idioma:</label>
-                                    <select id="language-select" name="language" class="styled-select">
-                                        <option value="pt-br" selected>Português (Brasil)</option>
-                                        <option value="en-us">English (US)</option>
-                                        <option value="es-es">Español</option>
-                                        <option value="fr-fr">Français</option>
-                                        <option value="de-de">Deutsch</option>
-                                    </select>
-                                </div>
-                                
-                                <div class="language-option">
-                                    <h3><i class="far fa-clock"></i> Formato de Data/Hora</h3>
-                                    <div class="radio-group">
-                                        <label>
-                                            <input type="radio" name="datetime_format" value="24h" checked>
-                                            <span class="radio-custom"></span>
-                                            24 horas (DD/MM/AAAA)
-                                        </label>
-                                        <label>
-                                            <input type="radio" name="datetime_format" value="12h">
-                                            <span class="radio-custom"></span>
-                                            12 horas (MM/DD/AAAA)
-                                        </label>
-                                    </div>
-                                </div>
-                                
-                                <div class="language-option">
-                                    <h3><i class="fas fa-map-marker-alt"></i> Região</h3>
-                                    <label for="timezone-select">Fuso horário:</label>
-                                    <select id="timezone-select" name="timezone" class="styled-select">
-                                        <option value="-3" selected>Brasília (UTC-03:00)</option>
-                                        <option value="-4">Manaus (UTC-04:00)</option>
-                                        <option value="-5">Rio Branco (UTC-05:00)</option>
-                                        <option value="0">Londres (UTC±00:00)</option>
-                                        <option value="1">Paris (UTC+01:00)</option>
-                                        <option value="-5">Nova York (UTC-05:00)</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        
-                        <div class="content-section" id="ajuda">
-                            <h2 class="section-title"><i class="fas fa-question-circle"></i> AJUDA</h2>
-                            <div class="section-content">
-                                <div class="help-option">
-                                    <h3><i class="fas fa-book"></i> Documentação</h3>
-                                    <p>Consulte nossa <a href="#"><i class="fas fa-external-link-alt"></i> documentação completa</a> para tirar dúvidas sobre o uso da plataforma.</p>
-                                </div>
-                                
-                                <div class="help-option">
-                                    <h3><i class="fas fa-headset"></i> Suporte</h3>
-                                    <p>Entre em contato com nossa equipe de suporte:</p>
-                                    <ul class="contact-list">
-                                        <li><i class="fas fa-envelope"></i> Email: <a href="mailto:suporte@tradelink.com">suporte@tradelink.com</a></li>
-                                        <li><i class="fas fa-phone"></i> Telefone: (31) 97504-4314</li>
-                                        <li><i class="fas fa-comment-dots"></i> Chat online: Disponível 24/7</li>
-                                    </ul>
-                                </div>
-                                
-                                <div class="help-option">
-                                    <h3><i class="fas fa-file-contract"></i> Termos e Políticas</h3>
-                                    <ul class="documents-list">
-                                        <li>
-                                            <a href="#"><i class="fas fa-file-alt"></i> Termos de Serviço</a>
-                                            <span class="doc-date">Última atualização: 15/06/2023</span>
-                                        </li>
-                                        <li>
-                                            <a href="#"><i class="fas fa-user-shield"></i> Política de Privacidade</a>
-                                            <span class="doc-date">Última atualização: 20/05/2023</span>
-                                        </li>
-                                        <li>
-                                            <a href="#"><i class="fas fa-users"></i> Diretrizes da Comunidade</a>
-                                            <span class="doc-date">Última atualização: 10/07/2023</span>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-
-                        
-                        <div class="form-actions">
-                            <button type="button" class="btn btn-secondary" id="cancel-btn">
-                                <i class="fas fa-times"></i> Cancelar
-                            </button>
-                            <button type="submit" class="btn btn-primary" id="save-btn">
-                                <i class="fas fa-save"></i> Salvar Alterações
-                            </button>
-                            <div class="status-message" id="status-message"></div>
-                        </div>
-                    </form>
+                <!-- Paginação -->
+                <div class="pagination">
+                    <button disabled><i class="fas fa-chevron-left"></i></button>
+                    <span class="page-info">Página 1 de 1</span>
+                    <button disabled><i class="fas fa-chevron-right"></i></button>
                 </div>
             </div>
         </div>
     </div>
 
-    
-    <div id="password-modal" class="modal">
+    <!-- Modal de Exportação -->
+    <div id="export-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Alterar Senha</h2>
+                <h2>Exportar Histórico</h2>
                 <span class="close">&times;</span>
             </div>
             <div class="modal-body">
-                <form id="formSenha">
+                <form id="export-form">
                     <div class="form-group">
-                        <label for="current-password">Senha Atual:</label>
-                        <input id="current-password" type="password" required>
+                        <label for="export-format">Formato:</label>
+                        <select id="export-format" required>
+                            <option value="csv">CSV</option>
+                            <option value="excel">Excel</option>
+                            <option value="pdf">PDF</option>
+                        </select>
                     </div>
+                    
                     <div class="form-group">
-                        <label for="new-password">Nova Senha:</label>
-                        <input id="new-password" type="password" required>
+                        <label for="export-period">Período:</label>
+                        <select id="export-period" required>
+                            <option value="current">Página atual</option>
+                            <option value="all">Todo o histórico</option>
+                            <option value="custom">Personalizado</option>
+                        </select>
                     </div>
-                    <div class="form-group">
-                        <label for="confirm-password">Confirmar Nova Senha:</label>
-                        <input id="confirm-password" type="password" required>
+                    
+                    <div class="form-group" id="custom-date-range" style="display: none;">
+                        <label for="export-start">De:</label>
+                        <input type="date" id="export-start">
+                        
+                        <label for="export-end">Até:</label>
+                        <input type="date" id="export-end">
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary close-modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Exportar</button>
                     </div>
                 </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" id="cancel-password-btn">Cancelar</button>
-                <button type="button" class="btn btn-primary" id="save-password-btn">Salvar Senha</button>
             </div>
         </div>
     </div>
 
-    
-    <div id="toast" class="toast">
-        <i class="fas fa-check-circle"></i>
-        <span id="toast-message">Operação realizada com sucesso!</span>
-    </div>
-
-    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../public/JS/historico.js"></script>
 </body>
 </html>
