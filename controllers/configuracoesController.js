@@ -1,7 +1,8 @@
 const repository = require('../repository/configuracoesRepository');
-
+const bcrypt  = require('bcrypt');
+const crypto  = require('crypto');
+const nodemailer = require('nodemailer');
 exports.salvarConfiguracoes = async (req, res) => {
-    console.log('Chegou no controller');
 
     // Verifica se há sessão
     const usuario = req.session.usuario[0];
@@ -86,7 +87,7 @@ exports.salvarConfiguracoes = async (req, res) => {
             };
 
             console.log('Usuário atualizado com sucesso');
-            res.render('configuracoes');
+            res.render("/configuracoes", (req, res) => res.render("configuracoes",{ usuario : req.session.usuario[0] || null }));
 
         } catch (err) {
             console.error('Erro ao atualizar usuário:', err);
@@ -149,10 +150,7 @@ exports.salvarConfiguracoes = async (req, res) => {
     }
 };
 
-const repository = require('../repository/usuarioRepository');
-const bcrypt  = require('bcrypt');
-const crypto  = require('crypto');
-const nodemailer = require('nodemailer');
+
 
 const safeBool = val => val === 'on' ? 1 : 0;
 
