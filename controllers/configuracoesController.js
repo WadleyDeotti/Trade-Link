@@ -1,158 +1,239 @@
 const repository = require('../repository/configuracoesRepository');
-const bcrypt  = require('bcrypt');
-const crypto  = require('crypto');
+const bcrypt = require('bcrypt');
+const crypto = require('crypto');
 const nodemailer = require('nodemailer');
+const safeBool = val => val === 'on' ? 1 : 0;
+
+//atualizar dados salvos no server
+async function atualizarSessaoUsuario(req) {
+  const usuario = req.session.usuario;
+  if (!usuario) throw new Error('Usuário não está logado');
+
+  const id = usuario.id_empresa || usuario.id_fornecedor;
+  const tipo = usuario.id_empresa ? 'empresa' : 'fornecedor';
+
+  let novoUsuario;
+  if (tipo === 'empresa') {
+    novoUsuario = await repository.buscarEmpresaPorId(id);
+  } else {
+    novoUsuario = await repository.buscarFornecedorPorId(id);
+  }
+
+  req.session.usuario = novoUsuario[0] || novoUsuario;
+  return req.session.usuario;
+}
+
 exports.salvarConfiguracoes = async (req, res) => {
 
-    // Verifica se há sessão
-    const usuario = req.session.usuario[0];
-    if (!usuario) {
-        return res.status(401).send('Usuário não logado');
+  // Verifica se há sessão
+  const usuario = req.session.usuario[0];
+  if (!usuario) {
+    return res.status(401).send('Usuário não logado');
+  }
+
+  // Pega os dados enviados pelo formulário
+  const {
+    nome_fantasia = '',
+    email = '',
+    localizacao = '',
+    telefone = '',
+    visibility = 'public',
+    data_sharing = 'off',
+    show_activity = 'off',
+    search_visibility = 'off',
+    notify_messages = 'off',
+    notify_mentions = 'off',
+    notify_updates = 'off',
+    notify_comments = 'off',
+    important_only = 'off',
+    email_notifications = 'off',
+    push_notifications = 'off',
+    language = 'pt-br',
+    datetime_format = '24h',
+    timezone = '-3',
+
+  } = req.body;
+
+
+  // Converte checkboxes ("on") em booleano (1/0)
+  const safe = val => (val === undefined || val === '' ? null : val);
+
+  if (usuario.id_empresa) {
+    try {
+      // Atualiza no banco usando repository com async/await
+      await repository.updateEmpresa({
+        nome_fantasia,
+        email,
+        localizacao,
+        telefone,
+        visibility,
+        data_sharing: safe(safeBool(data_sharing)),
+        show_activity: safe(safeBool(show_activity)),
+        search_visibility: safe(safeBool(search_visibility)),
+        notify_messages: safe(safeBool(notify_messages)),
+        notify_mentions: safe(safeBool(notify_mentions)),
+        notify_updates: safe(safeBool(notify_updates)),
+        notify_comments: safe(safeBool(notify_comments)),
+        important_only: safe(safeBool(important_only)),
+        email_notifications: safe(safeBool(email_notifications)),
+        push_notifications: safe(safeBool(push_notifications)),
+        language,
+        datetime_format,
+        timezone,
+        id_empresa: usuario.id_empresa
+      });
+
+      // Atualiza os dados na sessão
+      req.session.usuario = {
+        ...usuario,
+        nome_fantasia,
+        email,
+        localizacao,
+        telefone,
+        visibility,
+        data_sharing: safeBool(data_sharing),
+        show_activity: safeBool(show_activity),
+        search_visibility: safeBool(search_visibility),
+        notify_messages: safeBool(notify_messages),
+        notify_mentions: safeBool(notify_mentions),
+        notify_updates: safeBool(notify_updates),
+        notify_comments: safeBool(notify_comments),
+        important_only: safeBool(important_only),
+        email_notifications: safeBool(email_notifications),
+        push_notifications: safeBool(push_notifications),
+        language,
+        datetime_format,
+        timezone
+      };
+      await atualizarSessaoUsuario(req);
+      console.log('Usuário atualizado com sucesso');
+      res.render("/configuracoes", (req, res) => res.render("configuracoes", { usuario: req.session.usuario[0] || null }));
+
+    } catch (err) {
+      console.error('Erro ao atualizar usuário:', err);
+      res.status(500).send('Erro ao atualizar usuário');
     }
+  } else if (usuario.id_fornecedor) {
+    try {
+      await repository.updateEmpresa({
+        nome_fantasia,
+        email,
+        localizacao,
+        telefone,
+        visibility,
+        data_sharing: safe(safeBool(data_sharing)),
+        show_activity: safe(safeBool(show_activity)),
+        search_visibility: safe(safeBool(search_visibility)),
+        notify_messages: safe(safeBool(notify_messages)),
+        notify_mentions: safe(safeBool(notify_mentions)),
+        notify_updates: safe(safeBool(notify_updates)),
+        notify_comments: safe(safeBool(notify_comments)),
+        important_only: safe(safeBool(important_only)),
+        email_notifications: safe(safeBool(email_notifications)),
+        push_notifications: safe(safeBool(push_notifications)),
+        language,
+        datetime_format,
+        timezone,
+        id_fornecedor: usuario.id_fornecedor
+      });
 
-    // Pega os dados enviados pelo formulário
-    const {
-        nome_fantasia = '',
-        email = '',
-        localizacao = '',
-        telefone = '',
-        visibility = 'public',
-        data_sharing = 'off',
-        show_activity = 'off',
-        search_visibility = 'off',
-        notify_messages = 'off',
-        notify_mentions = 'off',
-        notify_updates = 'off',
-        notify_comments = 'off',
-        important_only = 'off',
-        email_notifications = 'off',
-        push_notifications = 'off',
-        language = 'pt-br',
-        datetime_format = '24h',
-        timezone = '-3',
+      // Atualiza os dados na sessão
+      req.session.usuario = {
+        ...usuario,
+        nome_fantasia,
+        email,
+        localizacao,
+        telefone,
+        visibility,
+        data_sharing: safeBool(data_sharing),
+        show_activity: safeBool(show_activity),
+        search_visibility: safeBool(search_visibility),
+        notify_messages: safeBool(notify_messages),
+        notify_mentions: safeBool(notify_mentions),
+        notify_updates: safeBool(notify_updates),
+        notify_comments: safeBool(notify_comments),
+        important_only: safeBool(important_only),
+        email_notifications: safeBool(email_notifications),
+        push_notifications: safeBool(push_notifications),
+        language,
+        datetime_format,
+        timezone
+      };
+      await atualizarSessaoUsuario(req);
+      console.log('Usuário atualizado com sucesso');
+      res.render('/configuracoes');
 
-    } = req.body;
-
-
-    // Converte checkboxes ("on") em booleano (1/0)
-    const toBool = val => val === 'on' ? 1 : 0;
-    const safe = val => (val === undefined || val === '' ? null : val);
-
-    if (usuario.id_empresa) {
-        try {
-            // Atualiza no banco usando repository com async/await
-            await repository.updateEmpresa({
-                nome_fantasia,
-                email,
-                localizacao,
-                telefone,
-                visibility,
-                data_sharing: safe(toBool(data_sharing)),
-                show_activity: safe(toBool(show_activity)),
-                search_visibility: safe(toBool(search_visibility)),
-                notify_messages: safe(toBool(notify_messages)),
-                notify_mentions: safe(toBool(notify_mentions)),
-                notify_updates: safe(toBool(notify_updates)),
-                notify_comments: safe(toBool(notify_comments)),
-                important_only: safe(toBool(important_only)),
-                email_notifications: safe(toBool(email_notifications)),
-                push_notifications: safe(toBool(push_notifications)),
-                language,
-                datetime_format,
-                timezone,
-                id_empresa: usuario.id_empresa
-            });
-
-            // Atualiza os dados na sessão
-            req.session.usuario = {
-                ...usuario,
-                nome_fantasia,
-                email,
-                localizacao,
-                telefone,
-                visibility,
-                data_sharing: toBool(data_sharing),
-                show_activity: toBool(show_activity),
-                search_visibility: toBool(search_visibility),
-                notify_messages: toBool(notify_messages),
-                notify_mentions: toBool(notify_mentions),
-                notify_updates: toBool(notify_updates),
-                notify_comments: toBool(notify_comments),
-                important_only: toBool(important_only),
-                email_notifications: toBool(email_notifications),
-                push_notifications: toBool(push_notifications),
-                language,
-                datetime_format,
-                timezone
-            };
-
-            console.log('Usuário atualizado com sucesso');
-            res.render("/configuracoes", (req, res) => res.render("configuracoes",{ usuario : req.session.usuario[0] || null }));
-
-        } catch (err) {
-            console.error('Erro ao atualizar usuário:', err);
-            res.status(500).send('Erro ao atualizar usuário');
-        }
-    } else if (usuario.id_fornecedor) {
-        try {
-            await repository.updateEmpresa({
-                nome_fantasia,
-                email,
-                localizacao,
-                telefone,
-                visibility,
-                data_sharing: safe(toBool(data_sharing)),
-                show_activity: safe(toBool(show_activity)),
-                search_visibility: safe(toBool(search_visibility)),
-                notify_messages: safe(toBool(notify_messages)),
-                notify_mentions: safe(toBool(notify_mentions)),
-                notify_updates: safe(toBool(notify_updates)),
-                notify_comments: safe(toBool(notify_comments)),
-                important_only: safe(toBool(important_only)),
-                email_notifications: safe(toBool(email_notifications)),
-                push_notifications: safe(toBool(push_notifications)),
-                language,
-                datetime_format,
-                timezone,
-                id_fornecedor: usuario.id_fornecedor
-            });
-
-            // Atualiza os dados na sessão
-            req.session.usuario = {
-                ...usuario,
-                nome_fantasia,
-                email,
-                localizacao,
-                telefone,
-                visibility,
-                data_sharing: toBool(data_sharing),
-                show_activity: toBool(show_activity),
-                search_visibility: toBool(search_visibility),
-                notify_messages: toBool(notify_messages),
-                notify_mentions: toBool(notify_mentions),
-                notify_updates: toBool(notify_updates),
-                notify_comments: toBool(notify_comments),
-                important_only: toBool(important_only),
-                email_notifications: toBool(email_notifications),
-                push_notifications: toBool(push_notifications),
-                language,
-                datetime_format,
-                timezone
-            };
-
-            console.log('Usuário atualizado com sucesso');
-            res.render('/configuracoes');
-
-        } catch (err) {
-            console.error('Erro ao atualizar usuário:', err);
-            res.status(500).send('Erro ao atualizar usuário');
-        }
+    } catch (err) {
+      console.error('Erro ao atualizar usuário:', err);
+      res.status(500).send('Erro ao atualizar usuário');
     }
+  }
+
 };
 
+exports.alterarSenha = async (req, res) => {
+  
+  // Verifica se há sessão
+  const usuario = req.session.usuario[0];
+  const { current_password, new_password, confirm_password } = req.body;
 
+  if (!usuario) {
+    return res.status(401).send('Usuário não logado');
+  }
+  if (usuario.id_empresa) {
+    // Busca o hash salvo no banco
+    const empresa = await repository.buscarSenhaEmpresa(usuario.id_empresa);
 
-const safeBool = val => val === 'on' ? 1 : 0;
+    // Confere se retornou algo
+    if (!empresa) {
+      return res.status(400).send("Usuário não encontrado.");
+    }
+
+    // Compara a senha atual com o hash
+    const senhaCorreta = await bcrypt.compare(current_password, empresa.senha_hash);
+    if (!senhaCorreta) {
+      return res.render("configuracoes", { mensagem: "Senha atual incorreta", usuario: req.session.usuario });
+    }
+
+    // Verifica se as novas senhas coincidem
+    if (new_password !== confirm_password) {
+      return res.render("configuracoes", { mensagem: "As senhas não coincidem", usuario: req.session.usuario });
+    }
+    
+    // Criptografa e atualiza
+    const senhaHash = await bcrypt.hash(new_password, 10);
+    await repository.updateSenhaEmpresa({ senha_hash: senhaHash, id_empresa: usuario.id_empresa });
+    await atualizarSessaoUsuario(req);
+    console.log('Senha alterada com sucesso');
+    res.render("configuracoes", { mensagem: "Senha alterada com sucesso!", usuario: req.session.usuario });
+  } else if (usuario.id_fornecedor) {
+    const fornecedor = await repository.buscarSenhaFornecedor(usuario.id_fornecedor);
+    console.log(current_password, fornecedor);
+    const senhaCorreta = await bcrypt.compare(current_password, fornecedor);
+
+    // Confere se retornou algo
+    if (!fornecedor) {
+      return res.status(400).send("Usuário não encontrado.");
+    }
+
+    // Compara a senha atual com o hash
+    if (!senhaCorreta) {
+      return res.render("configuracoes", { mensagem: "Senha atual incorreta", usuario: req.session.usuario });
+    } 
+
+    // Verifica se as novas senhas coincidem
+    if (new_password !== confirm_password) {
+      return res.render("configuracoes", { mensagem: "As senhas não coincidem", usuario: req.session.usuario });
+    }
+
+    // Criptografa e atualiza
+    const senhaHash = await bcrypt.hash(new_password, 10);
+    await repository.updateSenhaFornecedor({ senha_hash: senhaHash, id_fornecedor: usuario.id_fornecedor });
+    await atualizarSessaoUsuario(req);
+    console.log('Senha alterada com sucesso');
+    res.render("configuracoes", { mensagem: "Senha alterada com sucesso!", usuario: req.session.usuario });
+  };
+};
 
 exports.cadastrar = async (req, res) => {
   try {
@@ -162,25 +243,25 @@ exports.cadastrar = async (req, res) => {
     if (dadosUsuario.cnpj) {
       // Cadastro de empresa
       await repository.inserirEmpresa({
-        nome_fantasia: dadosUsuario.nome,
+        nome_fantasia: dadosUsuario.nome_completo,
         email: dadosUsuario.email,
         cnpj: dadosUsuario.cnpj.replace(/\D/g, ''),
-        senha: await bcrypt.hash(dadosUsuario.senha, 10)
+        senha_hash: await bcrypt.hash(dadosUsuario.senha, 10)
       });
 
-      req.session.usuario = { tipo: 'empresa' };
+      req.session.usuario = repository.buscarCNPJ(dadosUsuario.cnpj.replace(/\D/g, ''));
       return res.redirect('/fornecedores');
 
     } else if (dadosUsuario.cpf) {
       // Cadastro de fornecedor
       await repository.inserirFornecedor({
-        nome_fantasia: dadosUsuario.nome,
+        nome_fantasia: dadosUsuario.nome_completo,
         cpf: dadosUsuario.cpf.replace(/\D/g, ''),
         email: dadosUsuario.email,
-        senha: await bcrypt.hash(dadosUsuario.senha, 10)
+        senha_hash: await bcrypt.hash(dadosUsuario.senha, 10)
       });
 
-      req.session.usuario = { tipo: 'fornecedor' };
+      req.session.usuario = repository.buscarCPF(dadosUsuario.cpf.replace(/\D/g, ''));
       return res.redirect('/fornecedores');
 
     } else {

@@ -26,8 +26,8 @@ const conexao = mysql.createPool({
 module.exports = {
   // 🔹 Exemplo: buscar uma empresa de teste
   async testeUsuario() {
-    const [linhas] = await conexao.query("SELECT * FROM empresas WHERE id_empresa = 1");
-    return linhas.map(row => new Empresa(row));
+    const [linhas] = await conexao.query("SELECT * FROM fornecedores WHERE id_fornecedor = 6");
+    return linhas.map(row => new Fornecedor(row));
   },
 
   // 🔹 Buscar empresa por CNPJ
@@ -103,6 +103,71 @@ module.exports = {
   return resultado;
 },
 
+  // 🔹 Atualizar senha Empresa
+  async updateSenhaEmpresa(dados) {
+    const sql = "UPDATE empresas SET senha_hash = :senha_hash WHERE id_empresa = :id_empresa";
+    const valores = [dados.senha_hash, dados.id_empresa];
+    const [resultado] = await conexao.execute(sql, valores);
+    return resultado;
+  },
+
+  // 🔹 Atualizar senha Fornecedor
+  async updateSenhaFornecedor(dados) {
+    const sql = "UPDATE fornecedores SET senha_hash = :senha_hash WHERE id_fornecedor = :id_fornecedor";
+    const valores = [dados.senha_hash, dados.id_fornecedor];
+    const [resultado] = await conexao.execute(sql, valores);
+    return resultado;
+  },
+
+  // 🔹 buscar senha da empresa
+  async buscarSenhaEmpresa(id_empresa) {
+    const sql = "SELECT senha_hash FROM empresas WHERE id_empresa = ?";
+    const [rows] = await conexao.execute(sql, [id_empresa]);
+    return rows.length > 0 ? rows[0].senha_hash : null;
+  },
+
+  // 🔹 buscar senha do fornecedor
+  async buscarSenhaFornecedor(id_fornecedor) {
+    const sql = "SELECT senha_hash FROM fornecedores WHERE id_fornecedor = ?";
+    const [rows] = await conexao.execute(sql, [id_fornecedor]);
+    return rows.length > 0 ? rows[0].senha_hash : null;
+  },
+
+  //buscar empresa por id
+  async buscarEmpresaPorId(id_empresa) {
+    const sql = "SELECT * FROM empresas WHERE id_empresa = ?";
+    const [rows] = await conexao.execute(sql, [id_empresa]);
+    return rows.length > 0 ? new Empresa(rows[0]) : null;
+  },
+
+  //buscar fornecedor por id
+  async buscarFornecedorPorId(id_fornecedor) {
+    const sql = "SELECT * FROM fornecedores WHERE id_fornecedor = ?";
+    const [rows] = await conexao.execute(sql, [id_fornecedor]);
+    return rows.length > 0 ? new Fornecedor(rows[0]) : null;
+  },
+
+  // 🔹 Inserir nova empresa
+  async inserirEmpresa(empresa) {
+    
+    const sql = `
+      INSERT INTO empresas (nome_fantasia, cnpj, email, senha_hash) 
+      VALUES (:nome_fantasia, :cnpj, :email, :senha_hash)
+ `;
+    const valores = [empresa.nome_fantasia, empresa.cnpj, empresa.email, empresa.senha_hash];
+    const [resultado] = await conexao.execute(sql, valores);
+    return resultado;
+  },
+  async inserirFornecedor(fornecedor) {
+    const sql = `
+      INSERT INTO fornecedores (nome_fantasia, cpf, email, senha_hash)
+      VALUES (?,?,?,?)
+    `;
+    const valores = [fornecedor.nome_fantasia, fornecedor.cpf, fornecedor.email, fornecedor.senha_hash];
+    const [resultado] = await conexao.execute(sql, valores);
+    return resultado;
+  },
+
   buscarCNPJ: async (cnpj) => {
     const sql = "SELECT cnpj, senha_hash, email FROM empresas WHERE cnpj = ?";
     const [rows] = await conexao.execute(sql, [cnpj]);
@@ -113,20 +178,6 @@ module.exports = {
     const sql = "SELECT cpf, senha_hash, email FROM fornecedores WHERE cpf = ?";
     const [rows] = await conexao.execute(sql, [cpf]);
     return rows.map(row => new Fornecedor(row));
-  },
-
-  inserirEmpresa: async (empresa) => {
-    const sql = "INSERT INTO empresas(nome_fantasia, cnpj, email, senha_hash) VALUES (?, ?, ?, ?)";
-    const valores = [empresa.nome_fantasia, empresa.cnpj, empresa.email, empresa.senha];
-    const [resultado] = await conexao.execute(sql, valores);
-    return resultado;
-  },
-
-  inserirFornecedor: async (fornecedor) => {
-    const sql = "INSERT INTO fornecedores(nome_fantasia, cpf, email, senha_hash) VALUES (?, ?, ?, ?)";
-    const valores = [fornecedor.nome_fantasia, fornecedor.cpf, fornecedor.email, fornecedor.senha];
-    const [resultado] = await conexao.execute(sql, valores);
-    return resultado;
   },
 
   salvarTokenE: async ({ token_redefinicao, expira_token, cnpj }) => {

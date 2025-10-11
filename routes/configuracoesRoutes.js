@@ -35,14 +35,17 @@ router.get("/historico", (req, res) => res.render("historico"));
 router.get("/mensagens", (req, res) => res.render("mensagens"));
 
 // Configurações
-router.get("/configuracoes", (req, res) => res.render("configuracoes",{ usuario : req.session.usuario[0] || null }));
+router.get("/configuracoes", (req, res) => res.render("configuracoes"));
 
 // ------------------- POSTs -------------------
 // Cadastro
-// router.post("/registro", loginController.cadastrar);
+ router.post("/cadastrar", configuracoesController.cadastrar);
 
 // // Login
-// router.post("/login", loginController.logar);
+ router.post("/logar", configuracoesController.logar);
+
+//alterar senha
+router.post("/alterarSenha", configuracoesController.alterarSenha);
 
 //salvar configurações
 router.post("/salvarConfiguracoes", configuracoesController.salvarConfiguracoes);

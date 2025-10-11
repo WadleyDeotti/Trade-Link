@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,22 +16,22 @@
 
 <body>
     <div class="dashboard-container">
-        
+
         <!-- Sidebar -->
         <aside class="sidebar">
             <div class="logo">
                 <img src="../fornecedores/logo.png" alt="TradeLink Logo">
             </div>
             <nav>
-    <ul>
-        <li><a href="/dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
-        <li><a href="/fornecedores"><i class="fas fa-user"></i> Perfil</a></li>
-        <li><a href="/pedidos"><i class="fas fa-file-invoice"></i> Pedidos/Vendas</a></li>
-        <li><a href="/historico"><i class="fas fa-history"></i> Histórico</a></li>
-        <li><a href="/mensagens"><i class="fas fa-envelope"></i> Mensagens</a></li>
-        <li class="active"><a href="/configuracoes"><i class="fas fa-cog"></i> Configurações</a></li>
-    </ul>
-</nav>
+                <ul>
+                    <li><a href="/dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="/fornecedores"><i class="fas fa-user"></i> Perfil</a></li>
+                    <li><a href="/pedidos"><i class="fas fa-file-invoice"></i> Pedidos/Vendas</a></li>
+                    <li><a href="/historico"><i class="fas fa-history"></i> Histórico</a></li>
+                    <li><a href="/mensagens"><i class="fas fa-envelope"></i> Mensagens</a></li>
+                    <li class="active"><a href="/configuracoes"><i class="fas fa-cog"></i> Configurações</a></li>
+                </ul>
+            </nav>
 
         </aside>
 
@@ -45,53 +46,64 @@
             </header>
 
             <div class="content">
-                
+
                 <!-- Navegação das configurações -->
                 <div class="settings-nav">
-                    <button class="settings-nav-btn active" data-target="conta"><i class="fas fa-user"></i> Conta</button>
-                    <button class="settings-nav-btn" data-target="privacidade"><i class="fas fa-lock"></i> Privacidade</button>
-                    <button class="settings-nav-btn" data-target="notificacoes"><i class="fas fa-bell"></i> Notificações</button>
+                    <button class="settings-nav-btn active" data-target="conta"><i class="fas fa-user"></i>
+                        Conta</button>
+                    <button class="settings-nav-btn" data-target="privacidade"><i class="fas fa-lock"></i>
+                        Privacidade</button>
+                    <button class="settings-nav-btn" data-target="notificacoes"><i class="fas fa-bell"></i>
+                        Notificações</button>
                     <button class="settings-nav-btn" data-target="idioma"><i class="fas fa-globe"></i> Idioma</button>
-                    <button class="settings-nav-btn" data-target="ajuda"><i class="fas fa-question-circle"></i> Ajuda</button>
+                    <button class="settings-nav-btn" data-target="ajuda"><i class="fas fa-question-circle"></i>
+                        Ajuda</button>
                 </div>
 
                 <!-- Formulário de configurações -->
                 <div class="settings-content">
                     <form id="settings-form" method="POST" action="/salvarConfiguracoes">
-                        
+
                         <!-- Seção Conta -->
                         <section class="content-section active" id="conta">
                             <h2 class="section-title"><i class="fas fa-user"></i> Conta</h2>
                             <div class="section-content">
-                                 <div class="form-group">
+                                <div class="form-group">
                                     <label>Informações da Conta:</label>
                                     <div class="account-info">
                                         <div class="info-item">
                                             <span class="info-label">Nome:</span>
-                                            
-                                            <input type="text" class="info-value" id="account-name" name="nome_fantasia" value="<%= usuario?.nome_fantasia %>" required>
-                                            
+
+                                            <input type="text" class="info-value" id="account-name" name="nome_fantasia"
+                                                value="<%= usuario?.nome_fantasia %>" required>
+
                                         </div>
                                         <div class="info-item">
                                             <span class="info-label">Email:</span>
-                                            <input type="text" class="info-value" id="account-email" name="email" value="<%= usuario?.email %>" required>
-                                            
+                                            <input type="text" class="info-value" id="account-email" name="email"
+                                                value="<%= usuario?.email %>" required>
+
                                         </div>
                                         <div class="info-item">
-                                            <span class="info-label">CPF/CNPJ:</span>
-                                            <span class="info-value"><%= usuario?.cnpj %></span>
-                                           
-                                            
+                                            <span class="info-label">CPF/CNPJ</span>
+                                            <span class="info-value">
+                                                <%= usuario?.cpf ? usuario?.cpf : usuario?.cnpj %>
+                                            </span>
+
+
                                         </div>
                                         <div class="info-item">
                                             <span class="info-label">Localização:</span>
-                                            <input type="text" class="info-value" id="account-location" name="localizacao" value="<%= usuario?.localizacao || 'não definido' %>" required>
-                                            
+                                            <input type="text" class="info-value" id="account-location"
+                                                name="localizacao" value="<%= usuario?.localizacao || 'não definido' %>"
+                                                required>
+
                                         </div>
                                         <div class="info-item">
                                             <span class="info-label">Telefone:</span><br>
-                                            <input type="text" class="info-value" id="account-phone" name="telefone" value="<%= usuario?.telefone || 'não definido'%>" required>
-                                            
+                                            <input type="text" class="info-value" id="account-phone" name="telefone"
+                                                value="<%= usuario?.telefone || 'não definido'%>" required>
+
                                         </div>
                                     </div>
                                 </div>
@@ -113,18 +125,25 @@
                                 <div class="privacy-option">
                                     <h3><i class="fas fa-eye"></i> Visibilidade do Perfil</h3>
                                     <div class="radio-group">
-                                        <label><input type="radio" name="visibility" value="public" checked><span class="radio-custom"></span>Público</label>
-                                        <label><input type="radio" name="visibility" value="friends"><span class="radio-custom"></span>Somente amigos</label>
-                                        <label><input type="radio" name="visibility" value="private"><span class="radio-custom"></span>Privado</label>
+                                        <label><input type="radio" name="visibility" value="public" checked><span
+                                                class="radio-custom"></span>Público</label>
+                                        <label><input type="radio" name="visibility" value="friends"><span
+                                                class="radio-custom"></span>Somente amigos</label>
+                                        <label><input type="radio" name="visibility" value="private"><span
+                                                class="radio-custom"></span>Privado</label>
                                     </div>
                                 </div>
 
                                 <div class="privacy-option">
                                     <h3><i class="fas fa-database"></i> Controle de Dados</h3>
                                     <div class="checkbox-group">
-                                        <label><input type="checkbox" name="data_sharing" checked><span class="checkbox-custom"></span>Permitir compartilhamento de dados anônimos</label>
-                                        <label><input type="checkbox" name="show_activity" checked><span class="checkbox-custom"></span>Mostrar atividade recente</label>
-                                        <label><input type="checkbox" name="search_visibility"><span class="checkbox-custom"></span>Permitir aparecer em buscas</label>
+                                        <label><input type="checkbox" name="data_sharing" checked><span
+                                                class="checkbox-custom"></span>Permitir compartilhamento de dados
+                                            anônimos</label>
+                                        <label><input type="checkbox" name="show_activity" checked><span
+                                                class="checkbox-custom"></span>Mostrar atividade recente</label>
+                                        <label><input type="checkbox" name="search_visibility"><span
+                                                class="checkbox-custom"></span>Permitir aparecer em buscas</label>
                                     </div>
                                 </div>
                             </div>
@@ -137,19 +156,26 @@
                                 <div class="notification-option">
                                     <h3><i class="fas fa-envelope-open-text"></i> Tipos de Notificação</h3>
                                     <div class="checkbox-group">
-                                        <label><input type="checkbox" name="notify_messages"  checked><span class="checkbox-custom"></span>Mensagens diretas</label>
-                                        <label><input type="checkbox" name="notify_mentions" checked><span class="checkbox-custom"></span>Menções</label>
-                                        <label><input type="checkbox" name="notify_updates" false><span class="checkbox-custom"></span>Atualizações do sistema</label>
-                                        <label><input type="checkbox" name="notify_comments" false><span class="checkbox-custom"></span>Comentários</label>
+                                        <label><input type="checkbox" name="notify_messages" checked><span
+                                                class="checkbox-custom"></span>Mensagens diretas</label>
+                                        <label><input type="checkbox" name="notify_mentions" checked><span
+                                                class="checkbox-custom"></span>Menções</label>
+                                        <label><input type="checkbox" name="notify_updates" false><span
+                                                class="checkbox-custom"></span>Atualizações do sistema</label>
+                                        <label><input type="checkbox" name="notify_comments" false><span
+                                                class="checkbox-custom"></span>Comentários</label>
                                     </div>
                                 </div>
 
                                 <div class="notification-option">
                                     <h3><i class="fas fa-sliders-h"></i> Preferências</h3>
                                     <div class="checkbox-group">
-                                        <label><input type="checkbox" name="important_only"><span class="checkbox-custom"></span>Somente notificações importantes</label>
-                                        <label><input type="checkbox" name="email_notifications" checked><span class="checkbox-custom"></span>Notificações por email</label>
-                                        <label><input type="checkbox" name="push_notifications"><span class="checkbox-custom"></span>Notificações push</label>
+                                        <label><input type="checkbox" name="important_only"><span
+                                                class="checkbox-custom"></span>Somente notificações importantes</label>
+                                        <label><input type="checkbox" name="email_notifications" checked><span
+                                                class="checkbox-custom"></span>Notificações por email</label>
+                                        <label><input type="checkbox" name="push_notifications"><span
+                                                class="checkbox-custom"></span>Notificações push</label>
                                     </div>
                                 </div>
                             </div>
@@ -173,8 +199,10 @@
                                 <div class="language-option">
                                     <h3><i class="far fa-clock"></i> Formato de Data/Hora</h3>
                                     <div class="radio-group">
-                                        <label><input type="radio" name="datetime_format" value="24h" checked><span class="radio-custom"></span>24 horas</label>
-                                        <label><input type="radio" name="datetime_format" value="12h"><span class="radio-custom"></span>12 horas</label>
+                                        <label><input type="radio" name="datetime_format" value="24h" checked><span
+                                                class="radio-custom"></span>24 horas</label>
+                                        <label><input type="radio" name="datetime_format" value="12h"><span
+                                                class="radio-custom"></span>12 horas</label>
                                     </div>
                                 </div>
 
@@ -198,14 +226,16 @@
                             <div class="section-content">
                                 <div class="help-option">
                                     <h3><i class="fas fa-book"></i> Documentação</h3>
-                                    <p>Consulte nossa <a href="#"><i class="fas fa-external-link-alt"></i> documentação completa</a>.</p>
+                                    <p>Consulte nossa <a href="#"><i class="fas fa-external-link-alt"></i> documentação
+                                            completa</a>.</p>
                                 </div>
 
                                 <div class="help-option">
                                     <h3><i class="fas fa-headset"></i> Suporte</h3>
                                     <p>Entre em contato com nossa equipe:</p>
                                     <ul class="contact-list">
-                                        <li><i class="fas fa-envelope"></i> Email: <a href="mailto:suporte@tradelink.com">suporte@tradelink.com</a></li>
+                                        <li><i class="fas fa-envelope"></i> Email: <a
+                                                href="mailto:suporte@tradelink.com">suporte@tradelink.com</a></li>
                                         <li><i class="fas fa-phone"></i> Telefone: (31) 97504-4314</li>
                                         <li><i class="fas fa-comment-dots"></i> Chat online: Disponível 24/7</li>
                                     </ul>
@@ -214,9 +244,12 @@
                                 <div class="help-option">
                                     <h3><i class="fas fa-file-contract"></i> Termos e Políticas</h3>
                                     <ul class="documents-list">
-                                        <li><a href="#"><i class="fas fa-file-alt"></i> Termos de Serviço</a><span class="doc-date">Atualizado: 15/06/2023</span></li>
-                                        <li><a href="#"><i class="fas fa-user-shield"></i> Política de Privacidade</a><span class="doc-date">Atualizado: 20/05/2023</span></li>
-                                        <li><a href="#"><i class="fas fa-users"></i> Diretrizes da Comunidade</a><span class="doc-date">Atualizado: 10/07/2023</span></li>
+                                        <li><a href="#"><i class="fas fa-file-alt"></i> Termos de Serviço</a><span
+                                                class="doc-date">Atualizado: 15/06/2023</span></li>
+                                        <li><a href="#"><i class="fas fa-user-shield"></i> Política de
+                                                Privacidade</a><span class="doc-date">Atualizado: 20/05/2023</span></li>
+                                        <li><a href="#"><i class="fas fa-users"></i> Diretrizes da Comunidade</a><span
+                                                class="doc-date">Atualizado: 10/07/2023</span></li>
                                     </ul>
                                 </div>
                             </div>
@@ -224,8 +257,10 @@
 
                         <!-- Botões -->
                         <div class="form-actions">
-                            <button type="button" class="btn btn-secondary" id="cancel-btn"><i class="fas fa-times"></i> Cancelar</button>
-                            <button type="submit" class="btn btn-primary" id="save-btn"><i class="fas fa-save"></i> Salvar Alterações</button>
+                            <button type="button" class="btn btn-secondary" id="cancel-btn"><i class="fas fa-times"></i>
+                                Cancelar</button>
+                            <button type="submit" class="btn btn-primary" id="save-btn"><i class="fas fa-save"></i>
+                                Salvar Alterações</button>
                             <div class="status-message" id="status-message"></div>
                         </div>
                     </form>
@@ -241,33 +276,36 @@
                 <h2>Alterar Senha</h2>
                 <span class="close">&times;</span>
             </div>
-            <div class="modal-body">
-                <form id="formSenha">
+            <form action="alterarSenha" method="post">
+                <div class="modal-body">
+
                     <div class="form-group">
                         <label for="current-password">Senha Atual:</label>
-                        <input id="current-password" type="password" required>
+                        <input id="current-password" type="password" name="current_password" required>
                     </div>
                     <div class="form-group">
                         <label for="new-password">Nova Senha:</label>
-                        <input id="new-password" type="password" required>
+                        <input id="new-password" type="password" name="new_password" required>
                     </div>
                     <div class="form-group">
                         <label for="confirm-password">Confirmar Nova Senha:</label>
-                        <input id="confirm-password" type="password" required>
+                        <input id="confirm-password" type="password" name="confirm_password" required>
                     </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" id="cancel-password-btn">Cancelar</button>
-                <button type="button" class="btn btn-primary" id="save-password-btn">Salvar Senha</button>
-            </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="cancel-password-btn">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" id="save-password-btn">Salvar Senha</button>
+                </div>
+            </form>
         </div>
     </div>
 
-    <!-- Toast -->
+
     <div id="toast" class="toast">
         <i class="fas fa-check-circle"></i>
         <span id="toast-message">Operação realizada com sucesso!</span>
     </div>
 </body>
+
 </html>
