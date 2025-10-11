@@ -57,8 +57,8 @@
 
                 <!-- Formulário de configurações -->
                 <div class="settings-content">
-                    <form id="settings-form" method="POST" action="alterar">
-
+                    <form id="settings-form" method="POST" action="/salvarConfiguracoes">
+                        
                         <!-- Seção Conta -->
                         <section class="content-section active" id="conta">
                             <h2 class="section-title"><i class="fas fa-user"></i> Conta</h2>
@@ -68,23 +68,30 @@
                                     <div class="account-info">
                                         <div class="info-item">
                                             <span class="info-label">Nome:</span>
-                                            <span class="info-value" id="account-name"><%= usuario?.nome_fantasia %></span>
+                                            
+                                            <input type="text" class="info-value" id="account-name" name="nome_fantasia" value="<%= usuario?.nome_fantasia %>" required>
+                                            
                                         </div>
                                         <div class="info-item">
                                             <span class="info-label">Email:</span>
-                                            <span class="info-value" id="account-email"><%= usuario?.email %></span>
+                                            <input type="text" class="info-value" id="account-email" name="email" value="<%= usuario?.email %>" required>
+                                            
                                         </div>
                                         <div class="info-item">
                                             <span class="info-label">CPF/CNPJ:</span>
-                                            <span class="info-value" id="account-cpf"><%= usuario?.cnpj %></span>
+                                            <span class="info-value"><%= usuario?.cnpj %></span>
+                                           
+                                            
                                         </div>
                                         <div class="info-item">
                                             <span class="info-label">Localização:</span>
-                                            <span class="info-value" id="account-location"><%= usuario?.localizacao || "não definido" %></span>
+                                            <input type="text" class="info-value" id="account-location" name="localizacao" value="<%= usuario?.localizacao || 'não definido' %>" required>
+                                            
                                         </div>
                                         <div class="info-item">
-                                            <span class="info-label">Telefone:</span>
-                                            <span class="info-value" id="account-phone"><%= usuario?.telefone || "não definido" %></span>
+                                            <span class="info-label">Telefone:</span><br>
+                                            <input type="text" class="info-value" id="account-phone" name="telefone" value="<%= usuario?.telefone || 'não definido'%>" required>
+                                            
                                         </div>
                                     </div>
                                 </div>
@@ -130,10 +137,10 @@
                                 <div class="notification-option">
                                     <h3><i class="fas fa-envelope-open-text"></i> Tipos de Notificação</h3>
                                     <div class="checkbox-group">
-                                        <label><input type="checkbox" name="notify_messages" checked><span class="checkbox-custom"></span>Mensagens diretas</label>
+                                        <label><input type="checkbox" name="notify_messages"  checked><span class="checkbox-custom"></span>Mensagens diretas</label>
                                         <label><input type="checkbox" name="notify_mentions" checked><span class="checkbox-custom"></span>Menções</label>
-                                        <label><input type="checkbox" name="notify_updates"><span class="checkbox-custom"></span>Atualizações do sistema</label>
-                                        <label><input type="checkbox" name="notify_comments"><span class="checkbox-custom"></span>Comentários</label>
+                                        <label><input type="checkbox" name="notify_updates" false><span class="checkbox-custom"></span>Atualizações do sistema</label>
+                                        <label><input type="checkbox" name="notify_comments" false><span class="checkbox-custom"></span>Comentários</label>
                                     </div>
                                 </div>
 

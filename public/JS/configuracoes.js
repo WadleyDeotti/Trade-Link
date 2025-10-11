@@ -48,97 +48,16 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Carrega configurações salvas localmente
-    function loadSettingsData() {
-        const savedData = localStorage.getItem('userSettings');
-        if (savedData) {
-            const data = JSON.parse(savedData);
-
-            // Funções auxiliares
-            const setChecked = (name, value) => {
-                const element = document.querySelector(`input[name="${name}"][value="${value}"]`);
-                if (element) element.checked = true;
-            };
-
-            const setCheckbox = (name, checked) => {
-                const element = document.querySelector(`input[name="${name}"]`);
-                if (element) element.checked = checked;
-            };
-
-            // Aplica os valores salvos
-            setChecked('visibility', data.visibility || 'public');
-            setCheckbox('data_sharing', data.data_sharing || false);
-            setCheckbox('show_activity', data.show_activity || false);
-            setCheckbox('search_visibility', data.search_visibility || false);
-            setCheckbox('notify_messages', data.notify_messages || false);
-            setCheckbox('notify_mentions', data.notify_mentions || false);
-            setCheckbox('notify_updates', data.notify_updates || false);
-            setCheckbox('notify_comments', data.notify_comments || false);
-            setCheckbox('important_only', data.important_only || false);
-            setCheckbox('email_notifications', data.email_notifications || false);
-            setCheckbox('push_notifications', data.push_notifications || false);
-            setChecked('datetime_format', data.datetime_format || '24h');
-
-            // Selects
-            if (data.language) {
-                document.getElementById('language-select').value = data.language;
-            }
-            if (data.timezone) {
-                document.getElementById('timezone-select').value = data.timezone;
-            }
-        }
-    }
+    
 
     // Salva as configurações no localStorage
-    function saveSettingsData() {
-        const settingsData = {
-            visibility: document.querySelector('input[name="visibility"]:checked').value,
-            data_sharing: document.querySelector('input[name="data_sharing"]').checked,
-            show_activity: document.querySelector('input[name="show_activity"]').checked,
-            search_visibility: document.querySelector('input[name="search_visibility"]').checked,
-            notify_messages: document.querySelector('input[name="notify_messages"]').checked,
-            notify_mentions: document.querySelector('input[name="notify_mentions"]').checked,
-            notify_updates: document.querySelector('input[name="notify_updates"]').checked,
-            notify_comments: document.querySelector('input[name="notify_comments"]').checked,
-            important_only: document.querySelector('input[name="important_only"]').checked,
-            email_notifications: document.querySelector('input[name="email_notifications"]').checked,
-            push_notifications: document.querySelector('input[name="push_notifications"]').checked,
-            language: document.getElementById('language-select').value,
-            timezone: document.getElementById('timezone-select').value,
-            datetime_format: document.querySelector('input[name="datetime_format"]:checked').value
-        };
-
-        localStorage.setItem('userSettings', JSON.stringify(settingsData));
-    }
+    
 
     // Ao clicar em “Salvar”
-    function handleSettingsSubmit(e) {
-        e.preventDefault();
-
-        // Mostrar spinner de carregamento
-        const submitText = saveBtn.querySelector('span:first-child');
-        const submitSpinner = saveBtn.querySelector('.spinner');
-
-        submitText.style.display = 'none';
-        submitSpinner.style.display = 'inline-block';
-
-        // Simular um pequeno delay (como se estivesse salvando)
-        setTimeout(() => {
-            saveSettingsData();
-
-            // Restaurar o botão
-            submitText.style.display = 'inline-block';
-            submitSpinner.style.display = 'none';
-
-            showToast('Configurações salvas com sucesso!');
-        }, 1000);
-    }
+    
 
     // Ao clicar em “Cancelar”
-    function resetForm() {
-        loadSettingsData();
-        showToast('Alterações canceladas.', 'warning');
-    }
+    
 
     // Exibe o toast (notificação)
     function showToast(message, type = 'success') {

@@ -24,21 +24,16 @@ app.use(express.urlencoded({extended:true}));
 
 app.use(express.static(path.join(__dirname,'public')));
 
-app.get('/', (req, res) => {
-  repository.testeUsuario((err, empresas) => {
-    
-    if (err) {
-      // aqui encerra a requisição
-      return res.status(500).send('Erro ao buscar usuário');
-    }
-
-    // só aqui você salva na sessão
+app.get('/', async (req, res) => {
+  try {
+    const empresas = await repository.testeUsuario(); // ✅ agora retorna uma Promise
     req.session.usuario = empresas;
     console.log('Sessão salva:', req.session.usuario);
-
-    // redireciona só depois
     res.redirect('/configuracoes');
-  });
+  } catch (err) {
+    console.error('Erro ao buscar usuário:', err);
+    res.status(500).send('Erro ao buscar usuário');
+  }
 });
 
 

@@ -3,6 +3,8 @@ const router = express.Router();
 const configuracoesController = require("../controllers/configuracoesController");
 
 // ------------------- GETs -------------------
+router.get("/",(req, res) => res.render("configuracoes") );
+
 // Dashboard
 router.get("/dashboard", (req, res) => res.render("dashboard"));
 
@@ -43,6 +45,6 @@ router.get("/configuracoes", (req, res) => res.render("configuracoes",{ usuario 
 // router.post("/login", loginController.logar);
 
 //salvar configurações
-router.post("/alterar", configuracoesController.salvarConfiguracoes);
+router.post("/salvarConfiguracoes", configuracoesController.salvarConfiguracoes);
 
 module.exports = router;
