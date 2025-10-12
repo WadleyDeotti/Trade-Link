@@ -6,11 +6,15 @@ const safeBool = val => val === 'on' ? 1 : 0;
 
 //atualizar dados salvos no server
 async function atualizarSessaoUsuario(req) {
-  const usuario = req.session.usuario;
+  const usuario = req.session.usuario[0];
   if (!usuario) throw new Error('Usuário não está logado');
 
-  const id = usuario.id_empresa || usuario.id_fornecedor;
+  console.log(usuario);
   const tipo = usuario.id_empresa ? 'empresa' : 'fornecedor';
+  const id = tipo==='empresa' ? usuario.id_empresa : usuario.id_fornecedor;
+
+  console.log(typeof id, id);
+  console.log('Tipo de usuário:', tipo);
 
   let novoUsuario;
   if (tipo === 'empresa') {
@@ -19,7 +23,8 @@ async function atualizarSessaoUsuario(req) {
     novoUsuario = await repository.buscarFornecedorPorId(id);
   }
 
-  req.session.usuario = novoUsuario[0] || novoUsuario;
+  req.session.usuario = novoUsuario;
+  console.log(req.session.usuario);
   return req.session.usuario;
 }
 
@@ -107,7 +112,7 @@ exports.salvarConfiguracoes = async (req, res) => {
       };
       await atualizarSessaoUsuario(req);
       console.log('Usuário atualizado com sucesso');
-      res.render("/configuracoes", (req, res) => res.render("configuracoes", { usuario: req.session.usuario[0] || null }));
+      res.redirect("/configuracoes", (req, res) => res.redirect("configuracoes", { usuario: req.session.usuario[0] || null }));
 
     } catch (err) {
       console.error('Erro ao atualizar usuário:', err);
@@ -161,7 +166,7 @@ exports.salvarConfiguracoes = async (req, res) => {
       };
       await atualizarSessaoUsuario(req);
       console.log('Usuário atualizado com sucesso');
-      res.render('/configuracoes');
+      res.redirect('/configuracoes');
 
     } catch (err) {
       console.error('Erro ao atualizar usuário:', err);
@@ -172,10 +177,13 @@ exports.salvarConfiguracoes = async (req, res) => {
 };
 
 exports.alterarSenha = async (req, res) => {
-  
+
   // Verifica se há sessão
   const usuario = req.session.usuario[0];
   const { current_password, new_password, confirm_password } = req.body;
+  if (!current_password || !new_password || !confirm_password) {
+    return res.redirect("configuracoes", { mensagem: "Preencha todos os campos", usuario: req.session.usuario });
+  }
 
   if (!usuario) {
     return res.status(401).send('Usuário não logado');
@@ -192,20 +200,20 @@ exports.alterarSenha = async (req, res) => {
     // Compara a senha atual com o hash
     const senhaCorreta = await bcrypt.compare(current_password, empresa.senha_hash);
     if (!senhaCorreta) {
-      return res.render("configuracoes", { mensagem: "Senha atual incorreta", usuario: req.session.usuario });
+      return res.redirect("configuracoes", { mensagem: "Senha atual incorreta", usuario: req.session.usuario });
     }
 
     // Verifica se as novas senhas coincidem
     if (new_password !== confirm_password) {
-      return res.render("configuracoes", { mensagem: "As senhas não coincidem", usuario: req.session.usuario });
+      return res.redirect("configuracoes", { mensagem: "As senhas não coincidem", usuario: req.session.usuario });
     }
-    
+
     // Criptografa e atualiza
     const senhaHash = await bcrypt.hash(new_password, 10);
-    await repository.updateSenhaEmpresa({ senha_hash: senhaHash, id_empresa: usuario.id_empresa });
+    await repository.updateSenhaEmpresa({ senha_hash: confirm_password, id_empresa: usuario.id_empresa });
     await atualizarSessaoUsuario(req);
     console.log('Senha alterada com sucesso');
-    res.render("configuracoes", { mensagem: "Senha alterada com sucesso!", usuario: req.session.usuario });
+    res.redirect("configuracoes", { mensagem: "Senha alterada com sucesso!", usuario: req.session.usuario });
   } else if (usuario.id_fornecedor) {
     const fornecedor = await repository.buscarSenhaFornecedor(usuario.id_fornecedor);
     console.log(current_password, fornecedor);
@@ -218,12 +226,14 @@ exports.alterarSenha = async (req, res) => {
 
     // Compara a senha atual com o hash
     if (!senhaCorreta) {
-      return res.render("configuracoes", { mensagem: "Senha atual incorreta", usuario: req.session.usuario });
-    } 
+      console.log('Senha atual incorreta');
+      return res.redirect("configuracoes", { mensagem: "Senha atual incorreta", usuario: req.session.usuario });
+    }
 
     // Verifica se as novas senhas coincidem
     if (new_password !== confirm_password) {
-      return res.render("configuracoes", { mensagem: "As senhas não coincidem", usuario: req.session.usuario });
+      console.log('As senhas não coincidem');
+      return res.redirect("configuracoes", { mensagem: "As senhas não coincidem", usuario: req.session.usuario });
     }
 
     // Criptografa e atualiza
@@ -231,7 +241,7 @@ exports.alterarSenha = async (req, res) => {
     await repository.updateSenhaFornecedor({ senha_hash: senhaHash, id_fornecedor: usuario.id_fornecedor });
     await atualizarSessaoUsuario(req);
     console.log('Senha alterada com sucesso');
-    res.render("configuracoes", { mensagem: "Senha alterada com sucesso!", usuario: req.session.usuario });
+    res.redirect("configuracoes", { mensagem: "Senha alterada com sucesso!", usuario: req.session.usuario });
   };
 };
 
@@ -287,13 +297,13 @@ exports.logar = async (req, res) => {
       user = await repository.buscarCNPJ(documento);
       tipo = 'empresa';
     } else {
-      return res.render("login", { mensagem: "Documento inválido" });
+      return res.redirect("login", { mensagem: "Documento inválido" });
     }
 
-    if (!user || user.length === 0) return res.render("login", { mensagem: "Usuário não encontrado" });
+    if (!user || user.length === 0) return res.redirect("login", { mensagem: "Usuário não encontrado" });
 
     const mesmaSenha = await bcrypt.compare(senha, user[0].senha_hash);
-    if (!mesmaSenha) return res.render("login", { mensagem: "Senha incorreta" });
+    if (!mesmaSenha) return res.redirect("login", { mensagem: "Senha incorreta" });
 
     req.session.usuario = { tipo };
     if (tipo === 'empresa') return res.redirect("/empresa/dashboard");
@@ -301,7 +311,7 @@ exports.logar = async (req, res) => {
 
   } catch (err) {
     console.error(err);
-    return res.status(500).render("login", { mensagem: "Erro no servidor" });
+    return res.status(500).redirect("login", { mensagem: "Erro no servidor" });
   }
 };
 
@@ -317,10 +327,10 @@ exports.redefinirSenha = async (req, res) => {
       user = await repository.buscarCNPJ(documento);
       tipo = 'empresa';
     } else {
-      return res.render("login", { mensagem: "Documento inválido" });
+      return res.redirect("login", { mensagem: "Documento inválido" });
     }
 
-    if (!user || user.length === 0) return res.render("login", { mensagem: "Usuário não encontrado" });
+    if (!user || user.length === 0) return res.redirect("login", { mensagem: "Usuário não encontrado" });
 
     const token = crypto.randomBytes(20).toString("hex");
     const expira = new Date(Date.now() + 3600000); // 1h
@@ -345,11 +355,11 @@ exports.redefinirSenha = async (req, res) => {
              <a href="${link}">${link}</a>`
     });
 
-    res.render("login", { mensagem: "Link de redefinição enviado ao seu email" });
+    res.redirect("login", { mensagem: "Link de redefinição enviado ao seu email" });
 
   } catch (err) {
     console.error(err);
-    res.status(500).render("login", { mensagem: "Erro ao processar redefinição de senha" });
+    res.status(500).redirect("login", { mensagem: "Erro ao processar redefinição de senha" });
   }
 };
 
@@ -359,14 +369,14 @@ exports.formResetarSenha = async (req, res) => {
     const user = await repository.buscarPorToken(token);
 
     if (!user || user.reset_expira < new Date()) {
-      return res.render("login", { mensagem: "Token inválido ou expirado" });
+      return res.redirect("login", { mensagem: "Token inválido ou expirado" });
     }
 
-    res.render("resetarSenha", { token });
+    res.redirect("resetarSenha", { token });
 
   } catch (err) {
     console.error(err);
-    res.status(500).render("login", { mensagem: "Erro ao acessar formulário de redefinição" });
+    res.status(500).redirect("login", { mensagem: "Erro ao acessar formulário de redefinição" });
   }
 };
 
@@ -377,16 +387,16 @@ exports.resetarSenha = async (req, res) => {
 
     const user = await repository.buscarPorToken(token);
     if (!user || user.reset_expira < new Date()) {
-      return res.render("login", { mensagem: "Token inválido ou expirado" });
+      return res.redirect("login", { mensagem: "Token inválido ou expirado" });
     }
 
     const senhaHash = await bcrypt.hash(senha, 10);
     await repository.atualizarSenha(user.id, senhaHash);
 
-    res.render("login", { mensagem: "Senha alterada com sucesso!" });
+    res.redirect("login", { mensagem: "Senha alterada com sucesso!" });
 
   } catch (err) {
     console.error(err);
-    res.status(500).render("login", { mensagem: "Erro ao atualizar senha" });
+    res.status(500).redirect("login", { mensagem: "Erro ao atualizar senha" });
   }
 };

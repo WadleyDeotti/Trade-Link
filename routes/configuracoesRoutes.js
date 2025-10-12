@@ -6,7 +6,7 @@ const configuracoesController = require("../controllers/configuracoesController"
 router.get("/",(req, res) => res.render("configuracoes") );
 
 // Dashboard
-router.get("/dashboard", (req, res) => res.render("dashboard"));
+router.get("/dashboard", (req, res) => res.render("dashboard"),{usuario: req.session.usuario});
 
 // Registro
 router.get("/registro", (req, res) => {
@@ -23,19 +23,19 @@ router.get("/login", (req, res) => {
 });
 
 // Fornecedores
-router.get("/fornecedores", (req, res) => res.render("fornecedores"));
+router.get("/fornecedores", (req, res) => res.render("fornecedores"),{usuario: req.session.usuario});
 
 // Pedidos e Vendas
-router.get("/pedidos", (req, res) => res.render("pedidos"));
+router.get("/pedidos", (req, res) => res.render("pedidos"),{usuario: req.session.usuario});
 
 // Histórico
-router.get("/historico", (req, res) => res.render("historico"));
+router.get("/historico", (req, res) => res.render("historico"),{usuario: req.session.usuario});
 
 // Mensagens
-router.get("/mensagens", (req, res) => res.render("mensagens"));
+router.get("/mensagens", (req, res) => res.render("mensagens"),{usuario: req.session.usuario});
 
 // Configurações
-router.get("/configuracoes", (req, res) => res.render("configuracoes"));
+router.get("/configuracoes", (req, res) => res.render("configuracoes"),{usuario: req.session.usuario});
 
 // ------------------- POSTs -------------------
 // Cadastro

@@ -36,7 +36,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.get('/',async (req, res) => {
   req.session.usuario = await repository.testeUsuario();
   console.log(req.session.usuario[0]);
-  res.render("configuracoes",{ usuario : req.session.usuario[0] || null });
+  res.render("configuracoes",{ usuario : req.session.usuario || null });
 });
 
 const Rotas = require('./routes/configuracoesRoutes');

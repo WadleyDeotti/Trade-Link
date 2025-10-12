@@ -75,19 +75,21 @@
                                             <span class="info-label">Nome:</span>
 
                                             <input type="text" class="info-value" id="account-name" name="nome_fantasia"
-                                                value="<%= usuario?.nome_fantasia %>" required>
+                                                value="<%= usuario[0]?.nome_fantasia %>" required>
+
 
                                         </div>
                                         <div class="info-item">
                                             <span class="info-label">Email:</span>
                                             <input type="text" class="info-value" id="account-email" name="email"
-                                                value="<%= usuario?.email %>" required>
+                                                value="<%= usuario[0]?.email %>" required>
 
                                         </div>
                                         <div class="info-item">
                                             <span class="info-label">CPF/CNPJ</span>
+
                                             <span class="info-value">
-                                                <%= usuario?.cpf ? usuario?.cpf : usuario?.cnpj %>
+                                                <%= usuario[0]?.cnpj ? usuario[0]?.cnpj : usuario[0]?.cpf %>
                                             </span>
 
 
@@ -95,14 +97,15 @@
                                         <div class="info-item">
                                             <span class="info-label">Localização:</span>
                                             <input type="text" class="info-value" id="account-location"
-                                                name="localizacao" value="<%= usuario?.localizacao || 'não definido' %>"
-                                                required>
+                                                name="localizacao"
+                                                value="<%= usuario[0]?.localizacao || 'não definido' %>" required>
+
 
                                         </div>
                                         <div class="info-item">
                                             <span class="info-label">Telefone:</span><br>
                                             <input type="text" class="info-value" id="account-phone" name="telefone"
-                                                value="<%= usuario?.telefone || 'não definido'%>" required>
+                                                value="<%= usuario[0]?.telefone || 'não definido'%>" required>
 
                                         </div>
                                     </div>
@@ -125,11 +128,14 @@
                                 <div class="privacy-option">
                                     <h3><i class="fas fa-eye"></i> Visibilidade do Perfil</h3>
                                     <div class="radio-group">
-                                        <label><input type="radio" name="visibility" value="public" checked><span
+                                        <label><input type="radio" name="visibility" value="public"
+                                                <%=usuario[0]?.visibility==='public' ? 'checked' : '' %>><span
                                                 class="radio-custom"></span>Público</label>
-                                        <label><input type="radio" name="visibility" value="friends"><span
+                                        <label><input type="radio" name="visibility" value="friends"
+                                                <%=usuario[0]?.visibility==='friends' ? 'checked' : '' %>><span
                                                 class="radio-custom"></span>Somente amigos</label>
-                                        <label><input type="radio" name="visibility" value="private"><span
+                                        <label><input type="radio" name="visibility" value="private"
+                                                <%=usuario[0]?.visibility==='private' ? 'checked' : '' %>><span
                                                 class="radio-custom"></span>Privado</label>
                                     </div>
                                 </div>
@@ -137,12 +143,15 @@
                                 <div class="privacy-option">
                                     <h3><i class="fas fa-database"></i> Controle de Dados</h3>
                                     <div class="checkbox-group">
-                                        <label><input type="checkbox" name="data_sharing" checked><span
-                                                class="checkbox-custom"></span>Permitir compartilhamento de dados
+                                        <label><input type="checkbox" name="data_sharing" <%=usuario[0]?.data_sharing
+                                                ? 'checked' : '' %>><span class="checkbox-custom"></span>Permitir
+                                            compartilhamento de dados
                                             anônimos</label>
-                                        <label><input type="checkbox" name="show_activity" checked><span
-                                                class="checkbox-custom"></span>Mostrar atividade recente</label>
-                                        <label><input type="checkbox" name="search_visibility"><span
+                                        <label><input type="checkbox" name="show_activity" <%=usuario[0]?.show_activity
+                                                ? 'checked' : '' %>><span class="checkbox-custom"></span>Mostrar
+                                            atividade recente</label>
+                                        <label><input type="checkbox" name="search_visibility"
+                                                <%=usuario[0]?.search_visibility ? 'checked' : '' %>><span
                                                 class="checkbox-custom"></span>Permitir aparecer em buscas</label>
                                     </div>
                                 </div>
@@ -156,26 +165,32 @@
                                 <div class="notification-option">
                                     <h3><i class="fas fa-envelope-open-text"></i> Tipos de Notificação</h3>
                                     <div class="checkbox-group">
-                                        <label><input type="checkbox" name="notify_messages" checked><span
-                                                class="checkbox-custom"></span>Mensagens diretas</label>
-                                        <label><input type="checkbox" name="notify_mentions" checked><span
-                                                class="checkbox-custom"></span>Menções</label>
-                                        <label><input type="checkbox" name="notify_updates" false><span
-                                                class="checkbox-custom"></span>Atualizações do sistema</label>
-                                        <label><input type="checkbox" name="notify_comments" false><span
-                                                class="checkbox-custom"></span>Comentários</label>
+                                        <label><input type="checkbox" name="notify_messages"
+                                                <%=usuario[0]?.notify_messages ? 'checked' : '' %>> Mensagens
+                                            diretas</label>
+                                        <label><input type="checkbox" name="notify_mentions"
+                                                <%=usuario[0]?.notify_mentions ? 'checked' : '' %>> Menções</label>
+                                        <label><input type="checkbox" name="notify_updates"
+                                                <%=usuario[0]?.notify_updates ? 'checked' : '' %>> Atualizações do
+                                            sistema</label>
+                                        <label><input type="checkbox" name="notify_comments"
+                                                <%=usuario[0]?.notify_comments ? 'checked' : '' %>> Comentários</label>
                                     </div>
                                 </div>
 
                                 <div class="notification-option">
                                     <h3><i class="fas fa-sliders-h"></i> Preferências</h3>
                                     <div class="checkbox-group">
-                                        <label><input type="checkbox" name="important_only"><span
-                                                class="checkbox-custom"></span>Somente notificações importantes</label>
-                                        <label><input type="checkbox" name="email_notifications" checked><span
-                                                class="checkbox-custom"></span>Notificações por email</label>
-                                        <label><input type="checkbox" name="push_notifications"><span
-                                                class="checkbox-custom"></span>Notificações push</label>
+
+                                        <label><input type="checkbox" name="important_only"
+                                                <%=usuario[0]?.important_only ? 'checked' : '' %>> Somente notificações
+                                            importantes</label>
+                                        <label><input type="checkbox" name="email_notifications"
+                                                <%=usuario[0]?.email_notifications ? 'checked' : '' %>> Notificações por
+                                            email</label>
+                                        <label><input type="checkbox" name="push_notifications"
+                                                <%=usuario[0]?.push_notifications ? 'checked' : '' %>> Notificações
+                                            push</label>
                                     </div>
                                 </div>
                             </div>
@@ -188,21 +203,28 @@
                                 <div class="language-option">
                                     <label for="language-select"><i class="fas fa-language"></i> Idioma:</label>
                                     <select id="language-select" name="language" class="styled-select">
-                                        <option value="pt-br" selected>Português (Brasil)</option>
-                                        <option value="en-us">English (US)</option>
-                                        <option value="es-es">Español</option>
-                                        <option value="fr-fr">Français</option>
-                                        <option value="de-de">Deutsch</option>
+                                        <option value="pt-br" <%=usuario[0]?.language==='pt-br' ? 'selected' : '' %>
+                                            >Português (Brasil)</option>
+                                        <option value="en-us" <%=usuario[0]?.language==='en-us' ? 'selected' : '' %>
+                                            >English (US)</option>
+                                        <option value="es-es" <%=usuario[0]?.language==='es-es' ? 'selected' : '' %>
+                                            >Español</option>
+                                        <option value="fr-fr" <%=usuario[0]?.language==='fr-fr' ? 'selected' : '' %>
+                                            >Français</option>
+                                        <option value="de-de" <%=usuario[0]?.language==='de-de' ? 'selected' : '' %>
+                                            >Deutsch</option>
                                     </select>
                                 </div>
 
                                 <div class="language-option">
                                     <h3><i class="far fa-clock"></i> Formato de Data/Hora</h3>
                                     <div class="radio-group">
-                                        <label><input type="radio" name="datetime_format" value="24h" checked><span
-                                                class="radio-custom"></span>24 horas</label>
-                                        <label><input type="radio" name="datetime_format" value="12h"><span
-                                                class="radio-custom"></span>12 horas</label>
+                                        <label><input type="radio" name="datetime_format" value="24h"
+                                                <%=usuario[0]?.datetime_format==='24h' ? 'checked' : '' %>> 24
+                                            horas</label>
+                                        <label><input type="radio" name="datetime_format" value="12h"
+                                                <%=usuario[0]?.datetime_format==='12h' ? 'checked' : '' %>> 12
+                                            horas</label>
                                     </div>
                                 </div>
 
@@ -210,11 +232,16 @@
                                     <h3><i class="fas fa-map-marker-alt"></i> Região</h3>
                                     <label for="timezone-select">Fuso horário:</label>
                                     <select id="timezone-select" name="timezone" class="styled-select">
-                                        <option value="-3" selected>Brasília (UTC-03:00)</option>
-                                        <option value="-4">Manaus (UTC-04:00)</option>
-                                        <option value="-5">Rio Branco (UTC-05:00)</option>
-                                        <option value="0">Londres (UTC±00:00)</option>
-                                        <option value="1">Paris (UTC+01:00)</option>
+                                        <option value="-3" <%=usuario[0]?.timezone=='-3' ? 'selected' : '' %>>Brasília
+                                            (UTC-03:00)</option>
+                                        <option value="-4" <%=usuario[0]?.timezone=='-4' ? 'selected' : '' %>>Manaus
+                                            (UTC-04:00)</option>
+                                        <option value="-5" <%=usuario[0]?.timezone=='-5' ? 'selected' : '' %>>Rio Branco
+                                            (UTC-05:00)</option>
+                                        <option value="0" <%=usuario[0]?.timezone=='0' ? 'selected' : '' %>>Londres
+                                            (UTC±00:00)</option>
+                                        <option value="1" <%=usuario[0]?.timezone=='1' ? 'selected' : '' %>>Paris
+                                            (UTC+01:00)</option>
                                     </select>
                                 </div>
                             </div>

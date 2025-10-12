@@ -1,4 +1,3 @@
-// repository/usuarioRepository.js
 const mysql = require('mysql2/promise');
 const Empresa = require('../models/empresaModel');
 const Fornecedor = require('../models/fornecedorModel');
@@ -26,7 +25,7 @@ const conexao = mysql.createPool({
 module.exports = {
   // 🔹 Exemplo: buscar uma empresa de teste
   async testeUsuario() {
-    const [linhas] = await conexao.query("SELECT * FROM fornecedores WHERE id_fornecedor = 6");
+    const [linhas] = await conexao.query("SELECT * FROM fornecedores WHERE id_fornecedor = 8");
     return linhas.map(row => new Fornecedor(row));
   },
 
@@ -50,7 +49,7 @@ module.exports = {
 
   // 🔹 Atualizar dados da empresa
   async updateEmpresa(dados) {
-  const sql = `
+    const sql = `
     UPDATE empresas SET
       nome_fantasia = ?,
       email = ?,
@@ -73,35 +72,35 @@ module.exports = {
     WHERE id_empresa = ?
   `;
 
-  const values = [
-    dados.nome_fantasia,
-    dados.email,
-    dados.localizacao,
-    dados.telefone,
-    dados.visibility,
-    dados.data_sharing,
-    dados.show_activity,
-    dados.search_visibility,
-    dados.notify_messages,
-    dados.notify_mentions,
-    dados.notify_updates,
-    dados.notify_comments,
-    dados.important_only,
-    dados.email_notifications,
-    dados.push_notifications,
-    dados.language,
-    dados.datetime_format,
-    dados.timezone,
-    dados.id_empresa
-  ];
+    const values = [
+      dados.nome_fantasia,
+      dados.email,
+      dados.localizacao,
+      dados.telefone,
+      dados.visibility,
+      dados.data_sharing,
+      dados.show_activity,
+      dados.search_visibility,
+      dados.notify_messages,
+      dados.notify_mentions,
+      dados.notify_updates,
+      dados.notify_comments,
+      dados.important_only,
+      dados.email_notifications,
+      dados.push_notifications,
+      dados.language,
+      dados.datetime_format,
+      dados.timezone,
+      dados.id_empresa
+    ];
 
-  console.log('📦 Dados recebidos no repository:', dados);
+    console.log('📦 Dados recebidos no repository:', dados);
 
-  const [resultado] = await conexao.execute(sql, values);
-  console.log('🧾 Resultado do UPDATE:', resultado);
+    const [resultado] = await conexao.execute(sql, values);
+    console.log('🧾 Resultado do UPDATE:', resultado);
 
-  return resultado;
-},
+    return resultado;
+  },
 
   // 🔹 Atualizar senha Empresa
   async updateSenhaEmpresa(dados) {
@@ -114,9 +113,16 @@ module.exports = {
   // 🔹 Atualizar senha Fornecedor
   async updateSenhaFornecedor(dados) {
     const sql = "UPDATE fornecedores SET senha_hash = :senha_hash WHERE id_fornecedor = :id_fornecedor";
-    const valores = [dados.senha_hash, dados.id_fornecedor];
-    const [resultado] = await conexao.execute(sql, valores);
-    return resultado;
+    console.log('Tipo senha_hash:', typeof dados.senha_hash);
+    console.log('Tipo id_fornecedor:', typeof dados.id_fornecedor);
+    try {
+      const [resultado] = await conexao.execute(sql, dados);
+      console.log('✅ Atualização OK:', resultado);
+      return resultado;
+    } catch (erro) {
+      console.error('❌ Erro MySQL2:', erro.message);
+      throw erro;
+    }
   },
 
   // 🔹 buscar senha da empresa
@@ -149,7 +155,7 @@ module.exports = {
 
   // 🔹 Inserir nova empresa
   async inserirEmpresa(empresa) {
-    
+
     const sql = `
       INSERT INTO empresas (nome_fantasia, cnpj, email, senha_hash) 
       VALUES (:nome_fantasia, :cnpj, :email, :senha_hash)
