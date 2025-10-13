@@ -16,7 +16,7 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 app.use((req, res, next) => {
-  res.locals.session = req.session;
+  res.locals.usuario = req.session.usuario || null;
   next();
 });
 
@@ -24,20 +24,17 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-// app.get('/', async (req, res) => {
-//   if(req.session.usuario){
-//     if(req.session.usuario[0].cnpj){
-//       res.render('dashboard',{ usuario : req.session.usuario[0] || null });
-//     }else if(req.session.usuario[0].cpf){
-//       res.render('fornecedores',{ usuario : req.session.usuario[0] || null });
-//     }}else{res.render("registro")}
-// });
-
-app.get('/',async (req, res) => {
-  req.session.usuario = await repository.testeUsuario();
-  console.log(req.session.usuario[0]);
-  res.render("configuracoes",{ usuario : req.session.usuario || null });
+app.get('/', async (req, res) => {
+  if (req.session.usuario) {
+    if (req.session.usuario[0].cnpj) {
+      res.render('dashboard', { usuario: req.session.usuario || null });
+    } else if (req.session.usuario[0].cpf) {
+      res.render('fornecedores', { usuario: req.session.usuario || null });
+    }
+  } else { res.render("registro") }
 });
+
+
 
 const Rotas = require('./routes/configuracoesRoutes');
 

@@ -6,12 +6,12 @@ const safeBool = val => val === 'on' ? 1 : 0;
 
 //atualizar dados salvos no server
 async function atualizarSessaoUsuario(req) {
-  const usuario = req.session.usuario[0];
+  const usuario = req.session.usuario;
   if (!usuario) throw new Error('Usuário não está logado');
 
   console.log(usuario);
   const tipo = usuario.id_empresa ? 'empresa' : 'fornecedor';
-  const id = tipo==='empresa' ? usuario.id_empresa : usuario.id_fornecedor;
+  const id = tipo === 'empresa' ? usuario.id_empresa : usuario.id_fornecedor;
 
   console.log(typeof id, id);
   console.log('Tipo de usuário:', tipo);
@@ -31,7 +31,7 @@ async function atualizarSessaoUsuario(req) {
 exports.salvarConfiguracoes = async (req, res) => {
 
   // Verifica se há sessão
-  const usuario = req.session.usuario[0];
+  const usuario = req.session.usuario;
   if (!usuario) {
     return res.status(401).send('Usuário não logado');
   }
@@ -112,7 +112,7 @@ exports.salvarConfiguracoes = async (req, res) => {
       };
       await atualizarSessaoUsuario(req);
       console.log('Usuário atualizado com sucesso');
-      res.redirect("/configuracoes", (req, res) => res.redirect("configuracoes", { usuario: req.session.usuario[0] || null }));
+      res.redirect("/configuracoes", (req, res) => res.redirect("configuracoes", { usuario: req.session.usuario || null }));
 
     } catch (err) {
       console.error('Erro ao atualizar usuário:', err);
@@ -179,7 +179,7 @@ exports.salvarConfiguracoes = async (req, res) => {
 exports.alterarSenha = async (req, res) => {
 
   // Verifica se há sessão
-  const usuario = req.session.usuario[0];
+  const usuario = req.session.usuario;
   const { current_password, new_password, confirm_password } = req.body;
   if (!current_password || !new_password || !confirm_password) {
     return res.redirect("configuracoes", { mensagem: "Preencha todos os campos", usuario: req.session.usuario });
@@ -288,24 +288,24 @@ exports.logar = async (req, res) => {
     let { documento, senha } = req.body;
     documento = documento.replace(/\D/g, '');
 
-    let user, tipo;
+    let user;
 
     if (documento.length === 11) {
       user = await repository.buscarCPF(documento);
-      tipo = 'fornecedor';
+
     } else if (documento.length === 14) {
       user = await repository.buscarCNPJ(documento);
-      tipo = 'empresa';
+
     } else {
       return res.redirect("login", { mensagem: "Documento inválido" });
     }
 
     if (!user || user.length === 0) return res.redirect("login", { mensagem: "Usuário não encontrado" });
 
-    const mesmaSenha = await bcrypt.compare(senha, user[0].senha_hash);
+    const mesmaSenha = await bcrypt.compare(senha, user.senha_hash);
     if (!mesmaSenha) return res.redirect("login", { mensagem: "Senha incorreta" });
 
-    req.session.usuario = { tipo };
+
     if (tipo === 'empresa') return res.redirect("/empresa/dashboard");
     return res.redirect("/fornecedores");
 
@@ -348,7 +348,7 @@ exports.redefinirSenha = async (req, res) => {
 
     const link = `http://localhost:6767/atualizarSenha/${token}`;
     await transporter.sendMail({
-      to: user[0].email,
+      to: user.email,
       from: "",
       subject: "Trade Link - Redefinição de senha",
       html: `<p>Clique no link para redefinir sua senha:</p>

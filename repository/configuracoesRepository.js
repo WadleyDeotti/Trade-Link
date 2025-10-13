@@ -25,8 +25,8 @@ const conexao = mysql.createPool({
 module.exports = {
   // 🔹 Exemplo: buscar uma empresa de teste
   async testeUsuario() {
-    const [linhas] = await conexao.query("SELECT * FROM fornecedores WHERE id_fornecedor = 8");
-    return linhas.map(row => new Fornecedor(row));
+    const [rows] = await conexao.query("SELECT * FROM fornecedores WHERE id_fornecedor = 8");
+    return rows.length > 0 ? new Fornecedor(rows[0]) : null;
   },
 
   // 🔹 Buscar empresa por CNPJ
@@ -129,7 +129,7 @@ module.exports = {
   async buscarSenhaEmpresa(id_empresa) {
     const sql = "SELECT senha_hash FROM empresas WHERE id_empresa = ?";
     const [rows] = await conexao.execute(sql, [id_empresa]);
-    return rows.length > 0 ? rows[0].senha_hash : null;
+    return rows.length > 0 ? new Empresa(rows[0]) : null;
   },
 
   // 🔹 buscar senha do fornecedor
@@ -175,15 +175,15 @@ module.exports = {
   },
 
   buscarCNPJ: async (cnpj) => {
-    const sql = "SELECT cnpj, senha_hash, email FROM empresas WHERE cnpj = ?";
-    const [rows] = await conexao.execute(sql, [cnpj]);
-    return rows.map(row => new Empresa(row));
+    const sql = "SELECT * FROM empresas WHERE cnpj = ?";
+    const [rows] = await conexao.execute(sql, [id_empresa]);
+    return rows.length > 0 ? new Empresa(rows[0]) : null;
   },
 
   buscarCPF: async (cpf) => {
-    const sql = "SELECT cpf, senha_hash, email FROM fornecedores WHERE cpf = ?";
+    const sql = "SELECT * FROM fornecedores WHERE cpf = ?";
     const [rows] = await conexao.execute(sql, [cpf]);
-    return rows.map(row => new Fornecedor(row));
+    return rows.length > 0 ? new Fornecedor(rows[0]) : null;
   },
 
   salvarTokenE: async ({ token_redefinicao, expira_token, cnpj }) => {
@@ -203,13 +203,13 @@ module.exports = {
   buscarPorTokenE: async (token) => {
     const sql = "SELECT * FROM empresas WHERE token_redefinicao = ?";
     const [rows] = await conexao.execute(sql, [token]);
-    return rows.length > 0 ? rows[0] : null;
+    return rows.length > 0 ? new Empresa(rows[0]) : null;
   },
 
   buscarPorTokenF: async (token) => {
     const sql = "SELECT * FROM fornecedores WHERE token_redefinicao = ?";
     const [rows] = await conexao.execute(sql, [token]);
-    return rows.length > 0 ? rows[0] : null;
+    return rows.length > 0 ? new Fornecedor(rows[0]) : null;
   }
 
 

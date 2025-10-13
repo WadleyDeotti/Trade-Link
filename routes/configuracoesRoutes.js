@@ -3,10 +3,10 @@ const router = express.Router();
 const configuracoesController = require("../controllers/configuracoesController");
 
 // ------------------- GETs -------------------
-router.get("/",(req, res) => res.render("configuracoes") );
+router.get("/", (req, res) => res.render("configuracoes"));
 
 // Dashboard
-router.get("/dashboard", (req, res) => res.render("dashboard"),{usuario: req.session.usuario});
+router.get("/dashboard", (req, res) => res.render("dashboard"));
 
 // Registro
 router.get("/registro", (req, res) => {
@@ -23,26 +23,26 @@ router.get("/login", (req, res) => {
 });
 
 // Fornecedores
-router.get("/fornecedores", (req, res) => res.render("fornecedores"),{usuario: req.session.usuario});
+router.get("/fornecedores", (req, res) => res.render("fornecedores"));
 
 // Pedidos e Vendas
-router.get("/pedidos", (req, res) => res.render("pedidos"),{usuario: req.session.usuario});
+router.get("/pedidos", (req, res) => res.render("pedidos"));
 
 // Histórico
-router.get("/historico", (req, res) => res.render("historico"),{usuario: req.session.usuario});
+router.get("/historico", (req, res) => res.render("historico"));
 
 // Mensagens
-router.get("/mensagens", (req, res) => res.render("mensagens"),{usuario: req.session.usuario});
+router.get("/mensagens", (req, res) => res.render("mensagens"));
 
 // Configurações
-router.get("/configuracoes", (req, res) => res.render("configuracoes"),{usuario: req.session.usuario});
+router.get("/configuracoes", (req, res) => res.render("configuracoes"));
 
 // ------------------- POSTs -------------------
 // Cadastro
- router.post("/cadastrar", configuracoesController.cadastrar);
+router.post("/cadastrar", configuracoesController.cadastrar);
 
 // // Login
- router.post("/logar", configuracoesController.logar);
+router.post("/logar", configuracoesController.logar);
 
 //alterar senha
 router.post("/alterarSenha", configuracoesController.alterarSenha);
