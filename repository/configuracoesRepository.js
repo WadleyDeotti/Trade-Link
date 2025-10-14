@@ -93,10 +93,52 @@ module.exports = {
 
     return resultado;
   },
-  
+
   // 🔹 Atualizar dados do fornecedor
   async updateFornecedor(dados) {
+    const sql = `
+    UPDATE fornecedores SET
+      visibility = ?,
+      data_sharing = ?,
+      show_activity = ?,
+      search_visibility = ?,
+      notify_messages = ?,
+      notify_mentions = ?,
+      notify_updates = ?,
+      notify_comments = ?,
+      important_only = ?,
+      email_notifications = ?,
+      push_notifications = ?,
+      language = ?,
+      datetime_format = ?,
+      timezone = ?
+    WHERE id_fornecedor = ?
+  `;
 
+    const values = [
+      dados.visibility,
+      dados.data_sharing,
+      dados.show_activity,
+      dados.search_visibility,
+      dados.notify_messages,
+      dados.notify_mentions,
+      dados.notify_updates,
+      dados.notify_comments,
+      dados.important_only,
+      dados.email_notifications,
+      dados.push_notifications,
+      dados.language,
+      dados.datetime_format,
+      dados.timezone,
+      dados.id_empresa
+    ];
+
+    console.log('📦 Dados recebidos no repository:', dados);
+
+    const [resultado] = await conexao.execute(sql, values);
+    console.log('🧾 Resultado do UPDATE:', resultado);
+
+    return resultado;
 
   },
 
