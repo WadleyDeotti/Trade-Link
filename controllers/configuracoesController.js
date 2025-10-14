@@ -38,10 +38,6 @@ exports.salvarConfiguracoes = async (req, res) => {
 
   // Pega os dados enviados pelo formulário
   const {
-    nome_fantasia = '',
-    email = '',
-    localizacao = '',
-    telefone = '',
     visibility = 'public',
     data_sharing = 'off',
     show_activity = 'off',
@@ -67,10 +63,6 @@ exports.salvarConfiguracoes = async (req, res) => {
     try {
       // Atualiza no banco usando repository com async/await
       await repository.updateEmpresa({
-        nome_fantasia,
-        email,
-        localizacao,
-        telefone,
         visibility,
         data_sharing: safe(safeBool(data_sharing)),
         show_activity: safe(safeBool(show_activity)),
@@ -89,30 +81,9 @@ exports.salvarConfiguracoes = async (req, res) => {
       });
 
       // Atualiza os dados na sessão
-      req.session.usuario = {
-        ...usuario,
-        nome_fantasia,
-        email,
-        localizacao,
-        telefone,
-        visibility,
-        data_sharing: safeBool(data_sharing),
-        show_activity: safeBool(show_activity),
-        search_visibility: safeBool(search_visibility),
-        notify_messages: safeBool(notify_messages),
-        notify_mentions: safeBool(notify_mentions),
-        notify_updates: safeBool(notify_updates),
-        notify_comments: safeBool(notify_comments),
-        important_only: safeBool(important_only),
-        email_notifications: safeBool(email_notifications),
-        push_notifications: safeBool(push_notifications),
-        language,
-        datetime_format,
-        timezone
-      };
       await atualizarSessaoUsuario(req);
       console.log('Usuário atualizado com sucesso');
-      res.redirect("/configuracoes", (req, res) => res.redirect("configuracoes", { usuario: req.session.usuario || null }));
+      res.redirect("/configuracoes");
 
     } catch (err) {
       console.error('Erro ao atualizar usuário:', err);
@@ -120,11 +91,7 @@ exports.salvarConfiguracoes = async (req, res) => {
     }
   } else if (usuario.id_fornecedor) {
     try {
-      await repository.updateEmpresa({
-        nome_fantasia,
-        email,
-        localizacao,
-        telefone,
+      await repository.updateFornecedor({
         visibility,
         data_sharing: safe(safeBool(data_sharing)),
         show_activity: safe(safeBool(show_activity)),
@@ -143,27 +110,6 @@ exports.salvarConfiguracoes = async (req, res) => {
       });
 
       // Atualiza os dados na sessão
-      req.session.usuario = {
-        ...usuario,
-        nome_fantasia,
-        email,
-        localizacao,
-        telefone,
-        visibility,
-        data_sharing: safeBool(data_sharing),
-        show_activity: safeBool(show_activity),
-        search_visibility: safeBool(search_visibility),
-        notify_messages: safeBool(notify_messages),
-        notify_mentions: safeBool(notify_mentions),
-        notify_updates: safeBool(notify_updates),
-        notify_comments: safeBool(notify_comments),
-        important_only: safeBool(important_only),
-        email_notifications: safeBool(email_notifications),
-        push_notifications: safeBool(push_notifications),
-        language,
-        datetime_format,
-        timezone
-      };
       await atualizarSessaoUsuario(req);
       console.log('Usuário atualizado com sucesso');
       res.redirect('/configuracoes');

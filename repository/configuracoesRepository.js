@@ -51,10 +51,6 @@ module.exports = {
   async updateEmpresa(dados) {
     const sql = `
     UPDATE empresas SET
-      nome_fantasia = ?,
-      email = ?,
-      localizacao = ?,
-      telefone = ?,
       visibility = ?,
       data_sharing = ?,
       show_activity = ?,
@@ -73,10 +69,6 @@ module.exports = {
   `;
 
     const values = [
-      dados.nome_fantasia,
-      dados.email,
-      dados.localizacao,
-      dados.telefone,
       dados.visibility,
       dados.data_sharing,
       dados.show_activity,
@@ -100,6 +92,12 @@ module.exports = {
     console.log('🧾 Resultado do UPDATE:', resultado);
 
     return resultado;
+  },
+  
+  // 🔹 Atualizar dados do fornecedor
+  async updateFornecedor(dados) {
+
+
   },
 
   // 🔹 Atualizar senha Empresa

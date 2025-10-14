@@ -73,22 +73,18 @@
                                     <div class="account-info">
                                         <div class="info-item">
                                             <span class="info-label">Nome:</span>
-
-                                            <input type="text" class="info-value" id="account-name" name="nome_fantasia"
-                                                value="<%= usuario?.nome_fantasia %>" required>
-
-
+                                            <span class="info-value" id="account-info"><%= usuario?.nome_fantasia ? usuario?.nome_fantasia : "Não definido"%></span>
+                                            
                                         </div>
                                         <div class="info-item">
                                             <span class="info-label">Email:</span>
-                                            <input type="text" class="info-value" id="account-email" name="email"
-                                                value="<%= usuario?.email %>" required>
+                                            <span class="info-value" id="account-info"><%= usuario?.email ? usuario?.email : "Não definido"%></span>
+                                            
 
                                         </div>
                                         <div class="info-item">
-                                            <span class="info-label">CPF/CNPJ</span>
-
-                                            <span class="info-value">
+                                            <span class="info-label">CPF/CNPJ</span>     
+                                            <span class="info-value" id="account-info">
                                                 <%= usuario?.cnpj ? usuario?.cnpj : usuario?.cpf %>
                                             </span>
 
@@ -96,17 +92,12 @@
                                         </div>
                                         <div class="info-item">
                                             <span class="info-label">Localização:</span>
-                                            <input type="text" class="info-value" id="account-location"
-                                                name="localizacao" value="<%= usuario?.localizacao || 'não definido' %>"
-                                                required>
-
-
+                                            <span class="info-value" id="account-info"><%= usuario?.localizacao ? usuario?.localizacao : "Não definido" %></span>
+                                            
                                         </div>
                                         <div class="info-item">
                                             <span class="info-label">Telefone:</span><br>
-                                            <input type="text" class="info-value" id="account-phone" name="telefone"
-                                                value="<%= usuario?.telefone || 'não definido'%>" required>
-
+                                            <span class="info-value" id="account-info"><%= usuario?.Telefone ? usuario?.Telefone : "Não definido"%></span>                                          
                                         </div>
                                     </div>
                                 </div>
