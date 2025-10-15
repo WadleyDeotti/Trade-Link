@@ -325,3 +325,181 @@ document.addEventListener('DOMContentLoaded', function() {
     // Inicialização
     loadHistory();
 });
+
+ //alterações italo
+        document.addEventListener("DOMContentLoaded", () => {
+            const historyBody = document.getElementById("history-body");
+            const totalPurchases = document.getElementById("total-purchases");
+            const totalSales = document.getElementById("total-sales");
+            const balance = document.getElementById("balance");
+
+            const yearFilter = document.getElementById("year-filter");
+            const typeFilter = document.getElementById("type-filter");
+            const searchInput = document.getElementById("search-input");
+
+            async function carregarHistorico() {
+                const year = yearFilter.value;
+                const type = typeFilter.value;
+                const search = searchInput.value;
+
+                const response = await fetch(`/api/historico?year=${year}&type=${type}&search=${search}`);
+                const data = await response.json();
+
+                historyBody.innerHTML = "";
+
+                data.forEach(item => {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td>${new Date(item.data).toLocaleDateString("pt-BR")}</td>
+                        <td>${item.tipo === "purchase" ? "Compra" : "Venda"}</td>
+                        <td>${item.parceiro}</td>
+                        <td>R$ ${item.valor.toFixed(2).replace(".", ",")}</td>
+                        <td>${item.status}</td>
+                        <td>${item.detalhes || "-"}</td>
+                    `;
+                    historyBody.appendChild(row);
+                });
+            }
+
+            async function carregarResumo() {
+                const response = await fetch("/api/historico/resumo");
+                const data = await response.json();
+
+                totalPurchases.textContent = `R$ ${data.total_purchases.toFixed(2).replace(".", ",")}`;
+                totalSales.textContent = `R$ ${data.total_sales.toFixed(2).replace(".", ",")}`;
+                balance.textContent = `R$ ${data.balance.toFixed(2).replace(".", ",")}`;
+            }
+
+            // Eventos
+            yearFilter.addEventListener("change", carregarHistorico);
+            typeFilter.addEventListener("change", carregarHistorico);
+            searchInput.addEventListener("input", carregarHistorico);
+
+            // Inicialização
+            carregarHistorico();
+            carregarResumo();
+        });
+
+        document.addEventListener("DOMContentLoaded", () => {
+    const historyBody = document.getElementById("history-body");
+    const totalPurchases = document.getElementById("total-purchases");
+    const totalSales = document.getElementById("total-sales");
+    const balance = document.getElementById("balance");
+    const ctx = document.getElementById("history-chart").getContext("2d");
+
+    const yearFilter = document.getElementById("year-filter");
+    const typeFilter = document.getElementById("type-filter");
+    const searchInput = document.getElementById("search-input");
+
+    let chart; // variável global pro gráfico
+
+    async function carregarHistorico() {
+        const year = yearFilter.value;
+        const type = typeFilter.value;
+        const search = searchInput.value;
+
+        const response = await fetch(`/api/historico?year=${year}&type=${type}&search=${search}`);
+        const data = await response.json();
+
+        historyBody.innerHTML = "";
+
+        data.forEach(item => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${new Date(item.data).toLocaleDateString("pt-BR")}</td>
+                <td>${item.tipo === "purchase" ? "Compra" : "Venda"}</td>
+                <td>${item.parceiro}</td>
+                <td>R$ ${item.valor.toFixed(2).replace(".", ",")}</td>
+                <td>${item.status}</td>
+                <td>${item.detalhes || "-"}</td>
+            `;
+            historyBody.appendChild(row);
+        });
+    }
+
+    async function carregarResumo() {
+        const response = await fetch("/api/historico/resumo");
+        const data = await response.json();
+
+        totalPurchases.textContent = `R$ ${data.total_purchases.toFixed(2).replace(".", ",")}`;
+        totalSales.textContent = `R$ ${data.total_sales.toFixed(2).replace(".", ",")}`;
+        balance.textContent = `R$ ${data.balance.toFixed(2).replace(".", ",")}`;
+    }
+
+    async function carregarGrafico() {
+        const response = await fetch("/api/historico/grafico");
+        const data = await response.json();
+
+        const labels = data.map(d => `${d.mes}/${new Date().getFullYear()}`);
+        const compras = data.map(d => d.compras);
+        const vendas = data.map(d => d.vendas);
+
+        if (chart) chart.destroy(); // destruir gráfico anterior pra recriar
+
+        chart = new Chart(ctx, {
+            type: "bar",
+            data: {
+                labels,
+                datasets: [
+                    {
+                        label: "Compras",
+                        data: compras,
+                        backgroundColor: "rgba(255, 99, 132, 0.6)",
+                    },
+                    {
+                        label: "Vendas",
+                        data: vendas,
+                        backgroundColor: "rgba(54, 162, 235, 0.6)",
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+
+    // Eventos
+    yearFilter.addEventListener("change", () => {
+        carregarHistorico();
+        carregarGrafico();
+    });
+    typeFilter.addEventListener("change", carregarHistorico);
+    searchInput.addEventListener("input", carregarHistorico);
+
+    // Inicialização
+    carregarHistorico();
+    carregarResumo();
+    carregarGrafico();
+});
+
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    const response = await fetch('/api/historico');
+    const historicos = await response.json();
+
+    const tbody = document.getElementById('history-body');
+    tbody.innerHTML = '';
+
+    historicos.forEach(h => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${new Date(h.data).toLocaleDateString('pt-BR')}</td>
+        <td>${h.tipo === 'compra' ? 'Compra' : 'Venda'}</td>
+        <td>${h.nome_fornecedor || h.nome_empresa || '-'}</td>
+        <td>R$ ${parseFloat(h.valor).toFixed(2)}</td>
+        <td>${h.status}</td>
+        <td><button class="details-btn">Ver</button></td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+  } catch (err) {
+    console.error('Erro ao carregar histórico:', err);
+  }
+});

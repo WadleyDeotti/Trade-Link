@@ -2,6 +2,10 @@ const express = require("express");
 const path = require("path");
 const session = require("express-session")
 const app = express();
+const historicoRoutes = require('./routes/historicoRoutes');
+
+
+app.use('/api/historico', historicoRoutes);
 
 app.use(express.urlencoded({ extended: true }));
 app.use(session({
