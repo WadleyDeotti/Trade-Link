@@ -198,7 +198,7 @@ module.exports = {
 
     const sql = `
       INSERT INTO empresas (nome_fantasia, cnpj, email, senha_hash) 
-      VALUES (:nome_fantasia, :cnpj, :email, :senha_hash)
+      VALUES (?,?,?,?)
  `;
     const valores = [empresa.nome_fantasia, empresa.cnpj, empresa.email, empresa.senha_hash];
     const [resultado] = await conexao.execute(sql, valores);
