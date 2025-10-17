@@ -1,63 +1,43 @@
-const repository = require('../repository/usuarioRepository');
+const repository = require('../repository/fornecedoresRepository');
 const bcrypt  = require('bcrypt');
 const crypto  = require('crypto');
 const nodemailer = require('nodemailer');
 const session = require('express-session');
-const usuarioRepository = require('../repository/usuarioRepository');
+const fornecedoresRepository = require('../repository/fornecedoresRepository');
 
-const fornecedorController = {
-  async getAll(req, res) {
+
+
+  // Método para atualizar um fornecedor
+  exports.update = async(req, res) => {
     try {
-      const fornecedores = await usuarioRepository.getAll();
-      res.status(200).json(fornecedores);
-    } catch (error) {
-      res.status(500).json({ message: 'Erro ao buscar fornecedores', error });
-    }
-  },
+      const { nome_fantasia, cpf, email, senha_hash, telefone, endereco } = req.body;
 
-  async getById(req, res) {
-    try {
-      const { id } = req.params;
-      const fornecedor = await usuarioRepository.getById(id);
-
-      if (!fornecedor) {
-        return res.status(404).json({ message: 'Fornecedor não encontrado' });
+      // Verifica se todos os campos obrigatórios foram informados
+      if (!nome_fantasia || !cpf || !email || !senha_hash) {
+        return res.status(400).json({ message: 'Campos obrigatórios não informados.' });
       }
 
-      res.status(200).json(fornecedor);
-    } catch (error) {
-      res.status(500).json({ message: 'Erro ao buscar fornecedor', error });
-    }
-  },
+      // Monta o objeto com os dados a atualizar
+      const fornecedor = {
+        nome_fantasia,
+        cpf,
+        email,
+        senha_hash,
+        telefone,
+        endereco,
+      };
 
-  async create(req, res) {
-    try {
-      const novoFornecedor = await usuarioRepository.create(req.body);
-      res.status(201).json(novoFornecedor);
-    } catch (error) {
-      res.status(500).json({ message: 'Erro ao criar fornecedor', error });
-    }
-  },
+      const resultado = await fornecedorRepository.update(id_fornecedor, fornecedor);
 
-  async update(req, res) {
-    try {
-      const { id } = req.params;
-      const fornecedorAtualizado = await usuarioRepository.update(id, req.body);
-      res.status(200).json(fornecedorAtualizado);
-    } catch (error) {
-      res.status(500).json({ message: 'Erro ao atualizar fornecedor', error });
-    }
-  },
+      if (resultado.affectedRows === 0) {
+        return res.status(404).json({ message: 'Fornecedor não encontrado.' });
+      }
 
-  async remove(req, res) {
-    try {
-      const { id } = req.params;
-      await usuarioRepository.remove(id);
-      res.status(204).send();
+      return res.status(200).json({ message: 'Fornecedor atualizado com sucesso!' });
     } catch (error) {
-      res.status(500).json({ message: 'Erro ao deletar fornecedor', error });
+      console.error(error);
+      return res.status(500).json({ message: 'Erro ao atualizar fornecedor.' });
     }
-  }
-};
+  };
 
-module.exports = fornecedorController;
+

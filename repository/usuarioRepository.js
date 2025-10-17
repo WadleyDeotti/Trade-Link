@@ -78,6 +78,14 @@ procurarTokenF: (token, callback) => {
         if (err) return callback(err);
         callback(null, resultado.length > 0 ? resultado[0] : null);
     });
+},
+
+GetallTokenF: (token, callback) => {
+    const sql = "select * from fornecedores";
+    conexao.query(sql, [token], (err, resultado) => {
+        if (err) return callback(err);
+        callback(null, resultado.length > 0 ? resultado[0] : null);
+    });
 }
 
 };
