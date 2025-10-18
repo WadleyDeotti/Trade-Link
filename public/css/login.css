@@ -1,5 +1,15 @@
+:root {
+    --primary: #172B4B;
+    --primary-light: #38528D;
+    --accent: #B2C8F7;
+    --text: #596375;
+    --text-light: #f5f5f5;
+    --border: #e0e0e0;
+    --bg-light: #f8f9fa;
+}
+
 body {
-    background-color: #172B4B;
+    background-color: #f5f5f5;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     display: flex;
     justify-content: center;
@@ -7,12 +17,14 @@ body {
     min-height: 100vh;
     margin: 0;
     padding: 20px;
+    color: var(--text);
+    line-height: 1.6;
 }
 
 #login {
-    background-color: #B2C8F7;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     padding: 30px;
     width: 100%;
     max-width: 400px;
@@ -27,23 +39,24 @@ body {
     display: block;
     margin-bottom: 8px;
     font-size: 14px;
-    color: #172B4B;
-    font-weight: 600;
+    color: var(--primary);
+    font-weight: 500;
 }
 
 .inputregis {
     width: 100%;
     padding: 12px 15px;
-    border: 1px solid #E9FFFF;
-    border-radius: 6px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
     font-size: 14px;
-    background-color: #E9FFFF;
+    background-color: white;
     transition: all 0.3s ease;
     box-sizing: border-box;
+    font-family: inherit;
 }
 
 .inputregis:focus {
-    border-color: #38528B;
+    border-color: var(--primary-light);
     outline: none;
     box-shadow: 0 0 0 2px rgba(56, 82, 139, 0.2);
 }
@@ -69,49 +82,49 @@ body {
 }
 
 .eye-icon {
-    fill: #172B4B;
+    fill: var(--text);
     transition: fill 0.2s;
 }
 
 .toggle-password:hover .eye-icon {
-    fill: #0c1c38;
+    fill: var(--primary);
 }
 
 .loginTem {
     text-align: center;
     margin: 20px 0;
     font-size: 14px;
-    color: #172B4B;
+    color: var(--text);
 }
 
 .loginSend {
-    color: #38528B;
+    color: var(--primary-light);
     text-decoration: none;
-    font-weight: 600;
+    font-weight: 500;
     transition: color 0.2s;
 }
 
 .loginSend:hover {
-    color: #0c1c38;
+    color: var(--primary);
     text-decoration: underline;
 }
 
 .submit-btn {
     width: 100%;
     padding: 14px;
-    background-color: #172B4B;
+    background-color: var(--primary);
     color: white;
     border: none;
-    border-radius: 6px;
+    border-radius: 4px;
     font-size: 16px;
-    font-weight: 600;
+    font-weight: 500;
     cursor: pointer;
     margin-top: 10px;
     transition: all 0.3s ease;
 }
 
 .submit-btn:hover {
-    background-color: #112649;
+    background-color: var(--primary-light);
     transform: translateY(-1px);
 }
 
@@ -120,20 +133,20 @@ body {
 }
 
 .submit-btn:disabled {
-    background-color: #596375;
+    background-color: var(--text);
     cursor: not-allowed;
     opacity: 0.7;
 }
 
 dialog {
     border: none;
-    border-radius: 12px;
+    border-radius: 8px;
     padding: 0;
     width: 90%;
     max-width: 500px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     animation: fadeIn 0.3s ease-out;
-    background-color: #E9FFFF;
+    background-color: white;
 }
 
 dialog::backdrop {
@@ -156,8 +169,8 @@ dialog::backdrop {
 
 .modal-cabecalho h2 {
     margin: 0;
-    font-size: 20px;
-    color: #172B4B;
+    font-size: 18px;
+    color: var(--primary);
 }
 
 .fechar-modal {
@@ -176,34 +189,35 @@ dialog::backdrop {
 }
 
 .modal-corpo {
-    padding: 24px;
-    color: #172B4B;
+    padding: 20px;
+    color: var(--text);
 }
 
 .modal-rodape {
-    padding: 16px 24px;
-    border-top: 1px solid #ddd;
+    padding: 15px 20px;
+    border-top: 1px solid var(--border);
     display: flex;
     justify-content: flex-end;
-    gap: 12px;
+    gap: 10px;
 }
 
 .modal-btn {
-    padding: 10px 16px;
-    border-radius: 6px;
+    padding: 8px 16px;
+    border-radius: 4px;
     font-size: 14px;
+    font-weight: 500;
     cursor: pointer;
-    transition: all 0.2s;
-}
-
-.modal-btn-primario {
-    background-color: #172B4B;
-    color: white;
+    transition: all 0.3s;
     border: none;
 }
 
+.modal-btn-primario {
+    background-color: var(--primary);
+    color: white;
+}
+
 .modal-btn-primario:hover {
-    background-color: #0c1c38;
+    background-color: var(--primary-light);
 }
 
 @media (max-width: 480px) {

@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Produto - Nome do Produto</title>
+
+  <!-- Use project stylesheet so the page matches the rest of the site -->
+  <link rel="stylesheet" href="/css/fornecedores.css" />
+  <link rel="stylesheet" href="/css/produto.css" />
+</head>
+<body>
+  <header>
+    <nav style="max-width:1100px;margin:0 auto;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(0,0,0,0.04)">
+      <a href="/" style="font-weight:700;text-decoration:none;color:inherit">Trade Link</a>
+      <div>
+        <a href="/produtos" style="margin-right:12px;text-decoration:none;color:inherit">Produtos</a>
+        <a href="/contato" style="text-decoration:none;color:inherit">Contato</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="page-wrap" role="main">
+    <article class="product" aria-labelledby="product-title">
+      <section class="gallery">
+        <div class="main-img card" style="min-height:320px">
+          <img id="currentImage" src="/fornecedores/images/hq720.jpg" alt="Imagem do produto — Nome do Produto">
+        </div>
+
+        <div class="thumbs">
+          <img src="/fornecedores/images/hq720.jpg" data-large="/fornecedores/images/hq720.jpg" class="active" alt="miniatura 1">
+          <img src="/fornecedores/images/bobbiegoods.jpeg" data-large="/fornecedores/images/bobbiegoods.jpeg" alt="miniatura 2">
+          <img src="/fornecedores/images/labubu.webp" data-large="/fornecedores/images/labubu.webp" alt="miniatura 3">
+          <img src="/fornecedores/images/kit120canetinha.webp" data-large="/fornecedores/images/kit120canetinha.webp" alt="miniatura 4">
+        </div>
+      </section>
+
+      <aside class="info card" aria-labelledby="product-title" style="padding:18px">
+        <h1 id="product-title">Nome do Produto</h1>
+        <p class="price" aria-live="polite">R$ 199,00</p>
+
+        <p class="short-desc" style="margin:0 0 10px;color:#333">
+          Descrição curta do produto com benefícios principais. Direta e compatível com o restante do site.
+        </p>
+
+        <ul class="specs" aria-hidden="false">
+          <li>Característica 1</li>
+          <li>Característica 2</li>
+          <li>Material / Dimensões</li>
+        </ul>
+
+        <form id="purchaseForm" class="controls" action="#" method="post" aria-label="Adicionar ao carrinho">
+          <div class="qty" role="group" aria-label="Quantidade">
+            <button type="button" id="decQty" aria-label="Diminuir">−</button>
+            <input type="number" id="qty" name="quantity" min="1" value="1" aria-label="Quantidade">
+            <button type="button" id="incQty" aria-label="Aumentar">+</button>
+          </div>
+
+          <button type="submit" class="btn-primary" id="addToCart">Adicionar ao carrinho</button>
+          <button type="button" class="btn-ghost" id="buyNow">Comprar agora</button>
+        </form>
+
+        <div class="tabs" aria-label="Informações do produto">
+          <div style="margin-top:12px;border-top:1px solid #eee;padding-top:12px">
+            <strong>Detalhes</strong>
+            <p style="margin:8px 0 0;color:#444">Descrição completa, instruções e informações técnicas do produto.</p>
+          </div>
+        </div>
+      </aside> 
+    </article>
+
+    <!-- Outros produtos: lista abaixo do produto principal -->
+    <section class="other-products" aria-label="Outros produtos">
+      <h2 style="margin:12px 0">Outros produtos</h2>
+      <div class="other-grid">
+        <a class="other-card" href="/produto/1">
+          <img src="/fornecedores/images/bobbiegoods.jpeg" alt="Produto A" />
+          <div class="other-title">Produto A</div>
+          <div class="other-price">R$ 89,90</div>
+        </a>
+
+        <a class="other-card" href="/produto/2">
+          <img src="/fornecedores/images/labubu.webp" alt="Produto B" />
+          <div class="other-title">Produto B</div>
+          <div class="other-price">R$ 129,90</div>
+        </a>
+
+        <a class="other-card" href="/produto/3">
+          <img src="/fornecedores/images/kit120canetinha.webp" alt="Kit 120" />
+          <div class="other-title">Kit 120 canetinhas</div>
+          <div class="other-price">R$ 59,90</div>
+        </a>
+
+        <a class="other-card" href="/produto/4">
+          <img src="/fornecedores/images/foto.jpg" alt="Produto C" />
+          <div class="other-title">Produto C</div>
+          <div class="other-price">R$ 39,90</div>
+        </a>
+      </div>
+    </section>
+
+    <section style="margin-top:22px">
+      <h2 style="margin:0 0 12px">Produtos relacionados</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px">
+        <a class="card" href="/produto/1" style="text-decoration:none;color:inherit;padding:12px;display:block">
+          <img src="/fornecedores/images/bobbiegoods.jpeg" alt="" style="width:100%;height:140px;object-fit:cover;border-radius:6px;margin-bottom:8px">
+          <div style="font-weight:600">Produto A</div>
+          <div style="color:var(--accent)">R$ 89,90</div>
+        </a>
+
+        <a class="card" href="/produto/2" style="text-decoration:none;color:inherit;padding:12px;display:block">
+          <img src="/fornecedores/images/labubu.webp" alt="" style="width:100%;height:140px;object-fit:cover;border-radius:6px;margin-bottom:8px">
+          <div style="font-weight:600">Produto B</div>
+          <div style="color:var(--accent)">R$ 129,90</div>
+        </a>
+
+        <a class="card" href="/produtos" style="text-decoration:none;color:inherit;padding:12px;display:flex;align-items:center;justify-content:center">
+          Ver mais produtos
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer style="border-top:1px solid rgba(0,0,0,0.04);padding:18px 0;margin-top:28px">
+    <div style="max-width:1100px;margin:0 auto;padding:0 20px;color:#666;font-size:.95rem">© Trade Link</div>
+  </footer>
+
+  <script src="/JS/produtos.js" defer></script>
+  <script src="/JS/produto.js" defer></script>
+</body>
+</html>
