@@ -62,7 +62,7 @@
 
                 <!-- Formulário de configurações -->
                 <div class="settings-content">
-                    <form id="settings-form" method="POST" action="/salvarConfiguracoes">
+                    <form id="settings-form" method="POST" action="salvarConfiguracoes">
 
                         <!-- Seção Conta -->
                         <section class="content-section active" id="conta">
@@ -73,17 +73,21 @@
                                     <div class="account-info">
                                         <div class="info-item">
                                             <span class="info-label">Nome:</span>
-                                            <span class="info-value" id="account-info"><%= usuario?.nome_fantasia ? usuario?.nome_fantasia : "Não definido"%></span>
-                                            
-                                        </div>
-                                        <div class="info-item">
-                                            <span class="info-label">Email:</span>
-                                            <span class="info-value" id="account-info"><%= usuario?.email ? usuario?.email : "Não definido"%></span>
-                                            
+                                            <span class="info-value" id="account-info">
+                                                <%= usuario?.nome_fantasia ? usuario?.nome_fantasia : "Não definido" %>
+                                            </span>
 
                                         </div>
                                         <div class="info-item">
-                                            <span class="info-label">CPF/CNPJ</span>     
+                                            <span class="info-label">Email:</span>
+                                            <span class="info-value" id="account-info">
+                                                <%= usuario?.email ? usuario?.email : "Não definido" %>
+                                            </span>
+
+
+                                        </div>
+                                        <div class="info-item">
+                                            <span class="info-label">CPF/CNPJ</span>
                                             <span class="info-value" id="account-info">
                                                 <%= usuario?.cnpj ? usuario?.cnpj : usuario?.cpf %>
                                             </span>
@@ -92,12 +96,16 @@
                                         </div>
                                         <div class="info-item">
                                             <span class="info-label">Localização:</span>
-                                            <span class="info-value" id="account-info"><%= usuario?.localizacao ? usuario?.localizacao : "Não definido" %></span>
-                                            
+                                            <span class="info-value" id="account-info">
+                                                <%= usuario?.localizacao ? usuario?.localizacao : "Não definido" %>
+                                            </span>
+
                                         </div>
                                         <div class="info-item">
                                             <span class="info-label">Telefone:</span><br>
-                                            <span class="info-value" id="account-info"><%= usuario?.Telefone ? usuario?.Telefone : "Não definido"%></span>                                          
+                                            <span class="info-value" id="account-info">
+                                                <%= usuario?.Telefone ? usuario?.Telefone : "Não definido" %>
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -134,15 +142,15 @@
                                 <div class="privacy-option">
                                     <h3><i class="fas fa-database"></i> Controle de Dados</h3>
                                     <div class="checkbox-group">
-                                        <label><input type="checkbox" name="data_sharing" <%=usuario?.data_sharing
+                                        <label><input type="checkbox" name="data_sharing" <%=usuario?.data_sharing==1
                                                 ? 'checked' : '' %>><span class="checkbox-custom"></span>Permitir
                                             compartilhamento de dados
                                             anônimos</label>
-                                        <label><input type="checkbox" name="show_activity" <%=usuario?.show_activity
+                                        <label><input type="checkbox" name="show_activity" <%=usuario?.show_activity==1
                                                 ? 'checked' : '' %>><span class="checkbox-custom"></span>Mostrar
                                             atividade recente</label>
                                         <label><input type="checkbox" name="search_visibility"
-                                                <%=usuario?.search_visibility ? 'checked' : '' %>><span
+                                                <%=usuario?.search_visibility==1 ? 'checked' : '' %>><span
                                                 class="checkbox-custom"></span>Permitir aparecer em buscas</label>
                                     </div>
                                 </div>
@@ -156,16 +164,16 @@
                                 <div class="notification-option">
                                     <h3><i class="fas fa-envelope-open-text"></i> Tipos de Notificação</h3>
                                     <div class="checkbox-group">
-                                        <label><input type="checkbox" name="notify_messages" <%=usuario?.notify_messages
-                                                ? 'checked' : '' %>> Mensagens
+                                        <label><input type="checkbox" name="notify_messages"
+                                                <%=usuario?.notify_messages==1 ? 'checked' : '' %>> Mensagens
                                             diretas</label>
-                                        <label><input type="checkbox" name="notify_mentions" <%=usuario?.notify_mentions
-                                                ? 'checked' : '' %>> Menções</label>
-                                        <label><input type="checkbox" name="notify_updates" <%=usuario?.notify_updates
-                                                ? 'checked' : '' %>> Atualizações do
+                                        <label><input type="checkbox" name="notify_mentions"
+                                                <%=usuario?.notify_mentions==1 ? 'checked' : '' %>> Menções</label>
+                                        <label><input type="checkbox" name="notify_updates"
+                                                <%=usuario?.notify_updates==1 ? 'checked' : '' %>> Atualizações do
                                             sistema</label>
-                                        <label><input type="checkbox" name="notify_comments" <%=usuario?.notify_comments
-                                                ? 'checked' : '' %>> Comentários</label>
+                                        <label><input type="checkbox" name="notify_comments"
+                                                <%=usuario?.notify_comments==1 ? 'checked' : '' %>> Comentários</label>
                                     </div>
                                 </div>
 
@@ -173,14 +181,14 @@
                                     <h3><i class="fas fa-sliders-h"></i> Preferências</h3>
                                     <div class="checkbox-group">
 
-                                        <label><input type="checkbox" name="important_only" <%=usuario?.important_only
-                                                ? 'checked' : '' %>> Somente notificações
+                                        <label><input type="checkbox" name="important_only"
+                                                <%=usuario?.important_only==1 ? 'checked' : '' %>> Somente notificações
                                             importantes</label>
                                         <label><input type="checkbox" name="email_notifications"
-                                                <%=usuario?.email_notifications ? 'checked' : '' %>> Notificações por
+                                                <%=usuario?.email_notifications==1 ? 'checked' : '' %>> Notificações por
                                             email</label>
                                         <label><input type="checkbox" name="push_notifications"
-                                                <%=usuario?.push_notifications ? 'checked' : '' %>> Notificações
+                                                <%=usuario?.push_notifications==1 ? 'checked' : '' %>> Notificações
                                             push</label>
                                     </div>
                                 </div>

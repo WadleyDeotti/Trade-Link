@@ -25,8 +25,8 @@ const conexao = mysql.createPool({
 module.exports = {
   // 🔹 Exemplo: buscar uma empresa de teste
   async testeUsuario() {
-    const [rows] = await conexao.query("SELECT * FROM fornecedores WHERE id_fornecedor = 8");
-    return rows.length > 0 ? new Fornecedor(rows[0]) : null;
+    const [rows] = await conexao.query("SELECT * FROM empresas WHERE id_empresa = 2");
+    return rows.length > 0 ? new Empresa(rows[0]) : null;
   },
 
   // 🔹 Buscar empresa por CNPJ
@@ -216,7 +216,7 @@ module.exports = {
 
   buscarCNPJ: async (cnpj) => {
     const sql = "SELECT * FROM empresas WHERE cnpj = ?";
-    const [rows] = await conexao.execute(sql, [id_empresa]);
+    const [rows] = await conexao.execute(sql, [cnpj]);
     return rows.length > 0 ? new Empresa(rows[0]) : null;
   },
 

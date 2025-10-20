@@ -246,13 +246,12 @@ exports.logar = async (req, res) => {
       return res.redirect("login", { mensagem: "Documento inválido" });
     }
 
-    if (!user || user.length === 0) return res.redirect("login", { mensagem: "Usuário não encontrado" });
+    if (!user) return res.redirect("login", { mensagem: "Usuário não encontrado" });
 
     const mesmaSenha = await bcrypt.compare(senha, user.senha_hash);
     if (!mesmaSenha) return res.redirect("login", { mensagem: "Senha incorreta" });
 
-
-    if (tipo === 'empresa') return res.redirect("/empresa/dashboard");
+    req.session.usuario = user;
     return res.redirect("/fornecedores");
 
   } catch (err) {

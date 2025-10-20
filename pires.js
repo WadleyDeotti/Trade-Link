@@ -25,14 +25,20 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', async (req, res) => {
-  if (req.session.usuario) {
-    if (req.session.usuario.cnpj) {
-      res.render('dashboard');
-    } else if (req.session.usuario.cpf) {
-      res.render('fornecedores');
-    }
-  } else { res.render("registro") }
+  req.session.usuario = await repository.testeUsuario();
+  res.render('configuracoes');
+  console.log(req.session.usuario);
 });
+
+// app.get('/', async (req, res) => {
+//   if (req.session.usuario) {
+//     if (req.session.usuario.cnpj) {
+//       res.render('dashboard');
+//     } else if (req.session.usuario.cpf) {
+//       res.render('fornecedores');
+//     }
+//   } else { res.render("registro") }
+// });
 
 
 

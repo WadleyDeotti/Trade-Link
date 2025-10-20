@@ -125,8 +125,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Submissão do formulário de configurações
     function handleSettingsSubmit(e) {
-        e.preventDefault();
-
         // Aqui você pode enviar via fetch/ajax para salvar
         showToast('Configurações salvas com sucesso!', 'success');
     }
