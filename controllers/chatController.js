@@ -1,17 +1,21 @@
 import OpenAI from "openai";
 import { findFAQAnswer } from "../models/chatModel.js";
-import { handleUserMessage } from '../services/chatService.js';
-import { getMessages } from '../repositories/chatRepository.js';
+import { saveMessage, getMessages } from "../repositories/chatRepository.js";
 
 const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-export const sendMessage = async (req, res) => {
+// 🧠 Controlador principal do chat
+export async function sendMessage(req, res) {
   try {
     const { message } = req.body;
 
-    // 1️⃣ Tenta encontrar resposta no Excel primeiro
+    // Salva mensagem do usuário
+    await saveMessage('user', message);
+
+    // 1️⃣ Tenta responder com base nas FAQs locais
     const localAnswer = findFAQAnswer(message);
     if (localAnswer) {
+      await saveMessage('ai', localAnswer);
       return res.json({ reply: localAnswer });
     }
 
@@ -25,29 +29,23 @@ export const sendMessage = async (req, res) => {
     });
 
     const reply = completion.choices[0].message.content;
+
+    // Salva resposta da IA
+    await saveMessage('ai', reply);
+
     res.json({ reply });
   } catch (error) {
-    console.error(error);
+    console.error("Erro no controlador de chat:", error);
     res.status(500).json({ reply: "Erro ao se conectar com a IA." });
-  }
-};
-
-export async function sendMessage(req, res) {
-  try {
-    const { message } = req.body;
-    const saved = await handleUserMessage(message);
-    res.json(saved);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Erro ao processar mensagem' });
   }
 }
 
+// 📜 Lista todas as mensagens (para histórico do chat)
 export async function listMessages(req, res) {
   try {
     const messages = await getMessages();
     res.json(messages);
   } catch (err) {
-    res.status(500).json({ error: 'Erro ao buscar mensagens' });
+    res.status(500).json({ error: "Erro ao buscar mensagens" });
   }
 }
