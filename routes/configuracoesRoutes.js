@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const configuracoesController = require("../controllers/configuracoesController");
+repository = require("../repository/configuracoesRepository");
 
 // ------------------- GETs -------------------
 router.get("/", (req, res) => res.render("configuracoes"));
@@ -20,6 +21,13 @@ router.get("/login", (req, res) => {
   const mensagem = req.session.mensagem;
   delete req.session.mensagem;
   res.render("login", { mensagem: mensagem || null });
+});
+
+//inicial 
+router.get("/inicial", (req, res) => {  
+  let produtos = repository.getProdutos();
+  let fornecedor = repository.getFornecedor();
+  res.render("/inicial",{produtos, fornecedor});
 });
 
 // Fornecedores

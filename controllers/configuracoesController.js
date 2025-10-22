@@ -28,6 +28,8 @@ async function atualizarSessaoUsuario(req) {
   return req.session.usuario;
 }
 
+  
+
 exports.salvarConfiguracoes = async (req, res) => {
 
   // Verifica se há sessão

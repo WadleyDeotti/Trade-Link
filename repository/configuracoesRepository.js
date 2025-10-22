@@ -1,7 +1,8 @@
 const mysql = require('mysql2/promise');
 const Empresa = require('../models/empresaModel');
 const Fornecedor = require('../models/fornecedorModel');
-
+const Produto = require('../models/produtoModel');
+const { get } = require('../routes/configuracoesRoutes');
 // 🧩 Cria a conexão (ou pool)
 const conexao = mysql.createPool({
   host: "localhost",
@@ -11,7 +12,7 @@ const conexao = mysql.createPool({
   namedPlaceholders: true
 });
 
-// ✅ Teste de conexão (opcional)
+// ✅ Teste de conexão
 (async () => {
   try {
     const conn = await conexao.getConnection();
@@ -27,6 +28,16 @@ module.exports = {
   async testeUsuario() {
     const [rows] = await conexao.query("SELECT * FROM empresas WHERE id_empresa = 2");
     return rows.length > 0 ? new Empresa(rows[0]) : null;
+  },
+
+  // 🔹 Buscar produtos
+  async getProdutos() {
+    const [rows] = await conexao.execute("SELECT * FROM produtos");
+    return rows.length>0? new Produto(rows) : null;
+  },
+  async getFornecedor() {
+    const [rows] = await conexao.execute("SELECT * FROM fornecedores");
+    return rows.length>0? new Fornecedor(rows) : null;
   },
 
   // 🔹 Buscar empresa por CNPJ

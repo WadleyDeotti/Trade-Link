@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>inicial</title>
+  <link rel="stylesheet" href="css/inicial.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="search-wrap">
+      <input class="search" placeholder="Pesquisar..." aria-label="Pesquisar">
+      <span class="magn">🔍</span>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Produtos quentes -->
+    <section class="section hot">
+      <h2>Produtos quentes</h2>
+
+      <div class="carousel-wrap centered">
+        <button class="arrow prev" aria-label="Anterior">&#10094;</button>
+
+        <div class="carousel" data-role="carousel">
+          <div class="track">
+            <article class="card large"></article>
+            <article class="card large"></article>
+            <article class="card large"></article>
+            <article class="card large"></article>
+            <article class="card large"></article>
+          </div>
+        </div>
+
+        <button class="arrow next" aria-label="Próximo">&#10095;</button>
+      </div>
+    </section>
+
+    <!-- Outros produtos: placeholders com legenda -->
+    <section class="section others">
+      <div class="grid-3">
+        <figure class="figure">
+          <div class="img-placeholder"></div>
+          <figcaption><%= produtos[0]?.nome_produto ? produtos[0].nome_produto : ''><br><span class="small"><%= produtos[0]?.descricao? ? produtos[0]?.descricao : ''%></span></figcaption>
+        </figure>
+
+        <figure class="figure">
+          <div class="img-placeholder"></div>
+          <figcaption><%= produtos[1]?.nome_produto ? produtos[1].nome_produto : ''><br><span class="small"><%= produtos[1]?.descricao? ? produtos[1]?.descricao : ''%></span></figcaption>
+        
+        </figure>
+
+        <figure class="figure">
+          <div class="img-placeholder"></div>
+          <figcaption><%= produtos[2]?.nome_produto ? produtos[2].nome_produto : ''><br><span class="small"><%= produtos[2]?.descricao? ? produtos[2]?.descricao : ''%></span></figcaption>
+        
+        </figure>
+      </div>
+    </section>
+
+    <!-- Fornecedores (círculos) -->
+    <section class="section suppliers">
+      <h3>Conheça novos fornecedores</h3>
+
+      <div class="carousel-wrap centered small">
+        <button class="arrow prev" aria-label="Anterior fornecedores">&#10094;</button>
+
+        <div class="carousel" data-role="carousel">
+          <div class="track">
+            <div class="supplier">
+              <div class="avatar"></div>
+              <small><%= fornecedor[0]?.nome_fantasia ? fornecedor[0]?.nome_fantasia : ''</small>
+            </div>
+            <div class="supplier">
+              <div class="avatar"></div>
+              <small>fornecedor[1]?.nome_fantasia ? fornecedor[1]?.nome_fantasia : ''</small>
+            </div>
+            <div class="supplier">
+              <div class="avatar"></div>
+              <small>fornecedor[5]?.nome_fantasia ? fornecedor[5]?.nome_fantasia : ''</small>
+            </div>
+            <div class="supplier">
+              <div class="avatar"></div>
+              <small>fornecedor[2]?.nome_fantasia ? fornecedor[2]?.nome_fantasia : ''</small>
+            </div>
+            <div class="supplier">
+              <div class="avatar"></div>
+              <small>fornecedor[3]?.nome_fantasia ? fornecedor[3]?.nome_fantasia : ''</small>
+            </div>
+            <div class="supplier">
+              <div class="avatar"></div>
+              <small>fornecedor[4]?.nome_fantasia ? fornecedor[4]?.nome_fantasia : ''</small>             
+          </div>
+        </div>
+
+        <button class="arrow next" aria-label="Próximo fornecedores">&#10095;</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="contacts">
+        <h4>Contatos</h4>
+        <p>Email: contato@exemplo.com | Tel: (31) 99999-9999</p>
+        <div class="socials">
+          <a href="#" aria-label="facebook">Facebook</a>
+          <a href="#" aria-label="instagram">Instagram</a>
+          <a href="#" aria-label="linkedin">LinkedIn</a>
+        </div>
+      </div>
+
+      <div class="about">
+        <h4>Nossa história</h4>
+        <p>
+          A tradelink nasceu em 2018 como uma pequena iniciativa para conectar artesãos locais a compradores urbanos.
+          Hoje somos uma plataforma dedicada à qualidade, sustentabilidade e colaboração. Trabalhamos com centenas de
+          fornecedores independentes — cada peça conta uma história e ajudamos essas histórias a chegar onde merecem.
+        </p>
+      </div>
+    </div>
+    <div class="copyright">© 2025 tradelink — Todos os direitos reservados</div>
+  </footer>
+
+  <script src="JS/inicial.js"></script>
+</body>
+</html>

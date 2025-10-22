@@ -24,10 +24,14 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+// app.get('/', async (req, res) => {
+//   req.session.usuario = await repository.testeUsuario();
+//   res.render('configuracoes');
+//   console.log(req.session.usuario);
+// });
+
 app.get('/', async (req, res) => {
-  req.session.usuario = await repository.testeUsuario();
-  res.render('configuracoes');
-  console.log(req.session.usuario);
+  res.render('registro');
 });
 
 // app.get('/', async (req, res) => {
