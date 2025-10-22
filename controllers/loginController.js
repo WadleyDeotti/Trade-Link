@@ -199,4 +199,3 @@ exports.resetarSenha = (req, res) => {
     });
   });
 };
-
