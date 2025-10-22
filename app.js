@@ -2,7 +2,7 @@ const express = require("express");
 const path = require("path");
 const session = require("express-session")
 const app = express();
-const historicoRoutes = require('./routes/historicoRoutes');
+const historicoRoutes = require('./routes/usuarioRoutes');
 
 
 app.use('/api/historico', historicoRoutes);

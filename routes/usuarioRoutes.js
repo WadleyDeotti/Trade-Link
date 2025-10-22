@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const loginController = require("../controllers/loginController");
-
+const historicoController = require("../controllers/historicoController");
 
 // ------------------- GETs -------------------
 // Dashboard
@@ -30,10 +30,10 @@ router.get("/pedidos", (req, res) => res.render("pedidos"));
 // Histórico
 router.get("/historico", (req, res) => res.render("historico"));
 //alterações italo
-router.get("/", historicoController.getHistorico);
-router.get("/resumo", historicoController.getResumo);
-router.get("/grafico", historicoController.getGrafico);
-router.get('/', historicoController.listarHistorico);
+router.get("/api/historico", historicoController.getHistorico);
+router.get("/api/historico/resumo", historicoController.getResumo);
+router.get("/api/historico/grafico", historicoController.getGrafico);
+
 
 // Mensagens
 router.get("/mensagens", (req, res) => res.render("mensagens"));
