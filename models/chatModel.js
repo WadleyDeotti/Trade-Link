@@ -1,30 +1,19 @@
-import xlsx from "xlsx";
+import fs from "fs";
 import path from "path";
-import { fileURLToPath } from "url";
+import xlsx from "xlsx";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const faqPath = path.resolve("data/faq.xlsx");
 
-const faqPath = path.join(__dirname, "../data/faq.xlsx");
+export function findFAQAnswer(userQuestion) {
+  if (!fs.existsSync(faqPath)) return null;
 
-// Função para ler e transformar o Excel em array de objetos
-function loadFAQ() {
   const workbook = xlsx.readFile(faqPath);
   const sheet = workbook.Sheets[workbook.SheetNames[0]];
-  return xlsx.utils.sheet_to_json(sheet);
-}
+  const data = xlsx.utils.sheet_to_json(sheet);
 
-// Função para procurar resposta no Excel
-export function findFAQAnswer(userMessage) {
-  const faqs = loadFAQ();
-  const lowerMsg = userMessage.toLowerCase();
+  const match = data.find(item =>
+    userQuestion.toLowerCase().includes(item.pergunta.toLowerCase())
+  );
 
-  for (const row of faqs) {
-    const keyword = String(row["Pergunta (ou palavras-chave)"] || "").toLowerCase();
-    if (lowerMsg.includes(keyword)) {
-      return row["Resposta"] || null;
-    }
-  }
-
-  return null;
+  return match ? match.resposta : null;
 }
