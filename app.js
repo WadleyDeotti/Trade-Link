@@ -8,6 +8,9 @@ import usuarioRoutes from "./routes/usuarioRoutes.js";
 
 dotenv.config();
 
+console.log("Chave carregada?", process.env.OPENAI_API_KEY ? "Sim" : "Não");
+
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
