@@ -5,4 +5,4 @@ const produtoController = require('../controllers/CadastroProdutos');
 
 // ------------------- POSTs -------------------
 // Cadastro
-router.post('/produtos/cadastrar', produtoController.cadastrarProduto);
+router.post('/cadastrar', produtoController.cadastrarProduto);

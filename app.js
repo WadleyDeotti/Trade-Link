@@ -1,7 +1,9 @@
 const express = require("express");
 const path = require("path");
-const session = require("express-session")
+const session = require("express-session");
 const app = express();
+const fornecedoresRoutes = require('./routes/FornecedorRoutes');
+const produtosRoutes = require('./routes/ProdutoRoutes');
 
 app.use(express.urlencoded({ extended: true }));
 app.use(session({
@@ -19,11 +21,13 @@ app.use(express.urlencoded({extended:true}));
 app.use(express.static(path.join(__dirname,'public')));
 
 app.get('/', (req, res) => {
-  if(req.session.usuario){
-    if(req.session.usuario.cnpj){
+  if (req.session.usuario) {
+    if (req.session.usuario.cnpj) {
       res.render('empresa');
-    res.render('fornecedores');
-  }}else{
+    } else {
+      res.render('fornecedores');
+    }
+  }else{
   const mensagem = req.session.mensagem;
   delete req.session.mensagem; 
   res.render("dashboard", { mensagem: mensagem || null }); //padrao registro mudar pra pagina q quer ver
@@ -33,6 +37,8 @@ app.get('/', (req, res) => {
 const usuarioRoutes = require('./routes/usuarioRoutes');
 
 app.use('/',usuarioRoutes);
+app.use('/fornecedores', fornecedoresRoutes);
+app.use('/produtos', produtosRoutes);
 
 app.use((req,res)=> {
 res.status(404).send('pagina não encontrada');
