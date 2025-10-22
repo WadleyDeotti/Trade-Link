@@ -2,7 +2,8 @@ const mysql = require('mysql2/promise');
 const Empresa = require('../models/empresaModel');
 const Fornecedor = require('../models/fornecedorModel');
 const Produto = require('../models/produtoModel');
-const { get } = require('../routes/configuracoesRoutes');
+
+
 // 🧩 Cria a conexão (ou pool)
 const conexao = mysql.createPool({
   host: "localhost",
@@ -24,7 +25,7 @@ const conexao = mysql.createPool({
 })();
 
 module.exports = {
-  // 🔹 Exemplo: buscar uma empresa de teste
+  // 🔹 pegar um usuario pra teste
   async testeUsuario() {
     const [rows] = await conexao.query("SELECT * FROM empresas WHERE id_empresa = 2");
     return rows.length > 0 ? new Empresa(rows[0]) : null;

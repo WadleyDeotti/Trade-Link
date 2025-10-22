@@ -1,11 +1,13 @@
 <!doctype html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>inicial</title>
   <link rel="stylesheet" href="css/inicial.css">
 </head>
+
 <body>
   <header class="topbar">
     <div class="search-wrap">
@@ -41,22 +43,36 @@
       <div class="grid-3">
         <figure class="figure">
           <div class="img-placeholder"></div>
-          <figcaption><%= produtos[0]?.nome_produto ? produtos[0].nome_produto : ''><br><span class="small"><%= produtos[0]?.descricao? ? produtos[0]?.descricao : ''%></span></figcaption>
+          <figcaption>
+            <%= produtos[0]?.nome_produto ? produtos[0].nome_produto : '' %><br>
+              <span class="small">
+                <%= produtos[0]?.descricao ? produtos[0].descricao : '' %>
+              </span>
+          </figcaption>
         </figure>
 
         <figure class="figure">
           <div class="img-placeholder"></div>
-          <figcaption><%= produtos[1]?.nome_produto ? produtos[1].nome_produto : ''><br><span class="small"><%= produtos[1]?.descricao? ? produtos[1]?.descricao : ''%></span></figcaption>
-        
+          <figcaption>
+            <%= produtos[1]?.nome_produto ? produtos[1].nome_produto : '' %><br>
+              <span class="small">
+                <%= produtos[1]?.descricao ? produtos[1].descricao : '' %>
+              </span>
+          </figcaption>
         </figure>
 
         <figure class="figure">
           <div class="img-placeholder"></div>
-          <figcaption><%= produtos[2]?.nome_produto ? produtos[2].nome_produto : ''><br><span class="small"><%= produtos[2]?.descricao? ? produtos[2]?.descricao : ''%></span></figcaption>
-        
+          <figcaption>
+            <%= produtos[2]?.nome_produto ? produtos[2].nome_produto : '' %><br>
+              <span class="small">
+                <%= produtos[2]?.descricao ? produtos[2].descricao : '' %>
+              </span>
+          </figcaption>
         </figure>
       </div>
     </section>
+
 
     <!-- Fornecedores (círculos) -->
     <section class="section suppliers">
@@ -69,32 +85,44 @@
           <div class="track">
             <div class="supplier">
               <div class="avatar"></div>
-              <small><%= fornecedor[0]?.nome_fantasia ? fornecedor[0]?.nome_fantasia : ''</small>
+              <small>
+                <%= fornecedor[0]?.nome_fantasia ? fornecedor[0]?.nome_fantasia : '' %>
+              </small>
             </div>
             <div class="supplier">
               <div class="avatar"></div>
-              <small>fornecedor[1]?.nome_fantasia ? fornecedor[1]?.nome_fantasia : ''</small>
+              <small>
+                <%= fornecedor[1]?.nome_fantasia ? fornecedor[1]?.nome_fantasia : '' %>
+              </small>
             </div>
             <div class="supplier">
               <div class="avatar"></div>
-              <small>fornecedor[5]?.nome_fantasia ? fornecedor[5]?.nome_fantasia : ''</small>
+              <small>
+                <%= fornecedor[5]?.nome_fantasia ? fornecedor[5]?.nome_fantasia : '' %>
+              </small>
             </div>
             <div class="supplier">
               <div class="avatar"></div>
-              <small>fornecedor[2]?.nome_fantasia ? fornecedor[2]?.nome_fantasia : ''</small>
+              <small>
+                <%= fornecedor[2]?.nome_fantasia ? fornecedor[2]?.nome_fantasia : '' %>
+              </small>
             </div>
             <div class="supplier">
               <div class="avatar"></div>
-              <small>fornecedor[3]?.nome_fantasia ? fornecedor[3]?.nome_fantasia : ''</small>
+              <small>
+                <%= fornecedor[3]?.nome_fantasia ? fornecedor[3]?.nome_fantasia : '' %>
+              </small>
             </div>
             <div class="supplier">
               <div class="avatar"></div>
-              <small>fornecedor[4]?.nome_fantasia ? fornecedor[4]?.nome_fantasia : ''</small>             
+              <small>
+                <%= fornecedor[4]?.nome_fantasia ? fornecedor[4]?.nome_fantasia : '' %>
+              </small>
+            </div>
           </div>
-        </div>
 
-        <button class="arrow next" aria-label="Próximo fornecedores">&#10095;</button>
-      </div>
+          <button class="arrow next" aria-label="Próximo fornecedores">&#10095;</button>
+        </div>
     </section>
   </main>
 
@@ -124,4 +152,5 @@
 
   <script src="JS/inicial.js"></script>
 </body>
+
 </html>

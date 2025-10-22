@@ -30,8 +30,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 //   console.log(req.session.usuario);
 // });
 
-app.get('/', async (req, res) => {
-  res.render('registro');
+app.get('/',async (req,res)=>{
+  req.session.usuario = await repository.testeUsuario();
+  res.redirect('inicial');
 });
 
 // app.get('/', async (req, res) => {
@@ -44,8 +45,6 @@ app.get('/', async (req, res) => {
 //   } else { res.render("registro") }
 // });
 
-
-
 const Rotas = require('./routes/configuracoesRoutes');
 
 app.use('/', Rotas);
@@ -56,7 +55,11 @@ app.use((req, res) => {
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).send('erro interno do servidor');
+  if (process.env.NODE_ENV === 'development') {
+    res.status(500).send(`<pre>${err.stack}</pre>`);
+  } else {
+    res.status(500).send('Erro interno do servidor');
+  }
 });
 
 const PORT = process.env.PORT || 6767;
