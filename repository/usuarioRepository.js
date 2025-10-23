@@ -84,93 +84,115 @@ procurarTokenF: (token, callback) => {
     });
 },
 
- buscarHistorico: async ({ year, type, search }) => {
+// No arquivo: repository/usuarioRepository.js
+
+buscarHistorico: async ({ year, type, search }) => {
     try {
-      // Compras
-      let queryCompras = `
-        SELECT 
-          c.id_compra AS id,
-          'compra' AS tipo,
-          c.data_compra AS data,
-          c.valor_total AS valor,
-          c.status,
-          e.nome_fantasia AS nome_empresa,
-          f.nome_fantasia AS nome_fornecedor
-        FROM compras c
-        INNER JOIN empresas e ON c.id_empresa = e.id_empresa
-        INNER JOIN fornecedores f ON c.id_fornecedor = f.id_fornecedor
-        WHERE 1=1
-      `;
-      const params = [];
+        // Inicializa o array de resultados (para juntar compras e vendas)
+        let resultados = [];
 
-      if (year) {
-        queryCompras += " AND YEAR(c.data_compra) = ?";
-        params.push(year);
-      }
-      if (type && type !== "all") {
-        queryCompras += " AND c.status = ?";
-        params.push(type);
-      }
-      if (search) {
-        queryCompras += " AND (e.nome_fantasia LIKE ? OR f.nome_fantasia LIKE ?)";
-        params.push(`%${search}%`, `%${search}%`);
-      }
+        // Prepara o termo de busca com wildcards para a cláusula LIKE
+        const searchTerm = search ? `%${search}%` : null;
 
-      const [compras] = await db.execute(queryCompras, params);
+        // ======================= COMPRAS =======================
+        let queryCompras = `
+            SELECT 
+                c.id_compra AS id, 'compra' AS tipo, c.data_compra AS data,
+                c.valor_total AS valor, c.status,
+                NULL AS nome_empresa, f.nome_fantasia AS nome_fornecedor
+            FROM compras c
+            LEFT JOIN fornecedores f ON c.id_fornecedor = f.id_fornecedor
+            WHERE 1=1
+        `;
+        let paramsCompras = [];
 
-      // Vendas (Contratos)
-      let queryVendas = `
-        SELECT 
-          ct.id_contrato AS id,
-          'venda' AS tipo,
-          ct.data_inicio AS data,
-          ct.valor_total AS valor,
-          ct.status,
-          e.nome_fantasia AS nome_empresa,
-          f.nome_fantasia AS nome_fornecedor
-        FROM contratos ct
-        INNER JOIN empresas e ON ct.id_empresa = e.id_empresa
-        INNER JOIN fornecedores f ON ct.id_fornecedor = f.id_fornecedor
-        WHERE 1=1
-      `;
-      const paramsVendas = [];
-      if (year) {
-        queryVendas += " AND YEAR(ct.data_inicio) = ?";
-        paramsVendas.push(year);
-      }
-      if (type && type !== "all") {
-        queryVendas += " AND ct.status = ?";
-        paramsVendas.push(type);
-      }
-      if (search) {
-        queryVendas += " AND (e.nome_fantasia LIKE ? OR f.nome_fantasia LIKE ?)";
-        paramsVendas.push(`%${search}%`, `%${search}%`);
-      }
+        // Filtro por Ano
+        if (year) {
+            queryCompras += " AND YEAR(c.data_compra) = ?";
+            paramsCompras.push(year);
+        }
+        
+        // Filtro por Tipo (Status)
+        if (type && type !== "all") {
+            queryCompras += " AND c.status = ?";
+            paramsCompras.push(type);
+        }
+        
+        // Filtro por Busca
+        if (searchTerm) {
+            queryCompras += " AND (f.nome_fantasia LIKE ?)"; // Buscamos só no nome do fornecedor
+            paramsCompras.push(searchTerm);
+        }
 
-      const [vendas] = await db.execute(queryVendas, paramsVendas);
+        const [compras] = await db.execute(queryCompras, paramsCompras);
+        resultados = [...resultados, ...compras];
 
-      // Junta e ordena por data
-      return [...compras, ...vendas].sort((a, b) => new Date(b.data) - new Date(a.data));
+        // ======================= VENDAS (Contratos) =======================
+        let queryVendas = `
+            SELECT 
+                ct.id_contrato AS id, 'venda' AS tipo, ct.data_inicio AS data,
+                ct.valor_total AS valor, ct.status,
+                e.nome_fantasia AS nome_empresa, NULL AS nome_fornecedor
+            FROM contratos ct
+            LEFT JOIN empresas e ON ct.id_empresa = e.id_empresa
+            WHERE 1=1
+        `;
+        let paramsVendas = [];
+        
+        // Filtro por Ano
+        if (year) {
+            queryVendas += " AND YEAR(ct.data_inicio) = ?";
+            paramsVendas.push(year);
+        }
+        
+        // Filtro por Tipo (Status)
+        if (type && type !== "all") {
+            queryVendas += " AND ct.status = ?";
+            paramsVendas.push(type);
+        }
+        
+        // Filtro por Busca
+        if (searchTerm) {
+            queryVendas += " AND (e.nome_fantasia LIKE ?)"; // Buscamos só no nome da empresa (cliente)
+            paramsVendas.push(searchTerm);
+        }
+
+        const [vendas] = await db.execute(queryVendas, paramsVendas);
+        resultados = [...resultados, ...vendas];
+
+        // Junta e ordena por data (mais recente primeiro)
+        return resultados.sort((a, b) => new Date(b.data) - new Date(a.data));
 
     } catch (error) {
-      throw error;
+        console.error("Erro no repository buscarHistorico:", error);
+        throw error;
     }
-  },
+},
 
-  resumoFinanceiro: async () => {
+resumoFinanceiro: async () => {
     try {
-      const [results] = await db.execute(`
-        SELECT
-          SUM(c.valor_total) AS total_compras,
-          (SELECT SUM(ct.valor_total) FROM contratos ct) AS total_vendas,
-          (SELECT SUM(ct.valor_total) FROM contratos ct) - SUM(c.valor_total) AS saldo
-        FROM compras c
-      `);
-      return results[0];
+        // Consultas separadas para garantir a estabilidade e evitar NULLs
+        const [totalCompras] = await db.execute(`SELECT IFNULL(SUM(valor_total), 0) AS total_purchases FROM compras`);
+        const [totalVendas] = await db.execute(`SELECT IFNULL(SUM(valor_total), 0) AS total_sales FROM contratos`);
+
+        // Extrai os valores (já garantidos como não-nulos pelo IFNULL)
+        const purchases = totalCompras[0].total_purchases || 0;
+        const sales = totalVendas[0].total_sales || 0;
+        const balance = sales - purchases;
+
+        // ESTE É O JSON FINAL ESPERADO
+        return {
+            total_purchases: parseFloat(purchases), 
+            total_sales: parseFloat(sales),
+            balance: parseFloat(balance)
+        };
+
     } catch (error) {
-      throw error;
+        // ESSENCIAL: Logar o erro completo para ver o SQL que falhou!
+        console.error("Erro ao calcular resumo financeiro (SQL falhou):", error);
+        throw error;
     }
-  },
+},
 
   dadosGrafico: async () => {
     try {
