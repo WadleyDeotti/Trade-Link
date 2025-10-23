@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let chart; // gráfico global
 
     // Carregar histórico
-    async function carregarHistorico() {
+    async function carregarHistorico(state) {
         const year = yearFilter.value;
         const type = typeFilter.value;
         const search = searchInput.value;
@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Carregar resumo financeiro
-async function carregarResumo() {
+async function carregarResumo(state) {
     try {
         const response = await fetch("/api/historico/resumo");
         const data = await response.json();
@@ -66,7 +66,7 @@ async function carregarResumo() {
 }
 
     // Carregar gráfico
-    async function carregarGrafico() {
+    async function carregarGrafico(state) {
         try {
             const response = await fetch("/api/historico/grafico");
             const data = await response.json();
@@ -116,4 +116,68 @@ async function carregarResumo() {
     carregarHistorico();
     carregarResumo();
     carregarGrafico();
+});
+
+
+
+
+// 1. O Objeto Global que Gerencia o Estado e Notifica os Observadores
+const appState = {
+    // Estado inicial que será modificado pelos filtros
+    state: {
+        year: document.getElementById('year-filter').value, // Pega o valor inicial
+        type: document.getElementById('type-filter').value,
+        search: document.getElementById('search-input').value
+    },
+    observers: [],
+
+    // Adiciona uma função (ex: carregarHistorico) à lista
+    subscribe: function(observerFn) {
+        this.observers.push(observerFn);
+    },
+
+    // Notifica todas as funções quando o estado muda
+    notify: function() {
+        this.observers.forEach(observerFn => observerFn(this.state));
+    },
+
+    // Atualiza o estado e notifica todos
+    updateState: function(newState) {
+        // Usa Object.assign para mesclar o novo estado
+        this.state = Object.assign({}, this.state, newState);
+        console.log("Estado atualizado e notificado:", this.state);
+        this.notify();
+    }
+};
+
+// --- Conexão dos Observadores e Filtros ---
+
+document.addEventListener("DOMContentLoaded", () => {
+    // 1. Adicionar as funções como Observadoras
+    appState.subscribe(carregarHistorico);
+    appState.subscribe(carregarResumo);
+    appState.subscribe(carregarGrafico); // se existir
+
+    // 2. Conectar os filtros à função updateState
+    const yearFilter = document.getElementById('year-filter');
+    const typeFilter = document.getElementById('type-filter');
+    const searchInput = document.getElementById('search-input');
+    const searchButton = document.getElementById('search-button'); // Botão de busca
+
+    // Listener para Ano e Tipo
+    yearFilter.addEventListener('change', (e) => {
+        appState.updateState({ year: e.target.value });
+    });
+
+    typeFilter.addEventListener('change', (e) => {
+        appState.updateState({ type: e.target.value });
+    });
+
+    // Listener para a Busca (pode ser no botão ou no input)
+    searchButton.addEventListener('click', () => {
+        appState.updateState({ search: searchInput.value });
+    });
+    
+    // 3. Primeira Carga (Dispara a primeira notificação com o estado inicial)
+    appState.notify();
 });
