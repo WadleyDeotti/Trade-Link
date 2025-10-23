@@ -32,7 +32,7 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
 // Rotas
-app.use("/chat", chatRoutes);
+
 app.use("/", usuarioRoutes);
 
 // 404

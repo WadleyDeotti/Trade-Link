@@ -3,6 +3,8 @@ const router = express.Router();
 const loginController = require("../controllers/loginController");
 
 // ------------------- GETs -------------------
+router.get("/", (req, res) => res.render("dashboard"));
+
 // Dashboard
 router.get("/dashboard", (req, res) => res.render("dashboard"));
 
@@ -12,6 +14,8 @@ router.get("/registro", (req, res) => {
   delete req.session.mensagem; 
   res.render("registro", { mensagem: mensagem || null });
 });
+
+router.get('/chat', (req, res) => res.render('chat'));
 
 // Login
 router.get("/login", (req, res) => {
