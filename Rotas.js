@@ -1,10 +1,14 @@
 const express = require("express");
 const router = express.Router();
-const configuracoesController = require("../controllers/configuracoesController");
-const repository = require('../repository/configuracoesRepository');
+const configuracoesController = require("./controllers/configuracoesController");
+const loginController = require("./controllers/loginController");
+const repository = require('./Repository');
+const inicialController = require("./controllers/inicialController");
 
 // ------------------- GETs -------------------
-router.get("/", (req, res) => res.render("configuracoes"));
+router.get("/",inicialController.IniciarSite);
+
+router.get('/inicial', inicialController.IniciarSite);
 
 // Dashboard
 router.get("/dashboard", (req, res) => res.render("dashboard"));
@@ -47,10 +51,10 @@ router.get("/configuracoes", (req, res) => res.render("configuracoes"));
 
 // ------------------- POSTs -------------------
 // Cadastro
-router.post("/cadastrar", configuracoesController.cadastrar);
+router.post("/cadastrar", loginController.cadastrar);
 
 // // Login
-router.post("/logar", configuracoesController.logar);
+router.post("/logar", loginController.logar);
 
 //alterar senha
 router.post("/alterarSenha", configuracoesController.alterarSenha);

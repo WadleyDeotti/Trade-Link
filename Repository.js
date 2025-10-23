@@ -1,7 +1,7 @@
 const mysql = require('mysql2/promise');
-const Empresa = require('../models/empresaModel');
-const Fornecedor = require('../models/fornecedorModel');
-const Produto = require('../models/produtoModel');
+const Empresa = require('./models/empresaModel');
+const Fornecedor = require('./models/fornecedorModel');
+const Produto = require('./models/produtoModel');
 
 
 // 🧩 Cria a conexão (ou pool)

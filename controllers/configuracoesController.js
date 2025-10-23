@@ -1,7 +1,5 @@
-const repository = require('../repository/configuracoesRepository');
+const repository = require('../Repository');
 const bcrypt = require('bcrypt');
-const crypto = require('crypto');
-const nodemailer = require('nodemailer');
 const safeBool = val => val === 'on' ? 1 : 0;
 
 //atualizar dados salvos no server
@@ -27,9 +25,7 @@ async function atualizarSessaoUsuario(req) {
   console.log(req.session.usuario);
   return req.session.usuario;
 }
-
-  
-
+ 
 exports.salvarConfiguracoes = async (req, res) => {
 
   // Verifica se há sessão
@@ -193,157 +189,6 @@ exports.alterarSenha = async (req, res) => {
   };
 };
 
-exports.cadastrar = async (req, res) => {
-  try {
-    const dadosUsuario = req.body;
-    console.log("Recebendo dados do cadastro:", dadosUsuario);
 
-    if (dadosUsuario.cnpj) {
-      // Cadastro de empresa
-      await repository.inserirEmpresa({
-        nome_fantasia: dadosUsuario.nome_completo,
-        email: dadosUsuario.email,
-        cnpj: dadosUsuario.cnpj.replace(/\D/g, ''),
-        senha_hash: await bcrypt.hash(dadosUsuario.senha, 10)
-      });
 
-      req.session.usuario = repository.buscarCNPJ(dadosUsuario.cnpj.replace(/\D/g, ''));
-      return res.redirect('/fornecedores');
 
-    } else if (dadosUsuario.cpf) {
-      // Cadastro de fornecedor
-      await repository.inserirFornecedor({
-        nome_fantasia: dadosUsuario.nome_completo,
-        cpf: dadosUsuario.cpf.replace(/\D/g, ''),
-        email: dadosUsuario.email,
-        senha_hash: await bcrypt.hash(dadosUsuario.senha, 10)
-      });
-
-      req.session.usuario = repository.buscarCPF(dadosUsuario.cpf.replace(/\D/g, ''));
-      return res.redirect('/fornecedores');
-
-    } else {
-      return res.status(400).send("Dados inválidos");
-    }
-  } catch (err) {
-    console.error(err);
-    return res.status(500).send("Erro ao cadastrar usuário");
-  }
-};
-
-exports.logar = async (req, res) => {
-  try {
-    let { documento, senha } = req.body;
-    documento = documento.replace(/\D/g, '');
-
-    let user;
-
-    if (documento.length === 11) {
-      user = await repository.buscarCPF(documento);
-
-    } else if (documento.length === 14) {
-      user = await repository.buscarCNPJ(documento);
-
-    } else {
-      return res.redirect("login", { mensagem: "Documento inválido" });
-    }
-
-    if (!user) return res.redirect("login", { mensagem: "Usuário não encontrado" });
-
-    const mesmaSenha = await bcrypt.compare(senha, user.senha_hash);
-    if (!mesmaSenha) return res.redirect("login", { mensagem: "Senha incorreta" });
-
-    req.session.usuario = user;
-    return res.redirect("/fornecedores");
-
-  } catch (err) {
-    console.error(err);
-    return res.status(500).redirect("login", { mensagem: "Erro no servidor" });
-  }
-};
-
-exports.redefinirSenha = async (req, res) => {
-  try {
-    const documento = req.body.documento.replace(/\D/g, "");
-    let user, tipo;
-
-    if (documento.length === 11) {
-      user = await repository.buscarCPF(documento);
-      tipo = 'fornecedor';
-    } else if (documento.length === 14) {
-      user = await repository.buscarCNPJ(documento);
-      tipo = 'empresa';
-    } else {
-      return res.redirect("login", { mensagem: "Documento inválido" });
-    }
-
-    if (!user || user.length === 0) return res.redirect("login", { mensagem: "Usuário não encontrado" });
-
-    const token = crypto.randomBytes(20).toString("hex");
-    const expira = new Date(Date.now() + 3600000); // 1h
-
-    if (tipo === 'fornecedor') {
-      await repository.salvarTokenF({ cpf: documento, token_redefinicao: token, expira_token: expira });
-    } else {
-      await repository.salvarTokenE({ cnpj: documento, token_redefinicao: token, expira_token: expira });
-    }
-
-    const transporter = nodemailer.createTransport({
-      service: "Gmail",
-      auth: { user: "", pass: "" }
-    });
-
-    const link = `http://localhost:6767/atualizarSenha/${token}`;
-    await transporter.sendMail({
-      to: user.email,
-      from: "",
-      subject: "Trade Link - Redefinição de senha",
-      html: `<p>Clique no link para redefinir sua senha:</p>
-             <a href="${link}">${link}</a>`
-    });
-
-    res.redirect("login", { mensagem: "Link de redefinição enviado ao seu email" });
-
-  } catch (err) {
-    console.error(err);
-    res.status(500).redirect("login", { mensagem: "Erro ao processar redefinição de senha" });
-  }
-};
-
-exports.formResetarSenha = async (req, res) => {
-  try {
-    const { token } = req.params;
-    const user = await repository.buscarPorToken(token);
-
-    if (!user || user.reset_expira < new Date()) {
-      return res.redirect("login", { mensagem: "Token inválido ou expirado" });
-    }
-
-    res.redirect("resetarSenha", { token });
-
-  } catch (err) {
-    console.error(err);
-    res.status(500).redirect("login", { mensagem: "Erro ao acessar formulário de redefinição" });
-  }
-};
-
-exports.resetarSenha = async (req, res) => {
-  try {
-    const { token } = req.params;
-    const { senha } = req.body;
-
-    const user = await repository.buscarPorToken(token);
-    if (!user || user.reset_expira < new Date()) {
-      return res.redirect("login", { mensagem: "Token inválido ou expirado" });
-    }
-
-    const senhaHash = await bcrypt.hash(senha, 10);
-    await repository.atualizarSenha(user.id, senhaHash);
-
-    res.redirect("login", { mensagem: "Senha alterada com sucesso!" });
-
-  } catch (err) {
-    console.error(err);
-    res.status(500).redirect("login", { mensagem: "Erro ao atualizar senha" });
-  }
-};
