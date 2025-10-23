@@ -35,19 +35,6 @@ app.set("views", path.join(__dirname, "views"));
 app.use("/chat", chatRoutes);
 app.use("/", usuarioRoutes);
 
-app.get("/", (req, res) => {
-  if(req.session.usuario){
-    if(req.session.usuario.cnpj){
-      return res.render('empresa');
-    }
-    return res.render('fornecedores');
-  } else {
-    const mensagem = req.session.mensagem;
-    delete req.session.mensagem; 
-    return res.render("dashboard", { mensagem: mensagem || null });
-  }
-});
-
 // 404
 app.use((req, res) => {
   res.status(404).send('Página não encontrada');
