@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfil do Fornecedor - TradeLink</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="/css/fornecedores.css">
+    <link rel="stylesheet" href="../public/css/fornecedores.css">
 </head>
 <body>
     <div class="dashboard-container">
@@ -16,12 +16,13 @@
             </div>
             <nav>
                 <ul>
-                    <li><a href="dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
-                    <li class="active"><a href="fornecedores"><i class="fas fa-user"></i> Perfil</a></li>
-                    <li><a href="pedidos"><i class="fas fa-file-invoice"></i> Pedidos/Vendas</a></li>
-                    <li><a href="historico"><i class="fas fa-history"></i> Histórico</a></li>
-                    <li><a href="mensagens"><i class="fas fa-envelope"></i> Mensagens</a></li>
-                    <li><a href="configuracoes"><i class="fas fa-cog"></i> Configurações</a></li>
+                    <li><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li class="active"><a href="fornecedores.html"><i class="fas fa-user"></i> Perfil</a></li>
+                    <li><a href="pedidos.html"><i class="fas fa-file-invoice"></i> Pedidos/Vendas</a></li>
+                    <li><a href="historico.html"><i class="fas fa-history"></i> Histórico</a></li>
+                    <li><a href="mensagens.html"><i class="fas fa-envelope"></i> Mensagens</a></li>
+                    <li><a href="chat_ia.html"><i class="fas fa-robot"></i> Chat IA</a></li>
+                    <li><a href="configuracoes.html"><i class="fas fa-cog"></i> Configurações</a></li>
                 </ul>
             </nav>
         </div>
@@ -40,7 +41,7 @@
                 <!-- Banner e Avatar -->
                 <div class="profile-container">
                     <div class="profile-banner">
-                        <img id="banner-image" src="" alt="Banner">
+                        <img id="banner-image" src="images/banner.jpg" alt="Banner">
                     </div>
                     <div class="profile-info">
                         <div class="profile-avatar">
@@ -57,7 +58,7 @@
                             </p>
                             <div class="profile-stats">
                                 <div class="stat-item">
-                                    <span class="stat-value">15</span>
+                                    <span class="stat-value" id="products-count">0</span>
                                     <span class="stat-label">Produtos</span>
                                 </div>
                                 <div class="stat-item">
@@ -74,7 +75,7 @@
                 </div>
 
                 <!-- Formulário de Edição -->
-                <form id="formPerfil" method="POST" action="">
+                <form id="formPerfil" method="POST" action="/fornecedores/editar">
                     <div class="form-section">
                         <h2>Informações Pessoais</h2>
                         <div class="form-grid">
@@ -118,6 +119,29 @@
                         <div class="form-group">
                             <label for="fornecedor-descricao">Descreva seu negócio:</label>
                             <textarea id="fornecedor-descricao" name="descricao" placeholder="Descreva os produtos ou serviços que você oferece..." required></textarea>
+                        </div>
+                    </div>
+                
+                    <!-- Seção de Produtos -->
+                    <div class="form-section">
+                        <h2>Produtos do Fornecedor</h2>
+                        <div class="products-section">
+                            <div class="products-carousel">
+                                <button class="carousel-button carousel-button-prev">
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+                                <div class="carousel-container">
+                                    <div class="carousel-track">
+                                        <!-- Produtos serão adicionados aqui via JavaScript -->
+                                    </div>
+                                </div>
+                                <button class="carousel-button carousel-button-next">
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
+                            <button class="btn btn-primary" id="add-product-btn">
+                                <i class="fas fa-plus"></i> Adicionar Produto
+                            </button>
                         </div>
                     </div>
 
@@ -187,68 +211,91 @@
         </div>
     </div>
 
+    <!-- Modal para Adicionar/Editar Produto -->
+    <form action="">
+        <div id="product-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="product-modal-title">Adicionar Produto</h2>
+                    <span class="close">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <form id="formProduct">
+                        <div class="form-group">
+                            <label for="product-name">Nome do Produto:</label>
+                            <input id="product-name" type="text" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="product-description">Descrição:</label>
+                            <textarea id="product-description" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="product-price">Preço (R$):</label>
+                            <input id="product-price" type="number" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="product-category">Categoria:</label>
+                            <input id="product-category" type="text" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="product-image">Imagem do Produto:</label>
+                            <input type="file" id="product-image" accept="image/*">
+                            <div id="product-image-preview" style="margin-top: 10px; display: none;">
+                                <img id="product-preview-img" src="#" alt="Preview" style="max-width: 100%; max-height: 200px;">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="cancel-product-btn">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="save-product-btn">Salvar Produto</button>
+                </div>
+            </div>
+            </div>
+    </form>
+    <!-- Modal de Visualização/Edição do Produto -->
+    <div id="product-view-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="product-view-title">Detalhes do Produto</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="product-view-content">
+                    <!-- Conteúdo será preenchido via JavaScript -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="close-product-btn">Fechar</button>
+                <button type="button" class="btn btn-primary" id="edit-product-btn">Editar</button>
+                <button type="button" class="btn btn-danger" id="delete-product-btn">Excluir</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmação de Exclusão -->
+    <div id="delete-confirm-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Confirmar Exclusão</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p>Tem certeza que deseja excluir este produto?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancel-delete-btn">Cancelar</button>
+                <button type="button" class="btn btn-danger" id="confirm-delete-btn">Excluir</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Toast Notification -->
     <div id="toast" class="toast">
         <i class="fas fa-check-circle"></i>
         <span id="toast-message">Operação realizada com sucesso!</span>
     </div>
 
-    <script src="/JS/fornecedores.js"></script>
-
-<!-- AUTO-INJECT:LS-FLOW -->
-
-<!-- AUTO-INJECT:LS-FLOW -->
-<script>
-
-// AUTO-INJECT: Preencher formPerfil com LocalStorage
-(function(){
-  const data = JSON.parse(localStorage.getItem("user") || "{}");
-  function setValue(selectorList, value){
-    for(const sel of selectorList){
-      const el = document.querySelector(sel);
-      if(el){ el.value = value || ""; return true; }
-    }
-    return false;
-  }
-  function tryFillByName(nameKey, value){
-    return setValue([`#fornecedor-${nameKey}`, `[name="${nameKey}"]`, `#${nameKey}`], value);
-  }
-  window.addEventListener("DOMContentLoaded", () => {
-    const form = document.getElementById("formPerfil");
-    if(!form) return;
-    if(data.nome || data.nome_completo){
-      tryFillByName("nome", data.nome || data.nome_completo);
-    }
-    if(data.email){
-      tryFillByName("email", data.email);
-    }
-    if(data.cpf || data.documento){
-      tryFillByName("cpf", data.cpf || data.documento);
-      tryFillByName("documento", data.cpf || data.documento);
-    }
-    if(data.tipo_cadastro){
-      tryFillByName("tipo_cadastro", data.tipo_cadastro);
-    }
-    // Qualquer input com data-userkey será preenchido automaticamente
-    form.querySelectorAll("[data-userkey]").forEach(input => {
-      const key = input.getAttribute("data-userkey");
-      if(key && data[key] && !input.value){
-        input.value = data[key];
-      }
-    });
-    // Ao salvar o perfil, atualiza LocalStorage
-    form.addEventListener("submit", function(e){
-      e.preventDefault();
-      const formData = new FormData(form);
-      const obj = {};
-      formData.forEach((v,k) => obj[k]=v);
-      const merged = { ...(data||{}), ...obj, updatedAt: new Date().toISOString() };
-      localStorage.setItem("user", JSON.stringify(merged));
-      alert("Perfil salvo!");
-    });
-  });
-})();
-
-</script>
+    <script src="../public/JS/fornecedores.js"></script>
 </body>
 </html>
