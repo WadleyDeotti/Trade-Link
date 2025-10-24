@@ -18,12 +18,14 @@ exports.getProdutoPage = async (req, res) => {
             return res.status(404).send("Produto não encontrado."); 
         }
 
-        // 3. Renderiza a View (EJS) e passa os dados
-        // Assumindo que sua view se chama 'produto.ejs'
+        // 3. Busca as características (CORRIGIDO: O await está DENTRO da função async)
+        const caracteristicas = await usuarioRepository.buscarCaracteristicas(id_produto); 
+        
+        // 4. Renderiza a View (EJS) e passa os dados
         res.render('produto', { 
             produto: produto,
-            // Você pode adicionar outros dados aqui, como avaliacoes, relacionados, etc.
-            avaliacoes: await usuarioRepository.buscarAvaliacoes(id_produto) 
+            avaliacoes: await usuarioRepository.buscarAvaliacoes(id_produto),
+            caracteristicas: caracteristicas // Passando a lista de características
         });
 
     } catch (err) {
@@ -37,10 +39,11 @@ exports.getProdutoPage = async (req, res) => {
 // Função para exibir a página principal de produtos (Lista)
 exports.getListaProdutos = async (req, res) => {
     try {
+        // Renderiza a view de produto, mas com dados vazios para evitar quebra no EJS
         res.render('produto', {
-            // Passe dados vazios ou uma flag para o EJS saber que é a lista/página inicial
             produto: null, 
-            avaliacoes: [] 
+            avaliacoes: [],
+            caracteristicas: [] // Garante que a lista não quebre se for nula
         });
 
     } catch (err) {
