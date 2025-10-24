@@ -4,147 +4,194 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>inicial</title>
-  <link rel="stylesheet" href="../public/css/inicial.css">
+  <title>Trade Link - Início</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/inicial.css">
 </head>
 
 <body>
-
-
-  <!-- Sidebar -->
-        <div class="sidebar">
-            <div class="logo">
-                <img src="logo.png" alt="TradeLink">
-            </div>
-            <nav>
-                <ul>
-                    <li class="active"><a href="inicial"><i class="fas fa-home"></i> produtos</a></li>
-                    <li><a href="dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
-                    <li><a href="fornecedores"><i class="fas fa-user"></i> Perfil</a></li>
-                    <li><a href="pedidos"><i class="fas fa-file-invoice"></i> Pedidos/Vendas</a></li>
-                    <li><a href="historico"><i class="fas fa-history"></i> Histórico</a></li>
-                    <li><a href="mensagens"><i class="fas fa-envelope"></i> Mensagens</a></li>
-                    <li><a href="configuracoes"><i class="fas fa-cog"></i> Configurações</a></li>
-                </ul>
-            </nav>
-        </div>
-  
-  <header class="topbar">
-    <div class="search-wrap">
-      <input class="search" placeholder="Pesquisar..." aria-label="Pesquisar">
-      <span class="magn">🔍</span>
+  <div class="dashboard-container">
+    <div class="sidebar">
+      <div class="logo">
+        <img src="images/logo.png" alt="TradeLink">
+      </div>
+      <nav>
+        <ul>
+          <li class="active"><a href="inicial"><i class="fas fa-home"></i> Início</a></li>
+          <li><a href="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+          <li><a href="fornecedores"><i class="fas fa-user"></i> Perfil</a></li>
+          <li><a href="pedidos"><i class="fas fa-file-invoice"></i> Pedidos/Vendas</a></li>
+          <li><a href="historico"><i class="fas fa-history"></i> Histórico</a></li>
+          <li><a href="mensagens"><i class="fas fa-envelope"></i> Mensagens</a></li>
+          <li><a href="produto"><i class="fas fa-box"></i> Produtos</a></li>
+          <li><a href="categoria"><i class="fas fa-tags"></i> Categorias</a></li>
+          <li><a href="configuracoes"><i class="fas fa-cog"></i> Configurações</a></li>
+        </ul>
+      </nav>
     </div>
-  </header>
 
-  <main class="container">
-    <!-- Produtos quentes -->
-    <section class="section hot">
-      <h2>Produtos quentes</h2>
-
-      <div class="carousel-wrap centered">
-        <button class="arrow prev" aria-label="Anterior">&#10094;</button>
-
-        <div class="carousel" data-role="carousel">
-          <div class="track">
-            <article class="card large"></article>
-            <article class="card large"></article>
-            <article class="card large"></article>
-            <article class="card large"></article>
-            <article class="card large"></article>
-          </div>
+    <div class="main-content">
+      <header>
+        <h1><i class="fas fa-home"></i> Trade Link - Conectando Negócios</h1>
+        <div class="user-info">
+          <span>TradeLink</span>
+          <img src="images/profile.jpg" alt="Usuário">
         </div>
+      </header>
 
-        <button class="arrow next" aria-label="Próximo">&#10095;</button>
-      </div>
-    </section>
-
-    <!-- Outros produtos: placeholders com legenda -->
-    <section class="section others">
-      <div class="grid-3">
-        <figure class="figure">
-          <div class="img-placeholder"></div>
-          <figcaption>
-            <%= produtos[0]?.nome_produto ? produtos[0].nome_produto : '' %><br>
-              <span class="small">
-                <%= produtos[0]?.descricao ? produtos[0].descricao : '' %>
-              </span>
-          </figcaption>
-        </figure>
-
-        <figure class="figure">
-          <div class="img-placeholder"></div>
-          <figcaption>
-            <%= produtos[1]?.nome_produto ? produtos[1].nome_produto : '' %><br>
-              <span class="small">
-                <%= produtos[1]?.descricao ? produtos[1].descricao : '' %>
-              </span>
-          </figcaption>
-        </figure>
-
-        <figure class="figure">
-          <div class="img-placeholder"></div>
-          <figcaption>
-            <%= produtos[2]?.nome_produto ? produtos[2].nome_produto : '' %><br>
-              <span class="small">
-                <%= produtos[2]?.descricao ? produtos[2].descricao : '' %>
-              </span>
-          </figcaption>
-        </figure>
-      </div>
-    </section>
-
-
-    <!-- Fornecedores (círculos) -->
-    <section class="section suppliers">
-      <h3>Conheça novos fornecedores</h3>
-
-      <div class="carousel-wrap centered small">
-        <button class="arrow prev" aria-label="Anterior fornecedores">&#10094;</button>
-
-        <div class="carousel" data-role="carousel">
-          <div class="track">
-            <div class="supplier">
-              <div class="avatar"></div>
-              <small>
-                <%= fornecedor[0]?.nome_fantasia ? fornecedor[0]?.nome_fantasia : '' %>
-              </small>
-            </div>
-            <div class="supplier">
-              <div class="avatar"></div>
-              <small>
-                <%= fornecedor[1]?.nome_fantasia ? fornecedor[1]?.nome_fantasia : '' %>
-              </small>
-            </div>
-            <div class="supplier">
-              <div class="avatar"></div>
-              <small>
-                <%= fornecedor[5]?.nome_fantasia ? fornecedor[5]?.nome_fantasia : '' %>
-              </small>
-            </div>
-            <div class="supplier">
-              <div class="avatar"></div>
-              <small>
-                <%= fornecedor[2]?.nome_fantasia ? fornecedor[2]?.nome_fantasia : '' %>
-              </small>
-            </div>
-            <div class="supplier">
-              <div class="avatar"></div>
-              <small>
-                <%= fornecedor[3]?.nome_fantasia ? fornecedor[3]?.nome_fantasia : '' %>
-              </small>
-            </div>
-            <div class="supplier">
-              <div class="avatar"></div>
-              <small>
-                <%= fornecedor[4]?.nome_fantasia ? fornecedor[4]?.nome_fantasia : '' %>
-              </small>
+      <div class="content">
+        <!-- Hero Section -->
+        <section class="hero-section">
+          <div class="hero-content">
+            <h1 class="hero-title">Conecte-se com os Melhores Fornecedores</h1>
+            <p class="hero-subtitle">Descubra produtos de qualidade e estabeleça parcerias comerciais duradouras na
+              maior plataforma B2B do Brasil</p>
+            <div class="hero-stats">
+              <div class="stat">
+                <span class="stat-number">15.000+</span>
+                <span class="stat-label">Fornecedores</span>
+              </div>
+              <div class="stat">
+                <span class="stat-number">50.000+</span>
+                <span class="stat-label">Produtos</span>
+              </div>
+              <div class="stat">
+                <span class="stat-number">R$ 2.5M+</span>
+                <span class="stat-label">Negociados/mês</span>
+              </div>
             </div>
           </div>
+        </section>
 
-          <button class="arrow next" aria-label="Próximo fornecedores">&#10095;</button>
-        </div>
-    </section>
-  </main>
+        <!-- Search Section -->
+        <section class="search-section">
+          <div class="search-container">
+            <h2><i class="fas fa-search"></i> Encontre o que precisa</h2>
+            <div class="search-bar">
+              <input type="text" placeholder="Buscar produtos, fornecedores ou categorias..." class="main-search">
+              <button class="search-btn"><i class="fas fa-search"></i> Buscar</button>
+            </div>
+            <div class="quick-categories">
+              <span>Categorias populares:</span>
+              <a href="categoria" class="category-tag"><i class="fas fa-laptop"></i> Eletrônicos</a>
+              <a href="categoria" class="category-tag"><i class="fas fa-tshirt"></i> Roupas</a>
+              <a href="categoria" class="category-tag"><i class="fas fa-home"></i> Casa & Jardim</a>
+              <a href="categoria" class="category-tag"><i class="fas fa-tools"></i> Ferramentas</a>
+            </div>
+          </div>
+        </section>
+
+        <!-- Produtos em Destaque -->
+        <section class="section featured-products">
+          <div class="section-header">
+            <h2><i class="fas fa-fire"></i> Produtos em Destaque</h2>
+            <a href="categoria" class="view-all">Ver todos <i class="fas fa-arrow-right"></i></a>
+          </div>
+
+          <div class="carousel-wrap centered">
+            <button class="arrow prev" aria-label="Anterior">&#10094;</button>
+
+            <div class="carousel" data-role="carousel">
+              <div class="track">
+
+                <% produtos.forEach((produto, i)=> { %>
+                  <article class="product-card" onclick="window.location.href='produto'">
+                    <div class="product-info">
+                      <h4>
+                        <%= produto.nome_produto %>
+                      </h4>
+                      <p class="supplier">
+                        <%= produto.nome_fantasia %>
+                      </p>
+                      <div class="price">R$ <%= produto.preco.toFixed(2) %>
+                      </div>
+                      <div class="rating">
+                        <span class="stars">★★★★★</span>
+                        <span class="reviews">(127)</span>
+                      </div>
+                    </div>
+                  </article>
+                  <% }) %>
+              </div>
+            </div>
+
+            <button class="arrow next" aria-label="Próximo">&#10095;</button>
+          </div>
+        </section>
+
+        <!-- Fornecedores Verificados -->
+        <section class="section verified-suppliers">
+          <div class="section-header">
+            <h2><i class="fas fa-shield-alt"></i> Fornecedores Verificados</h2>
+            <a href="fornecedores" class="view-all">Ver todos <i class="fas fa-arrow-right"></i></a>
+          </div>
+
+          <div class="carousel-wrap centered small">
+            <button class="arrow prev" aria-label="Anterior fornecedores">&#10094;</button>
+
+            <div class="carousel" data-role="carousel">
+              <div class="track">
+                <div class="supplier-list">
+                  <% fornecedores.forEach((f)=> { %>
+                    <div class="supplier-card" onclick="window.location.href='fornecedores/<%= f.id_fornecedor %>'">
+                      <div class="supplier-avatar">
+                        <% if (f.verificado) { %>
+                          <div class="verified-badge"><i class="fas fa-check-circle"></i></div>
+                          <% } %>
+                      </div>
+
+                      <div class="supplier-info">
+                        <h4>
+                          <%= f.nome_fantasia %>
+                        </h4>
+                        <p class="location"><i class="fas fa-map-marker-alt"></i>
+                          <%= f.cidade %>, <%= f.estado %>
+                        </p>
+                        <div class="supplier-stats">
+                          <span class="stat">★ <%= f.avaliacao %></span>
+                          <span class="stat">
+                            <%= f.qtd_produtos %> produtos
+                          </span>
+                        </div>
+
+                        <div class="categories">
+                          <% if (f.categorias && f.categorias.length> 0) { %>
+                            <% f.categorias.forEach(categoria=> { %>
+                              <span class="category">
+                                <%= categoria %>
+                              </span>
+                              <% }) %>
+                                <% } %>
+                        </div>
+                      </div>
+                    </div>
+                    <% }) %>
+                </div>
+              </div>
+            </div>
+
+            <button class="arrow next" aria-label="Próximo fornecedores">&#10095;</button>
+          </div>
+        </section>
+
+        <!-- Call to Action -->
+        <section class="cta-section">
+          <div class="cta-content">
+            <h2>Pronto para começar?</h2>
+            <p>Junte-se a milhares de empresas que já encontraram seus fornecedores ideais</p>
+            <div class="cta-buttons">
+              <a href="registro" class="btn btn-primary btn-large">
+                <i class="fas fa-user-plus"></i> Cadastre-se Grátis
+              </a>
+              <a href="categoria" class="btn btn-secondary btn-large">
+                <i class="fas fa-search"></i> Explorar Produtos
+              </a>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
 
   <footer class="site-footer">
     <div class="footer-inner">
@@ -170,7 +217,7 @@
     <div class="copyright">© 2025 tradelink — Todos os direitos reservados</div>
   </footer>
 
-  <script src="../public/JS/inicial.js"></script>
+  <script src="JS/inicial.js"></script>
 </body>
 
 </html>

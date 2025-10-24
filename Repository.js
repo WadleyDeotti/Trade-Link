@@ -33,7 +33,13 @@ module.exports = {
 
   // 🔹 Buscar produtos
   async getProdutos() {
-    const [rows] = await conexao.execute("SELECT * FROM produtos");
+    const [rows] = await conexao.execute(`SELECT id_produto,
+    id_fornecedor,
+    nome_produto,
+    descricao,
+    preco,
+    disponivel,
+    nome_fantasia FROM produtos join fornecedores using(id_fornecedor)`);
     return rows.length>0? new Produto(rows) : null;
   },
   async getFornecedor() {

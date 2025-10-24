@@ -47,7 +47,7 @@ router.get("/historico", (req, res) => res.render("historico"));
 router.get("/mensagens", (req, res) => res.render("mensagens"));
 
 // Configurações
-router.get("/configuracoes", (req, res) => res.render("configuracoes"));
+router.get("/configuracoes", (req, res) => res.renderizador.render(res, "configuracoes",{}));
 
 // ------------------- POSTs -------------------
 // Cadastro
