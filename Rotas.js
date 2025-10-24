@@ -6,8 +6,8 @@ const repository = require('./Repository');
 const inicialController = require("./controllers/inicialController");
 
 // ------------------- GETs -------------------
-router.get("/",inicialController.IniciarSite);
-
+//router.get("/",inicialController.IniciarSite);
+router.get("/",(req, res) => res.render("categoria"));
 router.get('/inicial', inicialController.IniciarSite);
 
 // Dashboard
