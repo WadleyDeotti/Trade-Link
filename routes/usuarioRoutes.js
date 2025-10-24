@@ -15,8 +15,6 @@ router.get("/registro", (req, res) => {
   res.render("registro", { mensagem: mensagem || null });
 });
 
-router.get('/chat', (req, res) => res.render('chat'));
-
 // Login
 router.get("/login", (req, res) => {
   const mensagem = req.session.mensagem;
