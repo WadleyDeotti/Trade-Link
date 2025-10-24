@@ -88,77 +88,87 @@ procurarTokenF: (token, callback) => {
 
 buscarHistorico: async ({ year, type, search }) => {
     try {
-        // Inicializa o array de resultados (para juntar compras e vendas)
         let resultados = [];
-
-        // Prepara o termo de busca com wildcards para a cláusula LIKE
         const searchTerm = search ? `%${search}%` : null;
+        
+        // CORREÇÃO 1: Mapeamento de tipo para controlar a execução
+        const isPurchase = (type === 'all' || type === 'compra' || type === 'purchase');
+        const isSale = (type === 'all' || type === 'venda' || type === 'sale');
+        
+        // CORREÇÃO 2: Determinar se o filtro de status deve ser aplicado.
+        // Se o 'type' for 'purchase' ou 'sale', ele é um filtro de CATEGORIA, não de STATUS.
+        const isCategoryFilter = (type === 'purchase' || type === 'sale' || type === 'compra' || type === 'venda');
 
         // ======================= COMPRAS =======================
-        let queryCompras = `
-            SELECT 
-                c.id_compra AS id, 'compra' AS tipo, c.data_compra AS data,
-                c.valor_total AS valor, c.status,
-                NULL AS nome_empresa, f.nome_fantasia AS nome_fornecedor
-            FROM compras c
-            LEFT JOIN fornecedores f ON c.id_fornecedor = f.id_fornecedor
-            WHERE 1=1
-        `;
-        let paramsCompras = [];
+        if (isPurchase) { // EXECUTA SOMENTE SE FOR 'all', 'compra' ou 'purchase'
+            let queryCompras = `
+                SELECT 
+                    c.id_compra AS id, 'compra' AS tipo, c.data_compra AS data,
+                    c.valor_total AS valor, c.status,
+                    NULL AS nome_empresa, f.nome_fantasia AS nome_fornecedor
+                FROM compras c
+                LEFT JOIN fornecedores f ON c.id_fornecedor = f.id_fornecedor
+                WHERE 1=1
+            `;
+            let paramsCompras = [];
 
-        // Filtro por Ano
-        if (year) {
-            queryCompras += " AND YEAR(c.data_compra) = ?";
-            paramsCompras.push(year);
-        }
-        
-        // Filtro por Tipo (Status)
-        if (type && type !== "all") {
-            queryCompras += " AND c.status = ?";
-            paramsCompras.push(type);
-        }
-        
-        // Filtro por Busca
-        if (searchTerm) {
-            queryCompras += " AND (f.nome_fantasia LIKE ?)"; // Buscamos só no nome do fornecedor
-            paramsCompras.push(searchTerm);
-        }
+            // Filtro por Ano
+            if (year) {
+                queryCompras += " AND YEAR(c.data_compra) = ?";
+                paramsCompras.push(year);
+            }
+            
+            // Filtro por Tipo (STATUS) - SÓ APLICA SE O TIPO NÃO FOR UM FILTRO DE CATEGORIA GERAL
+            // Ex: Se type='aprovada', aplica. Se type='purchase', NÃO aplica aqui.
+            if (type && type !== "all" && !isCategoryFilter) { 
+                queryCompras += " AND c.status = ?";
+                paramsCompras.push(type); 
+            }
+            
+            // Filtro por Busca
+            if (searchTerm) {
+                queryCompras += " AND (f.nome_fantasia LIKE ?)";
+                paramsCompras.push(searchTerm);
+            }
 
-        const [compras] = await db.execute(queryCompras, paramsCompras);
-        resultados = [...resultados, ...compras];
+            const [compras] = await db.execute(queryCompras, paramsCompras);
+            resultados = [...resultados, ...compras];
+        }
 
         // ======================= VENDAS (Contratos) =======================
-        let queryVendas = `
-            SELECT 
-                ct.id_contrato AS id, 'venda' AS tipo, ct.data_inicio AS data,
-                ct.valor_total AS valor, ct.status,
-                e.nome_fantasia AS nome_empresa, NULL AS nome_fornecedor
-            FROM contratos ct
-            LEFT JOIN empresas e ON ct.id_empresa = e.id_empresa
-            WHERE 1=1
-        `;
-        let paramsVendas = [];
-        
-        // Filtro por Ano
-        if (year) {
-            queryVendas += " AND YEAR(ct.data_inicio) = ?";
-            paramsVendas.push(year);
-        }
-        
-        // Filtro por Tipo (Status)
-        if (type && type !== "all") {
-            queryVendas += " AND ct.status = ?";
-            paramsVendas.push(type);
-        }
-        
-        // Filtro por Busca
-        if (searchTerm) {
-            queryVendas += " AND (e.nome_fantasia LIKE ?)"; // Buscamos só no nome da empresa (cliente)
-            paramsVendas.push(searchTerm);
-        }
+        if (isSale) { // EXECUTA SOMENTE SE FOR 'all', 'venda' ou 'sale'
+            let queryVendas = `
+                SELECT 
+                    ct.id_contrato AS id, 'venda' AS tipo, ct.data_inicio AS data,
+                    ct.valor_total AS valor, ct.status,
+                    e.nome_fantasia AS nome_empresa, NULL AS nome_fornecedor
+                FROM contratos ct
+                LEFT JOIN empresas e ON ct.id_empresa = e.id_empresa
+                WHERE 1=1
+            `;
+            let paramsVendas = [];
+            
+            // Filtro por Ano
+            if (year) {
+                queryVendas += " AND YEAR(ct.data_inicio) = ?";
+                paramsVendas.push(year);
+            }
+            
+            // Filtro por Tipo (STATUS)
+            if (type && type !== "all" && !isCategoryFilter) { 
+                queryVendas += " AND ct.status = ?";
+                paramsVendas.push(type);
+            }
+            
+            // Filtro por Busca
+            if (searchTerm) {
+                queryVendas += " AND (e.nome_fantasia LIKE ?)";
+                paramsVendas.push(searchTerm);
+            }
 
-        const [vendas] = await db.execute(queryVendas, paramsVendas);
-        resultados = [...resultados, ...vendas];
+            const [vendas] = await db.execute(queryVendas, paramsVendas);
+            resultados = [...resultados, ...vendas];
+        }
 
         // Junta e ordena por data (mais recente primeiro)
         return resultados.sort((a, b) => new Date(b.data) - new Date(a.data));
