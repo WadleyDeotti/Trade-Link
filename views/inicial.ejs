@@ -94,24 +94,28 @@
             <div class="carousel" data-role="carousel">
               <div class="track">
 
-                <% produtos.forEach((produto, i)=> { %>
-                  <article class="product-card" onclick="window.location.href='produto'">
-                    <div class="product-info">
-                      <h4>
-                        <%= produto.nome_produto %>
-                      </h4>
-                      <p class="supplier">
-                        <%= produto.nome_fantasia %>
-                      </p>
-                      <div class="price">R$ <%= produto.preco.toFixed(2) %>
+                <% if (produtos && produtos.length> 0) { %>
+                  <% produtos.forEach((produto, i)=> { %>
+                    <article class="product-card" onclick="window.location.href='produto'">
+                      <div class="product-info">
+                        <h4>
+                          <%= produto.nome_produto %>
+                        </h4>
+                        <p class="supplier">
+                          <%= produto.nome_fantasia %>
+                        </p>
+                        <div class="price">R$ <%= produto.preco.toFixed(2) %>
+                        </div>
+                        <div class="rating">
+                          <span class="stars">★★★★★</span>
+                          <span class="reviews">(127)</span>
+                        </div>
                       </div>
-                      <div class="rating">
-                        <span class="stars">★★★★★</span>
-                        <span class="reviews">(127)</span>
-                      </div>
-                    </div>
-                  </article>
-                  <% }) %>
+                    </article>
+                    <% }) %>
+                      <% }else { %>
+                        <p>Nenhum produto em destaque encontrado.</p>
+                      <%}%>
               </div>
             </div>
 
@@ -132,40 +136,42 @@
             <div class="carousel" data-role="carousel">
               <div class="track">
                 <div class="supplier-list">
-                  <% fornecedores.forEach((f)=> { %>
-                    <div class="supplier-card" onclick="window.location.href='fornecedores/<%= f.id_fornecedor %>'">
-                      <div class="supplier-avatar">
-                        <% if (f.verificado) { %>
-                          <div class="verified-badge"><i class="fas fa-check-circle"></i></div>
-                          <% } %>
-                      </div>
-
-                      <div class="supplier-info">
-                        <h4>
-                          <%= f.nome_fantasia %>
-                        </h4>
-                        <p class="location"><i class="fas fa-map-marker-alt"></i>
-                          <%= f.cidade %>, <%= f.estado %>
-                        </p>
-                        <div class="supplier-stats">
-                          <span class="stat">★ <%= f.avaliacao %></span>
-                          <span class="stat">
-                            <%= f.qtd_produtos %> produtos
-                          </span>
+                  <% if (fornecedores && fornecedores.length> 0) { %>
+                    <% fornecedores.forEach((f)=> { %>
+                      <div class="supplier-card" onclick="window.location.href='fornecedores/<%= f.id_fornecedor %>'">
+                        <div class="supplier-avatar">
+                          <% if (f.verificado) { %>
+                            <div class="verified-badge"><i class="fas fa-check-circle"></i></div>
+                            <% } %>
                         </div>
-
-                        <div class="categories">
-                          <% if (f.categorias && f.categorias.length> 0) { %>
-                            <% f.categorias.forEach(categoria=> { %>
-                              <span class="category">
-                                <%= categoria %>
-                              </span>
-                              <% }) %>
-                                <% } %>
+                        <div class="supplier-info">
+                          <h4>
+                            <%= f.nome_fantasia %>
+                          </h4>
+                          <p class="location"><i class="fas fa-map-marker-alt"></i>
+                            <%= f.cidade %>, <%= f.estado %>
+                          </p>
+                          <div class="supplier-stats">
+                            <span class="stat">★ <%= f.avaliacao %></span>
+                            <span class="stat">
+                              <%= f.qtd_produtos %> produtos
+                            </span>
+                          </div>
+                          <div class="categories">
+                            <% if (f.categorias && f.categorias.length> 0) { %>
+                              <% f.categorias.forEach(categoria=> { %>
+                                <span class="category">
+                                  <%= categoria %>
+                                </span>
+                                <% }) %>
+                                  <% } %>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <% }) %>
+                      <% }) %>
+                        <% }else { %>
+                          <p>Nenhum fornecedor verificado encontrado.</p>
+                        <%}%>
                 </div>
               </div>
             </div>

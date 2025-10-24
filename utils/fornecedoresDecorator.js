@@ -8,8 +8,10 @@ class FornecedorDecorator extends Renderizador {
   }
 
   async render(res, view, data = {}) {
+     if (!data) data = {};
+  data.produtos = [];
     try {
-      const fornecedores = await repository.buscarTodos();
+      const fornecedores = await repository.getFornecedor();
       data.fornecedores = fornecedores;
     } catch (err) {
       console.error('Erro ao carregar fornecedores:', err);

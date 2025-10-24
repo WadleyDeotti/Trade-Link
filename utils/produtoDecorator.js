@@ -8,17 +8,20 @@ class ProdutoDecorator extends Renderizador {
   }
 
   async render(res, view, data = {}) {
+    if (!data) data = {};
+    data.produtos = [];
+  
     try {
-      // Busca todos os produtos
-      const produtos = await repository.getProdutos();
-      data.produtos = produtos;
-    } catch (err) {
-      console.error('Erro ao carregar produtos:', err);
-      data.produtos = [];
-    }
+  // Busca todos os produtos
+  const produtos = await repository.getProdutos();
+  data.produtos = produtos;
+} catch (err) {
+  console.error('Erro ao carregar produtos:', err);
 
-    // Chama o renderizador interno (decorator ou renderizador base)
-    this.renderizador.render(res, view, data);
+}
+
+// Chama o renderizador interno (decorator ou renderizador base)
+this.renderizador.render(res, view, data);
   }
 }
 
