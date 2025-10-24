@@ -1,52 +1,53 @@
-const express = require("express");
-const path = require("path");
-const session = require("express-session")
+import express from "express";
+import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
+import session from "express-session";
+import chatRoutes from "./routes/chatRoutes.js";
+import usuarioRoutes from "./routes/usuarioRoutes.js";
+
+dotenv.config();
+
+console.log("Chave carregada?", process.env.OPENAI_API_KEY ? "Sim" : "Não");
+
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const app = express();
 
+// Middlewares
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(session({
   secret: "chave-secreta",
   resave: false,
   saveUninitialized: false,
-   cookie: { maxAge: 1000 * 60 * 60 * 24 * 365 * 10 }
+  cookie: { maxAge: 1000 * 60 * 60 * 24 * 365 * 10 }
 }));
+app.use(express.static(path.join(__dirname, "public")));
 
-app.set('view engine','ejs');
-app.set('views', path.join(__dirname, 'views'));
+// EJS
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
 
-app.use(express.urlencoded({extended:true}));
+// Rotas
+app.use("/chat", chatRoutes);
+app.use("/", usuarioRoutes);
 
-app.use(express.static(path.join(__dirname,'public')));
-
-app.get('/', (req, res) => {
-  if(req.session.usuario){
-    if(req.session.usuario.cnpj){
-      res.render('empresa');
-    res.render('fornecedores');
-  }}else{
-  const mensagem = req.session.mensagem;
-  delete req.session.mensagem; 
-  res.render("dashboard", { mensagem: mensagem || null }); //padrao registro mudar pra pagina q quer ver
-  }
+// 404
+app.use((req, res) => {
+  res.status(404).send('Página não encontrada');
 });
 
-const usuarioRoutes = require('./routes/usuarioRoutes');
-
-app.use('/',usuarioRoutes);
-
-app.use((req,res)=> {
-res.status(404).send('pagina não encontrada');
+// 500
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Erro interno do servidor');
 });
 
-app.use((err,req,res,next) =>{
-console.error(err.stack);
-res.status(500).send('erro interno do servidor');
-});
-
+// Porta
 const PORT = process.env.PORT || 6767;
 app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
-  console.log(`http://localhost:${PORT}`);
-  console.log('Pressione Ctrl+C para encerrar o servidor.');
-  console.log('wallahi im cooking');
-})
+  console.log(`Servidor rodando em http://localhost:${PORT}`);
+});
