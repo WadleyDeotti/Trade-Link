@@ -12,13 +12,14 @@ async function sendMessage() {
 
     // Chamada para API GPT
     try {
-        const res = await fetch('http://localhost:3000/api/messages/1', {
+
+       const res = await fetch('/chat/send', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ text })
+            body: JSON.stringify({ message: text })
         });
         const data = await res.json();
-        addMessage(data.gptMessage.text, 'received');
+        addMessage(data.reply, 'received');
     } catch (err) {
         console.error(err);
         addMessage("Erro ao se conectar com a IA.", 'received');
