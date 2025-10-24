@@ -36,7 +36,30 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    
+    formLogin.addEventListener('submit', function(e) {
+        
+        
+        const documento = documentoInput.value.replace(/\D/g, '');
+        const isCpf = documento.length <= 11;
+        
+        if (isCpf && !validarCPF(documentoInput)) {
+            resultado.textContent = 'Por favor, insira um CPF válido';
+            resultado.style.color = '#d9534f';
+            dialog.showModal();
+            documentoInput.focus();
+            return;
+        }
+        
+        if (!isCpf && !validarCNPJ(documentoInput)) {
+            resultado.textContent = 'Por favor, insira um CNPJ válido';
+            resultado.style.color = '#d9534f';
+            dialog.showModal();
+            documentoInput.focus();
+            return;
+        }
+        setTimeout(() => {
+        }, 2000);
+    });
 });
 
 function formatarDocumento(input) {

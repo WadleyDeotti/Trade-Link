@@ -594,3 +594,40 @@ header h1 {
         justify-content: center;
     }
 }
+
+
+/* === AUTO-RESPONSIVE (CSS puro) === */
+* { box-sizing: border-box; }
+
+img, video { max-width: 100%; height: auto; display: block; }
+
+form { width: 100%; }
+
+input[type="text"], input[type="email"], input[type="password"], input[type="tel"], input[type="number"], select, textarea {
+  width: 100%;
+  max-width: 100%;
+}
+
+.table-responsive { width: 100%; overflow-x: auto; }
+
+.grid, .cards, .card-grid, .content-grid {
+  display: grid;
+  gap: 16px;
+}
+
+@media (min-width: 769px){
+  .grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+  .grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+  .grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
+}
+
+@media (max-width: 768px){
+  body { padding: 12px; }
+  .container, .wrapper, main, section { padding: 12px; }
+  .sidebar { position: static; width: 100%; }
+  nav ul { flex-wrap: wrap; gap: 8px; }
+  .row { display: flex; flex-direction: column; gap: 12px; }
+  .grid, .cards, .card-grid, .content-grid { grid-template-columns: 1fr !important; }
+  table { display: block; width: 100%; overflow-x: auto; }
+  .btn, button, input[type="submit"] { width: 100%; }
+}
