@@ -241,3 +241,40 @@ resumoFinanceiro: async () => {
     }
   }
 };
+
+
+
+const produtoRepository = {
+
+    // Função para buscar um produto e seus detalhes pelo ID
+    buscarProdutoPorId: async (id_produto) => {
+        try {
+            // A query traz o produto, o nome do fornecedor e o preço
+            const query = `
+                SELECT 
+                    p.id_produto, p.nome_produto, p.descricao, p.preco, p.disponivel,
+                    f.nome_fantasia AS nome_fornecedor
+                FROM produtos p
+                LEFT JOIN fornecedores f ON p.id_fornecedor = f.id_fornecedor
+                WHERE p.id_produto = ?
+            `;
+            const [rows] = await db.execute(query, [id_produto]);
+
+            if (rows.length === 0) {
+                return null; // Produto não encontrado
+            }
+            return rows[0]; // Retorna o primeiro e único resultado
+
+        } catch (error) {
+            console.error("Erro no repository buscarProdutoPorId:", error);
+            throw error; // Propaga o erro para o Controller
+        }
+    },
+
+    // Você pode adicionar funções para buscar avaliações, produtos relacionados, etc.
+    buscarAvaliacoes: async (id_produto) => {
+        // Exemplo: SELECT * FROM avaliacoes WHERE id_produto = ?
+        return []; // Retornando vazio por enquanto
+    }
+};
+

@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const loginController = require("../controllers/loginController");
 const historicoController = require("../controllers/historicoController");
+const produtoController = require('../controllers/produtoController');
 
 // ------------------- GETs -------------------
 // Dashboard
@@ -13,6 +14,10 @@ router.get("/registro", (req, res) => {
   delete req.session.mensagem; 
   res.render("registro", { mensagem: mensagem || null });
 });
+
+//Produto
+router.get('/produto/:id', produtoController.getProdutoPage);
+router.get("/produto", produtoController.getListaProdutos);
 
 // Login
 router.get("/login", (req, res) => {
