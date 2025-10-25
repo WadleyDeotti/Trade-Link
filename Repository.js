@@ -36,7 +36,7 @@ export async function getProdutos() {
     FROM produtos p
     JOIN fornecedores f USING(id_fornecedor)
   `);
-  return rows.length > 0 ? new Produto(rows[0]) : null;
+  return rows.map(row => new Produto(row));
 }
 
 export async function getFornecedor() {

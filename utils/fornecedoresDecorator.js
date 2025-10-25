@@ -9,7 +9,6 @@ export default class FornecedorDecorator extends Renderizador {
 
   async render(res, view, data = {}) {
     if (!data) data = {};
-    data.produtos = [];
 
     try {
       const fornecedores = await repository.getFornecedor();

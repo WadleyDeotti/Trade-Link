@@ -54,7 +54,7 @@ app.get('/', (req, res) => {
 
     res.renderizador.render(res, 'fornecedores', {});
   }
-  else { res.redirect('/inicial'); }
+  else { res.redirect('/login'); }
 });
 
 // Rotas da aplicação

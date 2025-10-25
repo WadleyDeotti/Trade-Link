@@ -42,6 +42,8 @@ router.get("/mensagens", (req, res) => res.render("mensagens"));
 // Configurações
 router.get("/configuracoes", (req, res) => res.renderizador.render(res, 'configuracoes', {}));
 
+router.get("/categoria", (req, res) => res.render("categoria"));
+
 // ------------------- POSTs -------------------
 // Cadastro
 router.post("/cadastrar", loginController.cadastrar);

@@ -10,8 +10,6 @@ export default class ProdutoDecorator extends Renderizador {
 
   async render(res, view, data = {}) {
     if (!data) data = {};
-    data.produtos = [];
-    console.log(data.produtos)
     try {
       // Busca todos os produtos
       const produtos = await repository.getProdutos();
