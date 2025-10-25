@@ -82,7 +82,7 @@
                 </div>
 
                 <!-- Formulário de Edição -->
-                <form id="formPerfil" method="POST" action="alterarFornecedor">
+                <form id="formPerfil" method="POST" action="updateDados">
                     <div class="form-section">
                         <h2>Informações Pessoais</h2>
                         <div class="form-grid">
@@ -135,6 +135,7 @@
                         </button>
                     </div>
                 </form>
+                <% if(usuario.id_fornecedor){ %>
                 <div class="form-section">
                         <h2>Produtos do Fornecedor</h2>
                         <div class="products-section">
@@ -157,6 +158,7 @@
                         </div>
                     </div>
             </div>
+            <% } %>
         </div>
     </div>   
 
@@ -185,7 +187,7 @@
     </div>
 
     <!-- Modal para Adicionar/Editar Produto -->
-    <form action="">
+    <form action="cadastrarProduto" method="POST" >
         <div id="product-modal" class="modal">
             <div class="modal-content">
                 <div class="modal-header">
@@ -196,19 +198,19 @@
                     <form id="formProduct">
                         <div class="form-group">
                             <label for="product-name">Nome do Produto:</label>
-                            <input id="product-name" type="text" required>
+                            <input id="product-name" type="text" name="nome_produto"required>
                         </div>
                         <div class="form-group">
                             <label for="product-description">Descrição:</label>
-                            <textarea id="product-description" required></textarea>
+                            <textarea id="product-description" name="descricao" required></textarea>
                         </div>
                         <div class="form-group">
                             <label for="product-price">Preço (R$):</label>
-                            <input id="product-price" type="number" step="0.01" required>
+                            <input id="product-price" type="number" step="0.01" name="preco" required>
                         </div>
                         <div class="form-group">
                             <label for="product-category">Categoria:</label>
-                            <input id="product-category" type="text" required>
+                            <input id="product-category" type="text" name="categoria" required>
                         </div>
                         <div class="form-group">
                             <label for="product-image">Imagem do Produto:</label>
@@ -222,7 +224,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" id="cancel-product-btn">Cancelar</button>
-                    <button type="button" class="btn btn-primary" id="save-product-btn">Salvar Produto</button>
+                    <button type="submit" class="btn btn-primary" id="save-product-btn">Salvar Produto</button>
                 </div>
             </div>
         </div>

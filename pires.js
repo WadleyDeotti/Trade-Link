@@ -36,9 +36,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', async (req, res) => {
-  const usuario = await repository.testeUsuario();
-  console.log(usuario);
-  
+  req.session.usuario = await repository.testeUsuario();
+  usuario = req.session.usuario;
   res.render('fornecedores', { usuario });
 });
 

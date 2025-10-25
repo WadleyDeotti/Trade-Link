@@ -4,6 +4,7 @@ const Fornecedor = require('./models/fornecedorModel');
 const Produto = require('./models/produtoModel');
 
 
+
 // 🧩 Cria a conexão (ou pool)
 const conexao = mysql.createPool({
   host: "localhost",
@@ -40,11 +41,11 @@ module.exports = {
     preco,
     disponivel,
     nome_fantasia FROM produtos join fornecedores using(id_fornecedor)`);
-    return rows.length>0? new Produto(rows) : null;
+    return rows.length > 0 ? new Produto(rows) : null;
   },
   async getFornecedor() {
     const [rows] = await conexao.execute("SELECT * FROM fornecedores");
-    return rows.length>0? new Fornecedor(rows) : null;
+    return rows.length > 0 ? new Fornecedor(rows) : null;
   },
 
   // 🔹 Buscar empresa por CNPJ
@@ -244,31 +245,30 @@ module.exports = {
     return rows.length > 0 ? new Fornecedor(rows[0]) : null;
   },
 
-  salvarTokenE: async ({ token_redefinicao, expira_token, cnpj }) => {
-    const sql = "UPDATE empresas SET token_redefinicao = ?, expira_token = ? WHERE cnpj = ?";
-    const valores = [token_redefinicao, expira_token, cnpj];
+  atualizarFornecedor: async (fornecedor) => {
+    const sql = `
+      UPDATE fornecedores SET nome_fantasia = ?,email = ?,localizacao = ?, telefone = ?, descricao = ? WHERE id_fornecedor = ?
+    `;
+    const valores = [fornecedor.nome_fantasia, fornecedor.email, fornecedor.localizacao, fornecedor.telefone, fornecedor.descricao, fornecedor.id_fornecedor];
     const [resultado] = await conexao.execute(sql, valores);
     return resultado;
   },
-
-  salvarTokenF: async ({ token_redefinicao, expira_token, cpf }) => {
-    const sql = "UPDATE fornecedores SET token_redefinicao = ?, expira_token = ? WHERE cpf = ?";
-    const valores = [token_redefinicao, expira_token, cpf];
+  atualizarEmpresa: async (empresa) => {
+    const sql = `
+      UPDATE empresas SET nome_fantasia = ?,email = ?,localizacao = ?, telefone = ?, descricao = ? WHERE id_empresa = ?
+    `;
+    const valores = [empresa.nome_fantasia, empresa.email, empresa.localizacao, empresa.telefone, empresa.descricao, empresa.id_empresa];
     const [resultado] = await conexao.execute(sql, valores);
     return resultado;
   },
-
-  buscarPorTokenE: async (token) => {
-    const sql = "SELECT * FROM empresas WHERE token_redefinicao = ?";
-    const [rows] = await conexao.execute(sql, [token]);
-    return rows.length > 0 ? new Empresa(rows[0]) : null;
+  cadastrarProduto: async (produto) => {
+    console.log(produto);
+    const sql = `
+    insert into produtos (id_fornecedor, nome_produto, descricao, preco, categoria)
+    values (?,?,?,?,?)  
+    `;
+    const valores = [produto.id_fornecedor, produto.nome_produto, produto.descricao, produto.preco, produto.categoria];
+    const [resultado] = await conexao.execute(sql, valores);
+    return resultado;
   },
-
-  buscarPorTokenF: async (token) => {
-    const sql = "SELECT * FROM fornecedores WHERE token_redefinicao = ?";
-    const [rows] = await conexao.execute(sql, [token]);
-    return rows.length > 0 ? new Fornecedor(rows[0]) : null;
-  }
-
-
 };

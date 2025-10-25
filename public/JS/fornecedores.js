@@ -2,6 +2,15 @@
 // PERFIL.JS — versão visual
 // ==========================
 
+// Pegar elementos
+const addProductBtn = document.getElementById('add-product-btn');
+const productModal = document.getElementById('product-modal');
+const closeModalBtns = productModal.querySelectorAll('.close'); // todos os 'x' do modal
+const cancelProductBtn = document.getElementById('cancel-product-btn');
+const openProductBtns = document.querySelectorAll(".open-product-modal");
+const closeProductModal = document.getElementById("close-product-modal");
+
+
 // ------- Toast de mensagens visuais -------
 function showToast(message, type = "info") {
   const toast = document.createElement("div");
@@ -20,9 +29,7 @@ function showToast(message, type = "info") {
 }
 
 // ------- Modal de Produto -------
-const productModal = document.getElementById("product-modal");
-const openProductBtns = document.querySelectorAll(".open-product-modal");
-const closeProductModal = document.getElementById("close-product-modal");
+
 
 if (openProductBtns && productModal) {
   openProductBtns.forEach(btn => {
@@ -85,3 +92,27 @@ document.querySelectorAll(".fake-action").forEach(btn => {
 });
 
 console.log("JS visual carregado com sucesso 🎨");
+
+// Abrir modal ao clicar no botão "Adicionar Produto"
+addProductBtn.addEventListener('click', () => {
+    productModal.style.display = 'block';
+});
+
+// Fechar modal ao clicar no "x"
+closeModalBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        productModal.style.display = 'none';
+    });
+});
+
+// Fechar modal ao clicar no botão cancelar
+cancelProductBtn.addEventListener('click', () => {
+    productModal.style.display = 'none';
+});
+
+// Fechar modal clicando fora da modal-content
+window.addEventListener('click', (event) => {
+    if(event.target === productModal){
+        productModal.style.display = 'none';
+    }
+});

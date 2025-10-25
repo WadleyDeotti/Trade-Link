@@ -25,7 +25,7 @@ async function atualizarSessaoUsuario(req) {
   console.log(req.session.usuario);
   return req.session.usuario;
 };
- 
+
 exports.salvarConfiguracoes = async (req, res) => {
 
   // Verifica se há sessão
@@ -189,10 +189,45 @@ exports.alterarSenha = async (req, res) => {
   };
 };
 
-exports.alterarFornecedor = async (req, res) => {
-    let dadosFornecedor = req.body;
-    console.log(dadosFornecedor);
+exports.updateDados = async (req, res) => {
+  let dadosFornecedor = req.body;
+  usuario = req.session.usuario;
+  
+  if (usuario.id_fornecedor) {
+    try {
+      dadosFornecedor.id_fornecedor = usuario.id_fornecedor;
+      await repository.atualizarFornecedor(dadosFornecedor);
+      console.log('Fornecedor atualizado com sucesso');
+      await atualizarSessaoUsuario(req);
+      res.redirect('/fornecedores');
+    } catch (err) {
+      console.error('Erro ao atualizar fornecedor:', err);
 
+    };
+  } else if (usuario.id_empresa) {
+    try {
+      dadosFornecedor.id_empresa = usuario.id_empresa;
+      console.log(dadosFornecedor);
+      await repository.atualizarEmpresa(dadosFornecedor);
+      console.log('Empresa atualizada com sucesso');
+      await atualizarSessaoUsuario(req);
+      res.redirect('/fornecedores');
+    } catch (err) {
+      console.error('Erro ao atualizar empresa:', err);
+    }
+  }
+  
 };
-
-
+exports.cadastrarProduto = async (req, res) => {
+  let dadosProduto = req.body;
+  let id_fornecedor = req.session.usuario.id_fornecedor;
+  dadosProduto.id_fornecedor = id_fornecedor;
+  try {
+    await repository.cadastrarProduto(dadosProduto);
+    console.log('Produto cadastrado com sucesso');
+    res.redirect('/fornecedores');
+  } catch (err) {
+    console.error('Erro ao cadastrar produto:', err);
+  };
+  
+};

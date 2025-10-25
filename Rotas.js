@@ -62,6 +62,8 @@ router.post("/alterarSenha", configuracoesController.alterarSenha);
 //salvar configurações
 router.post("/salvarConfiguracoes", configuracoesController.salvarConfiguracoes);
 
-router.post("/alterarFornecedor", configuracoesController.alterarFornecedor);
+router.post("/updateDados", configuracoesController.updateDados);
+
+router.post("/cadastrarProduto", configuracoesController.cadastrarProduto);
 
 module.exports = router;
