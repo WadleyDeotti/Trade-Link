@@ -4,7 +4,6 @@ import dotenv from "dotenv";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { findFAQAnswer } from "../models/chatModel.js";
 
-// Carregar .env
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 dotenv.config({ path: path.join(__dirname, "../.env") });
@@ -13,22 +12,26 @@ console.log("🔑 GEMINI_API_KEY carregada:", process.env.GEMINI_API_KEY ? "sim"
 
 // Inicializa Gemini
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" }); // modelo rápido e gratuito
+const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
 export const sendMessage = async (req, res) => {
   try {
     const { message } = req.body;
 
-    // 1️⃣ Primeiro tenta achar resposta no FAQ local
+    // Tenta achar resposta no FAQ local
     const localAnswer = findFAQAnswer(message);
     if (localAnswer) {
       return res.json({ reply: localAnswer });
     }
 
-    // 2️⃣ Usa o Gemini
-    const prompt = `Você é um assistente do Trade Link. Responda de forma útil e breve:\n\nUsuário: ${message}`;
-    const result = await model.generateContent(prompt);
-    const reply = result.response.text();
+    // Usa o Gemini corretamente (apenas strings ou { text: "..." })
+    const result = await model.generateContent([
+      "Você é um assistente útil do Trade Link. Responda de forma clara e breve.",
+      message
+    ]);
+
+    // Extrai a resposta
+    const reply = result.response[0].text ?? "Não consegui gerar uma resposta 😅";
 
     res.json({ reply });
   } catch (error) {
