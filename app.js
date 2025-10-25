@@ -1,52 +1,72 @@
-const express = require("express");
-const path = require("path");
-const session = require("express-session")
+// app.js
+import express from "express";
+import path from "path";
+import session from "express-session";
+import { fileURLToPath } from "url";
+
+// Importa rotas
+import Rotas from './routes/Rotas.js';
+import chatRoutes from "./routes/chatRoutes.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const app = express();
 
+// Middlewares
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
 app.use(session({
   secret: "chave-secreta",
   resave: false,
   saveUninitialized: false,
-   cookie: { maxAge: 1000 * 60 * 60 * 24 * 365 * 10 }
+  cookie: { maxAge: 1000 * 60 * 60 * 24 * 365 * 10 } // 10 anos
 }));
 
-app.set('view engine','ejs');
+// Configuração de views
+app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-app.use(express.urlencoded({extended:true}));
+// Arquivos estáticos
+app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(express.static(path.join(__dirname,'public')));
-
+// Rota principal
 app.get('/', (req, res) => {
-  if(req.session.usuario){
-    if(req.session.usuario.cnpj){
+  if (req.session.usuario) {
+    if (req.session.usuario.cnpj) {
+      // Só renderiza a view da empresa (não é possível renderizar duas ao mesmo tempo)
       res.render('empresa');
-    res.render('fornecedores');
-  }}else{
-  const mensagem = req.session.mensagem;
-  delete req.session.mensagem; 
-  res.render("dashboard", { mensagem: mensagem || null }); //padrao registro mudar pra pagina q quer ver
+    } else {
+      res.render('fornecedores');
+    }
+  } else {
+    const mensagem = req.session.mensagem;
+    delete req.session.mensagem;
+    res.render("dashboard", { mensagem: mensagem || null });
   }
 });
 
-const usuarioRoutes = require('./routes/usuarioRoutes');
+// Rotas da aplicação
+app.use('/', Rotas);
+app.use("/chat", chatRoutes);
 
-app.use('/',usuarioRoutes);
-
-app.use((req,res)=> {
-res.status(404).send('pagina não encontrada');
+// 404
+app.use((req, res) => {
+  res.status(404).send('Página não encontrada');
 });
 
-app.use((err,req,res,next) =>{
-console.error(err.stack);
-res.status(500).send('erro interno do servidor');
+// Erro interno
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Erro interno do servidor');
 });
 
+// Inicia servidor
 const PORT = process.env.PORT || 6767;
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
   console.log(`http://localhost:${PORT}`);
   console.log('Pressione Ctrl+C para encerrar o servidor.');
   console.log('wallahi im cooking');
-})
+});
