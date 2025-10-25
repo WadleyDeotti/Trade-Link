@@ -24,16 +24,16 @@
             </div>
             <nav>
                 <ul>
-          <li class="active"><a href="inicial"><i class="fas fa-home"></i> Produtos</a></li>
-          <li><a href="dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
-          <li><a href="fornecedores"><i class="fas fa-user"></i> Perfil</a></li>
-          <li><a href="pedidos"><i class="fas fa-file-invoice"></i> Pedidos/Vendas</a></li>
-          <li><a href="historico"><i class="fas fa-history"></i> Histórico</a></li>
-          <li><a href="chat"><i class="fas fa-robot"></i> Chat IA</a></li>
-          <li><a href="mensagens"><i class="fas fa-envelope"></i> Mensagens</a></li>
-          <li><a href="categoria"><i class="fas fa-tags"></i> Categorias</a></li>
-          <li><a href="configuracoes"><i class="fas fa-cog"></i> Configurações</a></li>
-        </ul>
+                    <li class="active"><a href="inicial"><i class="fas fa-home"></i> Produtos</a></li>
+                    <li><a href="dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="fornecedores"><i class="fas fa-user"></i> Perfil</a></li>
+                    <li><a href="pedidos"><i class="fas fa-file-invoice"></i> Pedidos/Vendas</a></li>
+                    <li><a href="historico"><i class="fas fa-history"></i> Histórico</a></li>
+                    <li><a href="chat"><i class="fas fa-robot"></i> Chat IA</a></li>
+                    <li><a href="mensagens"><i class="fas fa-envelope"></i> Mensagens</a></li>
+                    <li><a href="categoria"><i class="fas fa-tags"></i> Categorias</a></li>
+                    <li><a href="configuracoes"><i class="fas fa-cog"></i> Configurações</a></li>
+                </ul>
             </nav>
 
         </aside>
@@ -168,15 +168,19 @@
                                     <h3><i class="fas fa-envelope-open-text"></i> Tipos de Notificação</h3>
                                     <div class="checkbox-group">
                                         <label><input type="checkbox" name="notify_messages"
-                                                <%=usuario?.notify_messages==1 ? 'checked' : '' %>> Mensagens
+                                                <%=usuario?.notify_messages==1 ? 'checked' : '' %>><span
+                                                class="checkbox-custom"></span> Mensagens
                                             diretas</label>
                                         <label><input type="checkbox" name="notify_mentions"
-                                                <%=usuario?.notify_mentions==1 ? 'checked' : '' %>> Menções</label>
+                                                <%=usuario?.notify_mentions==1 ? 'checked' : '' %>><span
+                                                class="checkbox-custom"></span> Menções</label>
                                         <label><input type="checkbox" name="notify_updates"
-                                                <%=usuario?.notify_updates==1 ? 'checked' : '' %>> Atualizações do
+                                                <%=usuario?.notify_updates==1 ? 'checked' : '' %>> <span
+                                                class="checkbox-custom"></span>Atualizações do
                                             sistema</label>
                                         <label><input type="checkbox" name="notify_comments"
-                                                <%=usuario?.notify_comments==1 ? 'checked' : '' %>> Comentários</label>
+                                                <%=usuario?.notify_comments==1 ? 'checked' : '' %>><span
+                                                class="checkbox-custom"></span> Comentários</label>
                                     </div>
                                 </div>
 
@@ -185,13 +189,16 @@
                                     <div class="checkbox-group">
 
                                         <label><input type="checkbox" name="important_only"
-                                                <%=usuario?.important_only==1 ? 'checked' : '' %>> Somente notificações
+                                                <%=usuario?.important_only==1 ? 'checked' : '' %>> <span
+                                                class="radio-custom"></span>Somente notificações
                                             importantes</label>
                                         <label><input type="checkbox" name="email_notifications"
-                                                <%=usuario?.email_notifications==1 ? 'checked' : '' %>> Notificações por
+                                                <%=usuario?.email_notifications==1 ? 'checked' : '' %>> <span
+                                                class="radio-custom"></span>Notificações por
                                             email</label>
                                         <label><input type="checkbox" name="push_notifications"
-                                                <%=usuario?.push_notifications==1 ? 'checked' : '' %>> Notificações
+                                                <%=usuario?.push_notifications==1 ? 'checked' : '' %>> <span
+                                                class="radio-custom"></span>Notificações
                                             push</label>
                                     </div>
                                 </div>
@@ -222,10 +229,12 @@
                                     <h3><i class="far fa-clock"></i> Formato de Data/Hora</h3>
                                     <div class="radio-group">
                                         <label><input type="radio" name="datetime_format" value="24h"
-                                                <%=usuario?.datetime_format==='24h' ? 'checked' : '' %>> 24
+                                                <%=usuario?.datetime_format==='24h' ? 'checked' : '' %>><span
+                                                class="radio-custom"></span> 24
                                             horas</label>
                                         <label><input type="radio" name="datetime_format" value="12h"
-                                                <%=usuario?.datetime_format==='12h' ? 'checked' : '' %>> 12
+                                                <%=usuario?.datetime_format==='12h' ? 'checked' : '' %>><span
+                                                class="radio-custom"></span> 12
                                             horas</label>
                                     </div>
                                 </div>
