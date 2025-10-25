@@ -1,6 +1,6 @@
 // decorators/ProdutoDecorator.js
 import Renderizador from './Renderizador.js';
-import repository from '../Repository.js';
+import * as repository from '../Repository.js';
 
 export default class ProdutoDecorator extends Renderizador {
   constructor(renderizador) {
@@ -11,7 +11,7 @@ export default class ProdutoDecorator extends Renderizador {
   async render(res, view, data = {}) {
     if (!data) data = {};
     data.produtos = [];
-
+    console.log(data.produtos)
     try {
       // Busca todos os produtos
       const produtos = await repository.getProdutos();

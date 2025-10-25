@@ -22,7 +22,13 @@
           <li><a href="fornecedores"><i class="fas fa-user"></i> Perfil</a></li>
           <li><a href="pedidos"><i class="fas fa-file-invoice"></i> Pedidos/Vendas</a></li>
           <li><a href="historico"><i class="fas fa-history"></i> Histórico</a></li>
+<<<<<<< Updated upstream
           <li><a href="chat"><i class="fas fa-robot"></i> Chat IA</a></li>
+=======
+          <li><a href="mensagens"><i class="fas fa-envelope"></i> Mensagens</a></li>
+
+          <li><a href="categoria"><i class="fas fa-tags"></i> Categorias</a></li>
+>>>>>>> Stashed changes
           <li><a href="configuracoes"><i class="fas fa-cog"></i> Configurações</a></li>
         </ul>
       </nav>
@@ -92,7 +98,7 @@
             <div class="carousel" data-role="carousel">
               <div class="track">
 
-                <% if (produtos && produtos.length> 0) { %>
+                <% if (produtos && produtos.length> 0 ) { %>
                   <% produtos.forEach((produto, i)=> { %>
                     <article class="product-card" onclick="window.location.href='produto'">
                       <div class="product-info">
@@ -113,7 +119,7 @@
                     <% }) %>
                       <% }else { %>
                         <p>Nenhum produto em destaque encontrado.</p>
-                      <%}%>
+                        <%}%>
               </div>
             </div>
 
@@ -133,50 +139,51 @@
 
             <div class="carousel" data-role="carousel">
               <div class="track">
-                <div class="supplier-list">
-                  <% if (fornecedores && fornecedores.length> 0) { %>
-                    <% fornecedores.forEach((f)=> { %>
-                      <div class="supplier-card" onclick="window.location.href='fornecedores/<%= f.id_fornecedor %>'">
-                        <div class="supplier-avatar">
-                          <% if (f.verificado) { %>
-                            <div class="verified-badge"><i class="fas fa-check-circle"></i></div>
-                            <% } %>
+                <% if (fornecedores && fornecedores.length> 0) { %>
+                  <% fornecedores.forEach(f=> { %>
+                    <div class="supplier-card" onclick="window.location.href='fornecedores/<%= f.id_fornecedor %>'">
+                      <div class="supplier-avatar">
+                        <% if (f.verificado) { %>
+                          <div class="verified-badge"><i class="fas fa-check-circle"></i></div>
+                          <% } %>
+                      </div>
+                      <div class="supplier-info">
+                        <h4>
+                          <%= f.nome_fantasia %>
+                        </h4>
+                        <p class="location">
+                          <i class="fas fa-map-marker-alt"></i>
+                          <%= f.cidade || 'Cidade' %>, <%= f.estado || 'UF' %>
+                        </p>
+                        <div class="supplier-stats">
+                          <span class="stat">★ <%= f.avaliacao || '0.0' %></span>
+                          <span class="stat">
+                            <%= f.qtd_produtos || 0 %> produtos
+                          </span>
                         </div>
-                        <div class="supplier-info">
-                          <h4>
-                            <%= f.nome_fantasia %>
-                          </h4>
-                          <p class="location"><i class="fas fa-map-marker-alt"></i>
-                            <%= f.cidade %>, <%= f.estado %>
-                          </p>
-                          <div class="supplier-stats">
-                            <span class="stat">★ <%= f.avaliacao %></span>
-                            <span class="stat">
-                              <%= f.qtd_produtos %> produtos
-                            </span>
-                          </div>
-                          <div class="categories">
-                            <% if (f.categorias && f.categorias.length> 0) { %>
-                              <% f.categorias.forEach(categoria=> { %>
-                                <span class="category">
-                                  <%= categoria %>
-                                </span>
-                                <% }) %>
-                                  <% } %>
-                          </div>
+                        <div class="categories">
+                          <% if (f.categorias && f.categorias.length> 0) { %>
+                            <% f.categorias.forEach(categoria=> { %>
+                              <span class="category">
+                                <%= categoria %>
+                              </span>
+                              <% }) %>
+                                <% } %>
                         </div>
                       </div>
-                      <% }) %>
-                        <% }else { %>
-                          <p>Nenhum fornecedor verificado encontrado.</p>
-                        <%}%>
-                </div>
+                    </div>
+                    <% }) %>
+                      <% } else { %>
+                        <p>Nenhum fornecedor verificado encontrado.</p>
+                        <% } %>
               </div>
             </div>
 
             <button class="arrow next" aria-label="Próximo fornecedores">&#10095;</button>
           </div>
         </section>
+
+
 
         <!-- Call to Action -->
         <section class="cta-section">

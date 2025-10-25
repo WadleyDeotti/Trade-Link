@@ -8,6 +8,11 @@ import { fileURLToPath } from "url";
 import Rotas from './routes/Rotas.js';
 import chatRoutes from "./routes/chatRoutes.js";
 
+// Decorators
+import Renderizador from "./utils/Renderizador.js";
+import UsuarioDecorator from "./utils/usuarioDecorator.js";
+import ProdutoDecorator from "./utils/produtoDecorator.js";
+import FornecedorDecorator from "./utils/fornecedoresDecorator.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -24,6 +29,18 @@ app.use(session({
   cookie: { maxAge: 1000 * 60 * 60 * 24 * 365 * 10 } // 10 anos
 }));
 
+// Configuração de renderizador com decorators
+
+let renderizador = new Renderizador();
+renderizador = new UsuarioDecorator(renderizador);
+renderizador = new ProdutoDecorator(renderizador);
+renderizador = new FornecedorDecorator(renderizador);
+
+app.use((req, res, next) => {
+  res.renderizador = renderizador;
+  next();
+});
+
 // Configuração de views
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -34,17 +51,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Rota principal
 app.get('/', (req, res) => {
   if (req.session.usuario) {
-    if (req.session.usuario.cnpj) {
-      // Só renderiza a view da empresa (não é possível renderizar duas ao mesmo tempo)
-      res.render('empresa');
-    } else {
-      res.render('fornecedores');
-    }
-  } else {
-    const mensagem = req.session.mensagem;
-    delete req.session.mensagem;
-    res.render("dashboard", { mensagem: mensagem || null });
+
+    res.renderizador.render(res, 'fornecedores', {});
   }
+  else { res.redirect('/inicial'); }
 });
 
 // Rotas da aplicação
