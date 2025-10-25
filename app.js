@@ -2,10 +2,7 @@ const express = require("express");
 const path = require("path");
 const session = require("express-session")
 const app = express();
-const historicoRoutes = require('./routes/usuarioRoutes');
 
-
-app.use('/api/historico', historicoRoutes);
 
 app.use(express.urlencoded({ extended: true }));
 app.use(session({
@@ -23,15 +20,19 @@ app.use(express.urlencoded({extended:true}));
 app.use(express.static(path.join(__dirname,'public')));
 
 app.get('/', (req, res) => {
-  if(req.session.usuario){
-    if(req.session.usuario.cnpj){
-      res.render('empresa');
-    res.render('fornecedores');
-  }}else{
-  const mensagem = req.session.mensagem;
-  delete req.session.mensagem; 
-  res.render("dashboard", { mensagem: mensagem || null }); //padrao registro mudar pra pagina q quer ver
-  }
+  if(req.session.usuario){
+    if(req.session.usuario.cnpj){
+      return res.render('empresa'); // Renderiza e SAI
+    } else {
+      // Se não tem CNPJ, assume que é fornecedor, por exemplo
+      return res.render('fornecedores'); // Renderiza e SAI
+    }
+  } else {
+    // Usuário não logado, renderiza o dashboard ou login
+    const mensagem = req.session.mensagem;
+    delete req.session.mensagem; 
+    return res.render("dashboard", { mensagem: mensagem || null }); 
+  }
 });
 
 const usuarioRoutes = require('./routes/usuarioRoutes');
