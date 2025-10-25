@@ -94,28 +94,28 @@
               <div class="track">
 
                 <% if (produtos && produtos.length> 0 ) { %>
-                  <%console.log(produtos)%>
-                  <% produtos.forEach(produto=> { %>
-                    <article class="product-card" onclick="window.location.href='produto'">
-                      <div class="product-info">
-                        <h4>
-                          <%= produto.nome_produto %>
-                        </h4>
-                        <p class="supplier">
-                          <%= produto.nome_fantasia %>
-                        </p>
-                        <div class="price">R$ <%= produto.preco.toFixed(2) %>
+                  
+                    <% produtos.forEach(produto=> { %>
+                      <article class="product-card" onclick="window.location.href='produto'">
+                        <div class="product-info">
+                          <h4>
+                            <%= produto.nome_produto %>
+                          </h4>
+                          <p class="supplier">
+                            <%= produto.nome_fantasia %>
+                          </p>
+                          <div class="price">R$ <%= produto.preco.toFixed(2) %>
+                          </div>
+                          <div class="rating">
+                            <span class="stars">★★★★★</span>
+                            <span class="reviews">(127)</span>
+                          </div>
                         </div>
-                        <div class="rating">
-                          <span class="stars">★★★★★</span>
-                          <span class="reviews">(127)</span>
-                        </div>
-                      </div>
-                    </article>
-                    <% }) %>
-                      <% }else { %>
-                        <p>Nenhum produto em destaque encontrado.</p>
-                        <%}%>
+                      </article>
+                      <% }) %>
+                        <% }else { %>
+                          <p>Nenhum produto em destaque encontrado.</p>
+                          <%}%>
               </div>
             </div>
 
@@ -136,43 +136,43 @@
             <div class="carousel" data-role="carousel">
               <div class="track">
                 <% if (fornecedores && fornecedores.length> 0) { %>
-                  <%console.log(fornecedores)%>
-                  <% fornecedores.forEach(f=> { %>
-                    <div class="supplier-card" onclick="window.location.href='fornecedores/<%= f.id_fornecedor %>'">
-                      <div class="supplier-avatar">
-                        <% if (f.verificado) { %>
-                          <div class="verified-badge"><i class="fas fa-check-circle"></i></div>
+                  
+                    <% fornecedores.forEach(f=> { %>
+                      <div class="supplier-card" onclick="window.location.href='fornecedores/<%= f.id_fornecedor %>'">
+                        <div class="supplier-avatar">
+                          <% if (f.verificado) { %>
+                            <div class="verified-badge"><i class="fas fa-check-circle"></i></div>
+                            <% } %>
+                        </div>
+                        <div class="supplier-info">
+                          <h4>
+                            <%= f.nome_fantasia %>
+                          </h4>
+                          <p class="location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <%= f.cidade || 'Cidade' %>, <%= f.estado || 'UF' %>
+                          </p>
+                          <div class="supplier-stats">
+                            <span class="stat">★ <%= f.avaliacao || '0.0' %></span>
+                            <span class="stat">
+                              <%= f.qtd_produtos || 0 %> produtos
+                            </span>
+                          </div>
+                          <div class="categories">
+                            <% if (f.categorias && f.categorias.length> 0) { %>
+                              <% f.categorias.forEach(categoria=> { %>
+                                <span class="category">
+                                  <%= categoria %>
+                                </span>
+                                <% }) %>
+                                  <% } %>
+                          </div>
+                        </div>
+                      </div>
+                      <% }) %>
+                        <% } else { %>
+                          <p>Nenhum fornecedor verificado encontrado.</p>
                           <% } %>
-                      </div>
-                      <div class="supplier-info">
-                        <h4>
-                          <%= f.nome_fantasia %>
-                        </h4>
-                        <p class="location">
-                          <i class="fas fa-map-marker-alt"></i>
-                          <%= f.cidade || 'Cidade' %>, <%= f.estado || 'UF' %>
-                        </p>
-                        <div class="supplier-stats">
-                          <span class="stat">★ <%= f.avaliacao || '0.0' %></span>
-                          <span class="stat">
-                            <%= f.qtd_produtos || 0 %> produtos
-                          </span>
-                        </div>
-                        <div class="categories">
-                          <% if (f.categorias && f.categorias.length> 0) { %>
-                            <% f.categorias.forEach(categoria=> { %>
-                              <span class="category">
-                                <%= categoria %>
-                              </span>
-                              <% }) %>
-                                <% } %>
-                        </div>
-                      </div>
-                    </div>
-                    <% }) %>
-                      <% } else { %>
-                        <p>Nenhum fornecedor verificado encontrado.</p>
-                        <% } %>
               </div>
             </div>
 

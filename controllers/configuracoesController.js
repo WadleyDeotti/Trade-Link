@@ -1,4 +1,3 @@
-// controllers/usuarioController.js
 import bcrypt from "bcrypt";
 import * as repository from "../Repository.js"; // ajuste o caminho conforme seu arquivo
 const safeBool = val => val === 'on' ? 1 : 0;
@@ -8,12 +7,11 @@ async function atualizarSessaoUsuario(req) {
   const usuario = req.session.usuario;
   if (!usuario) throw new Error('Usuário não está logado');
 
-  console.log(usuario);
+  
   const tipo = usuario.id_empresa ? 'empresa' : 'fornecedor';
   const id = tipo === 'empresa' ? usuario.id_empresa : usuario.id_fornecedor;
 
-  console.log(typeof id, id);
-  console.log('Tipo de usuário:', tipo);
+  
 
   let novoUsuario;
   if (tipo === 'empresa') {
@@ -103,7 +101,8 @@ export const salvarConfiguracoes = async (req, res) => {
 export const alterarSenha = async (req, res) => {
   const usuario = req.session.usuario;
   const { current_password, new_password, confirm_password } = req.body;
-
+  console.log(usuario);
+  console.log(req.body);
   if (!current_password || !new_password || !confirm_password) {
     return res.redirect("configuracoes");
   }
@@ -112,10 +111,8 @@ export const alterarSenha = async (req, res) => {
 
   try {
     if (usuario.id_empresa) {
-      const empresa = await repository.buscarSenhaEmpresa(usuario.id_empresa);
-      if (!empresa) return res.status(400).send("Usuário não encontrado.");
 
-      const senhaCorreta = await bcrypt.compare(current_password, empresa.senha_hash);
+      const senhaCorreta = await bcrypt.compare(current_password, usuario.senha_hash);
       if (!senhaCorreta) return res.redirect("configuracoes");
 
       if (new_password !== confirm_password) return res.redirect("configuracoes");
@@ -123,8 +120,8 @@ export const alterarSenha = async (req, res) => {
       const senhaHash = await bcrypt.hash(new_password, 10);
       await repository.updateSenhaEmpresa({ senha_hash: senhaHash, id_empresa: usuario.id_empresa });
     } else if (usuario.id_fornecedor) {
-      const fornecedor = await repository.buscarSenhaFornecedor(usuario.id_fornecedor);
-      const senhaCorreta = await bcrypt.compare(current_password, fornecedor.senha_hash);
+      const senhaCorreta = await bcrypt.compare(current_password, usuario.senha_hash);
+
       if (!senhaCorreta) return res.redirect("configuracoes");
       if (new_password !== confirm_password) return res.redirect("configuracoes");
 
