@@ -24,7 +24,7 @@ async function atualizarSessaoUsuario(req) {
   req.session.usuario = novoUsuario;
   console.log(req.session.usuario);
   return req.session.usuario;
-}
+};
  
 exports.salvarConfiguracoes = async (req, res) => {
 
@@ -189,6 +189,10 @@ exports.alterarSenha = async (req, res) => {
   };
 };
 
+exports.alterarFornecedor = async (req, res) => {
+    let dadosFornecedor = req.body;
+    console.log(dadosFornecedor);
 
+};
 
 

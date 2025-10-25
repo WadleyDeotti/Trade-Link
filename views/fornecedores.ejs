@@ -1,28 +1,30 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfil do Fornecedor - TradeLink</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="../public/css/fornecedores.css">
+    <link rel="stylesheet" href="css/fornecedores.css">
 </head>
+
 <body>
     <div class="dashboard-container">
         <!-- Sidebar -->
         <div class="sidebar">
             <div class="logo">
-                <img src="logo.png" alt="TradeLink">
+                <img src="images/logo.png" alt="TradeLink">
             </div>
             <nav>
                 <ul>
-                    <li><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
-                    <li class="active"><a href="fornecedores.html"><i class="fas fa-user"></i> Perfil</a></li>
-                    <li><a href="pedidos.html"><i class="fas fa-file-invoice"></i> Pedidos/Vendas</a></li>
-                    <li><a href="historico.html"><i class="fas fa-history"></i> Histórico</a></li>
-                    <li><a href="mensagens.html"><i class="fas fa-envelope"></i> Mensagens</a></li>
-                    <li><a href="chat_ia.html"><i class="fas fa-robot"></i> Chat IA</a></li>
-                    <li><a href="configuracoes.html"><i class="fas fa-cog"></i> Configurações</a></li>
+                    <li><a href="dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li class="active"><a href="fornecedores"><i class="fas fa-user"></i> Perfil</a></li>
+                    <li><a href="pedidos"><i class="fas fa-file-invoice"></i> Pedidos/Vendas</a></li>
+                    <li><a href="historico"><i class="fas fa-history"></i> Histórico</a></li>
+                    <li><a href="mensagens"><i class="fas fa-envelope"></i> Mensagens</a></li>
+                    <li><a href="chat_ia"><i class="fas fa-robot"></i> Chat IA</a></li>
+                    <li><a href="configuracoes"><i class="fas fa-cog"></i> Configurações</a></li>
                 </ul>
             </nav>
         </div>
@@ -30,10 +32,11 @@
         <!-- Main Content -->
         <div class="main-content">
             <header>
-                <h1><i class="fas fa-user"></i> Perfil do Fornecedor</h1>
+                <h1><i class="fas fa-user"></i> Perfil d<%= usuario.cnpj? 'a Empresa' : 'o Fornecedor' %>
+                </h1>
                 <div class="user-info">
                     <span id="header-user-name">TradeLink</span>
-                    <img id="header-user-pic" src="profile.jpg" alt="Usuário">
+                    <img id="header-user-pic" src="images/profile.jpg" alt="Usuário">
                 </div>
             </header>
 
@@ -48,13 +51,17 @@
                             <img id="avatar-image" src="images/foto.jpg" alt="Avatar">
                         </div>
                         <div class="profile-details">
-                            <h1 class="profile-name" id="profile-name">Nome do Fornecedor</h1>
+                            <h1 class="profile-name" id="profile-name">
+                                <%= usuario.nome_fantasia %>
+                            </h1>
                             <div class="profile-location">
                                 <i class="fas fa-map-marker-alt"></i>
-                                <span id="profile-location">Localização</span>
+                                <span id="profile-location">
+                                    <%= usuario.localizacao || 'Sua localizacao' %>
+                                </span>
                             </div>
                             <p class="profile-description" id="profile-description">
-                                Descrição do negócio do fornecedor. Aqui será exibida a descrição que o fornecedor cadastrar.
+                                <%= usuario.descricao || 'Sua descricao' %>
                             </p>
                             <div class="profile-stats">
                                 <div class="stat-item">
@@ -75,41 +82,35 @@
                 </div>
 
                 <!-- Formulário de Edição -->
-                <form id="formPerfil" method="POST" action="/fornecedores/editar">
+                <form id="formPerfil" method="POST" action="alterarFornecedor">
                     <div class="form-section">
                         <h2>Informações Pessoais</h2>
                         <div class="form-grid">
                             <div class="form-group">
                                 <label for="fornecedor-nome">Nome:</label>
-                                <input id="fornecedor-nome" name="nome" type="text" placeholder="Nome do fornecedor" required>
+                                <input id="fornecedor-nome" name="nome_fantasia" type="text"
+                                    value="<%= usuario.nome_fantasia %>" required>
                             </div>
                             <div class="form-group">
                                 <label for="fornecedor-email">Email:</label>
-                                <input id="fornecedor-email" name="email" type="email" placeholder="email@exemplo.com" required>
+                                <input id="fornecedor-email" name="email" type="email" value="<%= usuario.email || ''%>"
+                                    required>
                             </div>
                             <div class="form-group">
                                 <label for="fornecedor-cpf">CPF/CNPJ:</label>
-                                <input id="fornecedor-cpf" name="cpf_cnpj" type="text" placeholder="000.000.000-00" required>
+                                <input id="fornecedor-cpf" name="<%= usuario.cnpj? 'cnpj' : 'cpf' %>" type="text"
+                                    value="<%= usuario.cnpj || usuario.cpf %>" required>
                             </div>
                             <div class="form-group">
                                 <label for="fornecedor-local">Localização:</label>
-                                <input id="fornecedor-local" name="localizacao" type="text" placeholder="Cidade, Estado" required>
+                                <input id="fornecedor-local" name="localizacao" type="text"
+                                    value="<%= usuario.localizacao || 'não definido'%>" required>
                             </div>
-                            <div class="form-group">
-                                <label for="fornecedor-senha">Senha:</label>
-                                <div class="input-with-icon">
-                                    <input id="fornecedor-senha" name="senha" type="password" value="••••••••" readonly>
-                                    <button type="button" class="toggle-password" id="view-password-btn">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                </div>
-                                <button type="button" class="btn btn-secondary" id="change-password-btn" style="margin-top: 10px;">
-                                    <i class="fas fa-key"></i> Alterar Senha
-                                </button>
-                            </div>
+
                             <div class="form-group">
                                 <label for="fornecedor-telefone">Telefone:</label>
-                                <input id="fornecedor-telefone" name="telefone" type="tel" placeholder="(00) 00000-0000">
+                                <input id="fornecedor-telefone" name="telefone" type="tel"
+                                    value="<%= usuario.telefone || 'não definido' %>" required>
                             </div>
                         </div>
                     </div>
@@ -118,12 +119,23 @@
                         <h2>Descrição do Negócio</h2>
                         <div class="form-group">
                             <label for="fornecedor-descricao">Descreva seu negócio:</label>
-                            <textarea id="fornecedor-descricao" name="descricao" placeholder="Descreva os produtos ou serviços que você oferece..." required></textarea>
+                            <textarea id="fornecedor-descricao" name="descricao"
+                                placeholder="<%= usuario.descricao || 'Descreva seu negocio' %>" required></textarea>
                         </div>
                     </div>
-                
+
                     <!-- Seção de Produtos -->
-                    <div class="form-section">
+                    
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" id="cancel-btn">Cancelar</button>
+                        <button type="submit" class="btn btn-primary" id="save-btn">
+                            <span id="submit-text">Salvar Alterações</span>
+
+                        </button>
+                    </div>
+                </form>
+                <div class="form-section">
                         <h2>Produtos do Fornecedor</h2>
                         <div class="products-section">
                             <div class="products-carousel">
@@ -144,48 +156,9 @@
                             </button>
                         </div>
                     </div>
-
-                    <div class="form-actions">
-                        <button type="button" class="btn btn-secondary" id="cancel-btn">Cancelar</button>
-                        <button type="submit" class="btn btn-primary" id="save-btn">
-                            <span id="submit-text">Salvar Alterações</span>
-                            <span id="submit-spinner" class="spinner" style="display: none;"></span>
-                        </button>
-                    </div>
-                </form>
             </div>
         </div>
-    </div>
-
-    <!-- Modal para Alterar Senha -->
-    <div id="password-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Alterar Senha</h2>
-                <span class="close">&times;</span>
-            </div>
-            <div class="modal-body">
-                <form id="formSenha">
-                    <div class="form-group">
-                        <label for="current-password">Senha Atual:</label>
-                        <input id="current-password" type="password" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="new-password">Nova Senha:</label>
-                        <input id="new-password" type="password" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="confirm-password">Confirmar Nova Senha:</label>
-                        <input id="confirm-password" type="password" required>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" id="cancel-password-btn">Cancelar</button>
-                <button type="button" class="btn btn-primary" id="save-password-btn">Salvar Senha</button>
-            </div>
-        </div>
-    </div>
+    </div>   
 
     <!-- Modal para Upload de Imagem -->
     <div id="image-modal" class="modal">
@@ -241,7 +214,8 @@
                             <label for="product-image">Imagem do Produto:</label>
                             <input type="file" id="product-image" accept="image/*">
                             <div id="product-image-preview" style="margin-top: 10px; display: none;">
-                                <img id="product-preview-img" src="#" alt="Preview" style="max-width: 100%; max-height: 200px;">
+                                <img id="product-preview-img" src="#" alt="Preview"
+                                    style="max-width: 100%; max-height: 200px;">
                             </div>
                         </div>
                     </form>
@@ -251,7 +225,7 @@
                     <button type="button" class="btn btn-primary" id="save-product-btn">Salvar Produto</button>
                 </div>
             </div>
-            </div>
+        </div>
     </form>
     <!-- Modal de Visualização/Edição do Produto -->
     <div id="product-view-modal" class="modal">
@@ -296,6 +270,7 @@
         <span id="toast-message">Operação realizada com sucesso!</span>
     </div>
 
-    <script src="../public/JS/fornecedores.js"></script>
+    <script src="JS/fornecedores.js"></script>
 </body>
+
 </html>

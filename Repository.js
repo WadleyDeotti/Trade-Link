@@ -27,8 +27,8 @@ const conexao = mysql.createPool({
 module.exports = {
   // 🔹 pegar um usuario pra teste
   async testeUsuario() {
-    const [rows] = await conexao.query("SELECT * FROM empresas WHERE id_empresa = 2");
-    return rows.length > 0 ? new Empresa(rows[0]) : null;
+    const [rows] = await conexao.query("SELECT * FROM fornecedores WHERE id_fornecedor = 5");
+    return rows.length > 0 ? new Fornecedor(rows[0]) : null;
   },
 
   // 🔹 Buscar produtos

@@ -11,6 +11,8 @@ class Empresa {
     telefone = null, 
     endereco = null, 
     data_cadastro = null,
+    descricao = null,
+    // 🧩 Campos de configurações
     localizacao = 'não definido',
     visibility = 'public',
     data_sharing = false,
@@ -36,6 +38,8 @@ class Empresa {
     this.telefone = telefone;
     this.endereco = endereco;
     this.data_cadastro = data_cadastro;
+    this.descricao = descricao;
+    // Configurações
     this.localizacao = localizacao;
     this.visibility = visibility;
     this.data_sharing = data_sharing;

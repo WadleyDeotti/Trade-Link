@@ -7,7 +7,7 @@ const inicialController = require("./controllers/inicialController");
 
 // ------------------- GETs -------------------
 //router.get("/",inicialController.IniciarSite);
-router.get("/",(req, res) => res.render("categoria"));
+
 router.get('/inicial', inicialController.IniciarSite);
 
 // Dashboard
@@ -61,5 +61,7 @@ router.post("/alterarSenha", configuracoesController.alterarSenha);
 
 //salvar configurações
 router.post("/salvarConfiguracoes", configuracoesController.salvarConfiguracoes);
+
+router.post("/alterarFornecedor", configuracoesController.alterarFornecedor);
 
 module.exports = router;

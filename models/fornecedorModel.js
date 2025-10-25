@@ -12,7 +12,7 @@ class Fornecedor {
     token_validacao = null,
     validade_token = null,
     data_cadastro = null,
-
+    descricao = null,
     // 🧩 Campos de configurações
     localizacao = 'não definido',
     visibility = 'public',
@@ -42,7 +42,7 @@ class Fornecedor {
     this.token_validacao = token_validacao;
     this.validade_token = validade_token;
     this.data_cadastro = data_cadastro;
-
+    this.descricao = descricao;
     // Configurações
     this.localizacao = localizacao;
     this.visibility = visibility;
@@ -57,6 +57,8 @@ class Fornecedor {
     this.email_notifications = email_notifications;
     this.push_notifications = push_notifications;
     this.language = language;
+    this.datetime_format = datetime_format;
+    this.timezone = timezone;
   }
 }
 

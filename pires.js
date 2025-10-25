@@ -35,6 +35,13 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.get('/', async (req, res) => {
+  const usuario = await repository.testeUsuario();
+  console.log(usuario);
+  
+  res.render('fornecedores', { usuario });
+});
+
 app.use('/', Rotas);
 
 app.use((req, res) => {
