@@ -28,10 +28,10 @@ export const sendMessage = async (req, res) => {
     const result = await model.generateContent([
       "Você é um assistente útil do Trade Link. Responda de forma clara e breve.",
       message
-    ]);
+  ]);
 
     // Extrai a resposta
-    const reply = result.response[0].text ?? "Não consegui gerar uma resposta 😅";
+    const reply = result.candidates?.[0]?.content || "Desculpe, não consegui gerar uma resposta.";
 
     res.json({ reply });
   } catch (error) {
