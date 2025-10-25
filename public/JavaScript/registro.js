@@ -3,73 +3,66 @@ document.addEventListener('DOMContentLoaded', function() {
     const typeOptions = document.querySelectorAll('.typeOption');
     const tipoCadastroInput = document.getElementById('tipoCadastro');
     const docField = document.getElementById('campoTroca');
+    const submitBtn = document.getElementById('submit-btn');
+    const togglePasswordButtons = document.querySelectorAll('.toggle-password');
     const senhaInput = document.getElementById('senha');
     const confirmarSenhaInput = document.getElementById('confirmarSenha');
 
     typeOptions.forEach(option => {
         option.addEventListener('click', function() {
-            typeOptions.forEach(opt => opt.classList.remove('selected'));
-            this.classList.add('selected');
-            tipoCadastroInput.value = this.dataset.type;
-            
-            if (this.dataset.type === 'fornecedor') {
-                docField.innerHTML = `
-                    <div class="formGroup">
-                        <label for="cpf" class="labelregis">CPF:</label>
-                        <input id="cpf" name="cpf" type="text" class="inputregis" placeholder="XXX.XXX.XXX-XX" 
-                            maxlength="14" oninput="mascaraCpf(this)" required>
-                    </div>
-                    <div class="checkboxGroup">
-                        <input type="checkbox" id="termosCheckbox" name="aceita_termos" class="customCheckbox" required>
-                        <label for="termosCheckbox" class="checkboxLabel">
-                            Li e aceito os <span class="linkModal" data-modal="termosDialog">Termos de Serviço</span>
-                        </label>
-                    </div>
-                    <div class="checkboxGroup">
-                        <input type="checkbox" id="privacidadeCheckbox" name="aceita_privacidade" class="customCheckbox" required>
-                        <label for="privacidadeCheckbox" class="checkboxLabel">
-                            Li e aceito a <span class="linkModal" data-modal="privacidadeDialog">Política de Privacidade</span>
-                        </label>
-                    </div>
-                    <div class="loginTem">
-                        Já tem uma conta? <a class="loginSend" href="/login">LOGIN</a>
-                    </div>
-                    <div class="loginTem">
-                        <a class="loginSend" href="/fornecedores">Fornecedores</a>
-                    </div>
-                    <button type="submit" class="submit-btn" id="submit-btn" disabled>CONCLUIR</button>
-                `;
-            } else {
-                docField.innerHTML = `
-                    <div class="formGroup">
-                        <label for="cnpj" class="labelregis">CNPJ:</label>
-                        <input id="cnpj" name="cnpj" type="text" class="inputregis" placeholder="XX.XXX.XXX/XXXX-XX" 
-                            maxlength="18" oninput="mascaraCnpj(this)" required>
-                    </div>
-                    <div class="checkboxGroup">
-                        <input type="checkbox" id="termosCheckbox" name="aceita_termos" class="customCheckbox" required>
-                        <label for="termosCheckbox" class="checkboxLabel">
-                            Li e aceito os <span class="linkModal" data-modal="termosDialog">Termos de Serviço</span>
-                        </label>
-                    </div>
-                    <div class="checkboxGroup">
-                        <input type="checkbox" id="privacidadeCheckbox" name="aceita_privacidade" class="customCheckbox" required>
-                        <label for="privacidadeCheckbox" class="checkboxLabel">
-                            Li e aceito a <span class="linkModal" data-modal="privacidadeDialog">Política de Privacidade</span>
-                        </label>
-                    </div>
-                    <div class="loginTem">
-                        Já tem uma conta? <a class="loginSend" href="/login">LOGIN</a>
-                    </div>
-                    <div class="loginTem">
-                        <a class="loginSend" href="/fornecedores">Fornecedores</a>
-                    </div>
-                    <button type="submit" class="submit-btn" id="submit-btn" disabled>CONCLUIR</button>
-                `;
-            }
-            
-            setupForm();
-        });
+    typeOptions.forEach(opt => opt.classList.remove('selected'));
+    this.classList.add('selected');
+    tipoCadastroInput.value = this.dataset.type;
+
+    // Função para gerar os campos comuns (checkbox e links)
+    function camposComuns() {
+        return `
+            <div class="checkboxGroup">
+                <input type="checkbox" id="termosCheckbox" name="aceita_termos" class="customCheckbox" required>
+                <label for="termosCheckbox" class="checkboxLabel">
+                    Li e aceito os <span class="linkModal" data-modal="termosDialog">Termos de Serviço</span>
+                </label>
+            </div>
+            <div class="checkboxGroup">
+                <input type="checkbox" id="privacidadeCheckbox" name="aceita_privacidade" class="customCheckbox" required>
+                <label for="privacidadeCheckbox" class="checkboxLabel">
+                    Li e aceito a <span class="linkModal" data-modal="privacidadeDialog">Política de Privacidade</span>
+                </label>
+            </div>
+            <div class="loginTem">
+                Já tem uma conta? <a class="loginSend" href="/login">LOGIN</a>
+            </div>
+            <div class="loginTem">
+                <a class="loginSend" href="/fornecedores">Fornecedores</a>
+            </div>
+            <button type="submit" class="submit-btn" id="submit-btn" disabled>CONCLUIR</button>
+        `;
+    }
+
+    // Alterar campos dependendo do tipo
+    if (this.dataset.type === 'fornecedor') {
+        docField.innerHTML = `
+            <div class="formGroup">
+                <label for="cpf" class="labelregis">CPF:</label>
+                <input id="cpf" name="cpf" type="text" class="inputregis" placeholder="XXX.XXX.XXX-XX" 
+                    maxlength="14" oninput="mascaraCpf(this)" required>
+            </div>
+            ${camposComuns()}
+        `;
+    } else {
+        docField.innerHTML = `
+            <div class="formGroup">
+                <label for="cnpj" class="labelregis">CNPJ:</label>
+                <input id="cnpj" name="cnpj" type="text" class="inputregis" placeholder="XX.XXX.XXX/XXXX-XX" 
+                    maxlength="18" oninput="mascaraCnpj(this)" required>
+            </div>
+            ${camposComuns()}
+        `;
+    }
+
+    setupForm();
+});
+
     });
 
     function setupForm() {
@@ -103,7 +96,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const icon = this.querySelector('svg');
                 if (input.type === 'password') {
                     input.type = 'text';
-                    icon.innerHTML = '<path d="M12 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-4.5c-5 0-9.27 3.11-11 7.5 1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5m0 10a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1-2.5 2.5z"/>';
+                    icon.innerHTML = '<path d="M12 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-4.5c-5 0-9.27 3.11-11 7.5 1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5m0 10a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5z"/>';
                 } else {
                     input.type = 'password';
                     icon.innerHTML = '<path d="M12 9a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0-4.5c5 0 9.27 3.11 11 7.5-1.73 4.39-6 7.5-11 7.5S2.73 16.39 1 12c1.73-4.39 6-7.5 11-7.5M3.18 12a9.821 9.821 0 0 0 17.64 0 9.821 9.821 0 0 0-17.64 0z"/>';
@@ -128,45 +121,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // formRegister.addEventListener('submit', function(e) {
-    //     e.preventDefault();
-        
-    //     if (senhaInput.value !== confirmarSenhaInput.value) {
-    //         const resultado = document.getElementById('resultado');
-    //         resultado.textContent = 'As senhas não coincidem!';
-    //         resultado.style.color = '#d9534f';
-    //         document.getElementById('meuDialog').showModal();
-    //         return;
-    //     }
-        
-    //     if (senhaInput.value.length < 8) {
-    //         const resultado = document.getElementById('resultado');
-    //         resultado.textContent = 'A senha deve ter pelo menos 8 caracteres!';
-    //         resultado.style.color = '#d9534f';
-    //         document.getElementById('meuDialog').showModal();
-    //         return;
-    //     }
-        
-    //     let isValid = false;
-    //     const resultado = document.getElementById('resultado');
-        
-    //     if (tipoCadastroInput.value === 'fornecedor') {
-    //         isValid = validarCPF(document.getElementById('cpf'));
-    //     } else {
-    //         isValid = validarCNPJ(document.getElementById('cnpj'));
-    //     }
-        
-    //     if (!isValid) {
-    //         resultado.textContent = tipoCadastroInput.value === 'fornecedor' ? 'CPF inválido!' : 'CNPJ inválido!';
-    //         resultado.style.color = '#d9534f';
-    //         document.getElementById('meuDialog').showModal();
-    //         return;
-    //     }
-      
-    // });
+    
 });
-
-// ======= Funções auxiliares =======
 
 function mascaraCpf(input) {
     let value = input.value.replace(/\D/g, '').slice(0, 11);

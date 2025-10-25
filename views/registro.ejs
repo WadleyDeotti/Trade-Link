@@ -1,16 +1,14 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro</title>
+    <title>Registro - TradeLink</title>
     <link rel="stylesheet" href="/css/registro.css">
-    <script src="/JS/registro.js"></script>
+    <script src="/JavaScript/registro.js" defer></script>
 </head>
-
 <body>
-    <form id="register" method="POST" action="/cadastrar">
+    <form id="register" method="POST" action="/registro">
         <input type="hidden" id="tipoCadastro" name="tipo_cadastro" value="fornecedor">
 
         <p>Escolha seu tipo de cadastro</p>
@@ -21,8 +19,7 @@
 
         <div class="formGroup">
             <label for="nomeCompleto" class="labelregis">Nome:</label>
-            <input id="nomeCompleto" name="nome_completo" class="inputregis" type="text" placeholder="Seu nome completo"
-                required>
+            <input id="nomeCompleto" name="nome_completo" class="inputregis" type="text" placeholder="Seu nome completo" required>
         </div>
 
         <div class="formGroup">
@@ -33,12 +30,10 @@
         <div class="formGroup">
             <label for="senha" class="labelregis">Senha:</label>
             <div class="password-container">
-                <input id="senha" name="senha" type="password" class="inputregis" placeholder="Digite sua senha"
-                    required>
+                <input id="senha" name="senha" type="password" class="inputregis" placeholder="Digite sua senha" required>
                 <button type="button" class="toggle-password" aria-label="Mostrar senha">
                     <svg class="eye-icon" viewBox="0 0 24 24" width="20" height="20">
-                        <path
-                            d="M12 9a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0-4.5c5 0 9.27 3.11 11 7.5-1.73 4.39-6 7.5-11 7.5S2.73 16.39 1 12c1.73-4.39 6-7.5 11-7.5M3.18 12a9.821 9.821 0 0 0 17.64 0 9.821 9.821 0 0 0-17.64 0z" />
+                        <path d="M12 9a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0-4.5c5 0 9.27 3.11 11 7.5-1.73 4.39-6 7.5-11 7.5S2.73 16.39 1 12c1.73-4.39 6-7.5 11-7.5M3.18 12a9.821 9.821 0 0 0 17.64 0 9.821 9.821 0 0 0-17.64 0z"/>
                     </svg>
                 </button>
             </div>
@@ -47,12 +42,10 @@
         <div class="formGroup">
             <label for="confirmarSenha" class="labelregis">Confirmar Senha:</label>
             <div class="password-container">
-                <input id="confirmarSenha" name="confirmar_senha" type="password" class="inputregis"
-                    placeholder="Confirme sua senha" required>
+                <input id="confirmarSenha" name="confirmar_senha" type="password" class="inputregis" placeholder="Confirme sua senha" required>
                 <button type="button" class="toggle-password" aria-label="Mostrar senha">
                     <svg class="eye-icon" viewBox="0 0 24 24" width="20" height="20">
-                        <path
-                            d="M12 9a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0-4.5c5 0 9.27 3.11 11 7.5-1.73 4.39-6 7.5-11 7.5S2.73 16.39 1 12c1.73-4.39 6-7.5 11-7.5M3.18 12a9.821 9.821 0 0 0 17.64 0 9.821 9.821 0 0 0-17.64 0z" />
+                        <path d="M12 9a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0-4.5c5 0 9.27 3.11 11 7.5-1.73 4.39-6 7.5-11 7.5S2.73 16.39 1 12c1.73-4.39 6-7.5 11-7.5M3.18 12a9.821 9.821 0 0 0 17.64 0 9.821 9.821 0 0 0-17.64 0z"/>
                     </svg>
                 </button>
             </div>
@@ -61,8 +54,8 @@
         <div id="campoTroca">
             <div class="formGroup">
                 <label for="cpf" class="labelregis">CPF:</label>
-                <input id="cpf" name="cpf" type="text" class="inputregis" placeholder="XXX.XXX.XXX-XX" maxlength="14"
-                    oninput="mascaraCpf(this)" required>
+                <input id="cpf" name="cpf" type="text" class="inputregis" placeholder="XXX.XXX.XXX-XX" 
+                       maxlength="14" oninput="mascaraCpf(this)" required>
             </div>
 
             <div class="checkboxGroup">
@@ -71,110 +64,30 @@
                     Li e aceito os <span class="linkModal" data-modal="termosDialog">Termos de Serviço</span>
                 </label>
             </div>
+
             <div class="checkboxGroup">
-                <input type="checkbox" id="privacidadeCheckbox" name="aceita_privacidade" class="customCheckbox"
-                    required>
+                <input type="checkbox" id="privacidadeCheckbox" name="aceita_privacidade" class="customCheckbox" required>
                 <label for="privacidadeCheckbox" class="checkboxLabel">
                     Li e aceito a <span class="linkModal" data-modal="privacidadeDialog">Política de Privacidade</span>
                 </label>
             </div>
 
             <div class="loginTem">
-                Já tem uma conta? <a class="loginSend" href="login">LOGIN</a>
+                Já tem uma conta? <a class="loginSend" href="/login">LOGIN</a>
             </div>
             <div class="loginTem">
-                <a class="loginSend" href="fornecedores">Fornecedores</a>
+                <a class="loginSend" href="/fornecedores">Fornecedores</a>
             </div>
             <button type="submit" class="submit-btn" id="submit-btn" disabled>CONCLUIR</button>
         </div>
+        <% if (mensagem) { %>
+  <p style="color:red;"><%= mensagem %></p>
+<% } %>
     </form>
 
-    <dialog id="meuDialog">
-        <div class="modal-cabecalho">
-            <h2>Validação</h2>
-            <button class="fechar-modal" id="fecharModal">&times;</button>
-        </div>
-        <div class="modal-corpo">
-            <p id="resultado"></p>
-        </div>
-        <div class="modal-rodape">
-            <button class="modal-btn modal-btn-primario" id="confirmarModal">OK</button>
-        </div>
-    </dialog>
-
-    <dialog id="termosDialog">
-        <div class="modal-cabecalho">
-            <h2>Termos de Serviço</h2>
-            <button class="fechar-modal">&times;</button>
-        </div>
-        <div class="modal-corpo">
-            <h3>1. Aceitação dos Termos</h3>
-            <p>Ao acessar e usar este serviço, você concorda em cumprir estes termos de serviço.</p>
-
-            <h3>2. Uso do Serviço</h3>
-            <p>Você concorda em usar o serviço apenas para fins legais e de acordo com estes Termos.</p>
-
-            <h3>3. Conta do Usuário</h3>
-            <p>Você é responsável por manter a confidencialidade de sua conta e senha.</p>
-        </div>
-        <div class="modal-rodape">
-            <button class="modal-btn modal-btn-primario fechar-modal-btn">Entendi</button>
-        </div>
-    </dialog>
-
-    <dialog id="privacidadeDialog">
-        <div class="modal-cabecalho">
-            <h2>Política de Privacidade</h2>
-            <button class="fechar-modal">&times;</button>
-        </div>
-        <div class="modal-corpo">
-            <h3>1. Informações Coletadas</h3>
-            <p>Coletamos informações que você nos fornece ao se registrar em nosso serviço.</p>
-
-            <h3>2. Uso das Informações</h3>
-            <p>Utilizamos suas informações para fornecer e melhorar nosso serviço.</p>
-
-            <h3>3. Segurança</h3>
-            <p>Implementamos medidas de segurança para proteger suas informações.</p>
-        </div>
-        <div class="modal-rodape">
-            <button class="modal-btn modal-btn-primario fechar-modal-btn">Entendi</button>
-        </div>
-    </dialog>
-    <!-- AUTO-INJECT:LS-FLOW -->
-    <script>
-
-        // AUTO-INJECT: Registro -> LocalStorage -> redirect
-        (function () {
-            const form = document.getElementById("register");
-            if (form) {
-                form.addEventListener("submit", function (e) {
-                    
-                    const tipo = document.getElementById("tipoCadastro")?.value || "fornecedor";
-                    const nome = document.getElementById("nomeCompleto")?.value || "";
-                    const email = document.getElementById("email")?.value || "";
-                    const senha = document.getElementById("senha")?.value || "";
-                    const cpf = document.getElementById("cpf")?.value || "";
-                    if (!nome || !email || !senha) {
-                        alert("Preencha nome, email e senha.");
-                        return;
-                    }
-                });
-
-                // Botões de seleção de tipo (se existirem)
-                document.querySelectorAll(".typeOption").forEach(el => {
-                    el.addEventListener("click", () => {
-                        document.querySelectorAll(".typeOption").forEach(x => x.classList.remove("selected"));
-                        el.classList.add("selected");
-                        const type = el.getAttribute("data-type") || "fornecedor";
-                        const hidden = document.getElementById("tipoCadastro");
-                        if (hidden) hidden.value = type;
-                    });
-                });
-            }
-        })();
-
-    </script>
+    <!-- Modals -->
+    <dialog id="meuDialog"></dialog>
+    <dialog id="termosDialog"></dialog>
+    <dialog id="privacidadeDialog"></dialog>
 </body>
-
 </html>
