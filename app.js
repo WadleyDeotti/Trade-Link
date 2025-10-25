@@ -29,7 +29,7 @@ app.set("views", path.join(__dirname, "views"));
 
 // Rotas
 app.use("/chat", chatRoutes);
-app.use("/", usuarioRoutes);
+app.use("/usuario", usuarioRoutes);
 
 // 404
 app.use((req, res) => {

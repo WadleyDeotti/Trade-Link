@@ -1,4 +1,4 @@
-class Fornecedor {
+export class Fornecedor {
   constructor({
     id_fornecedor = null,
     nome_fantasia,
@@ -12,8 +12,6 @@ class Fornecedor {
     token_validacao = null,
     validade_token = null,
     data_cadastro = null,
-
-    // 🧩 Campos de configurações
     localizacao = 'não definido',
     visibility = 'public',
     data_sharing = false,
@@ -42,8 +40,6 @@ class Fornecedor {
     this.token_validacao = token_validacao;
     this.validade_token = validade_token;
     this.data_cadastro = data_cadastro;
-
-    // Configurações
     this.localizacao = localizacao;
     this.visibility = visibility;
     this.data_sharing = data_sharing;
@@ -57,7 +53,7 @@ class Fornecedor {
     this.email_notifications = email_notifications;
     this.push_notifications = push_notifications;
     this.language = language;
+    this.datetime_format = datetime_format;
+    this.timezone = timezone;
   }
 }
-
-module.exports = Fornecedor;

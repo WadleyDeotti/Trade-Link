@@ -1,8 +1,8 @@
-class Empresa {
+export class Empresa {
   constructor({ 
     id_empresa = null, 
     nome_fantasia, 
-    razao_social, 
+    razao_social = null, 
     cnpj, 
     email, 
     senha_hash,
@@ -51,6 +51,3 @@ class Empresa {
     this.timezone = timezone;
   }
 }
-
-// Agora sim, exporta a classe
-module.exports = Empresa;

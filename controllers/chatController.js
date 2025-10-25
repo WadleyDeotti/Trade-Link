@@ -1,7 +1,7 @@
 import path from "path";
 import { fileURLToPath } from "url";
 import dotenv from "dotenv";
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenAI } from "@google/genai";
 import { findFAQAnswer } from "../models/chatModel.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -11,27 +11,23 @@ dotenv.config({ path: path.join(__dirname, "../.env") });
 console.log("🔑 GEMINI_API_KEY carregada:", process.env.GEMINI_API_KEY ? "sim" : "não");
 
 // Inicializa Gemini
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 export const sendMessage = async (req, res) => {
   try {
     const { message } = req.body;
 
-    // Tenta achar resposta no FAQ local
+    // Tenta achar resposta no FAQ local primeiro
     const localAnswer = findFAQAnswer(message);
-    if (localAnswer) {
-      return res.json({ reply: localAnswer });
-    }
+    if (localAnswer) return res.json({ reply: localAnswer });
 
-    // Usa o Gemini corretamente (apenas strings ou { text: "..." })
-    const result = await model.generateContent([
-      "Você é um assistente útil do Trade Link. Responda de forma clara e breve.",
-      message
-  ]);
+    // Chamada correta usando nova lib
+    const response = await ai.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: `Você é um assistente do Trade Link. Responda de forma breve e útil:\nUsuário: ${message}`
+    });
 
-    // Extrai a resposta
-    const reply = result.candidates?.[0]?.content || "Desculpe, não consegui gerar uma resposta.";
+    const reply = response?.text || "Desculpe, não consegui gerar uma resposta.";
 
     res.json({ reply });
   } catch (error) {
