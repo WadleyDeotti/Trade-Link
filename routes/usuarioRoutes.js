@@ -3,10 +3,14 @@ const router = express.Router();
 const loginController = require("../controllers/loginController");
 const historicoController = require("../controllers/historicoController");
 const produtoController = require('../controllers/produtoController');
+const categoriaController = require('../controllers/categoriaController');
 
 // ------------------- GETs -------------------
 // Dashboard
 router.get("/dashboard", (req, res) => res.render("dashboard"));
+
+//Categoria
+router.get("/categoria", categoriaController.getCategoriasPage);
 
 // Registro
 router.get("/registro", (req, res) => {
