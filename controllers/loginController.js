@@ -1,8 +1,8 @@
-const repository = require('../Repository');
-const bcrypt  = require('bcrypt');
-const crypto  = require('crypto');
+// controllers/loginController.js
+import * as repository from "../Repository.js"; // ajuste o caminho conforme seu projeto
+import bcrypt from "bcrypt";
 
-exports.cadastrar = async (req, res) => {
+export const cadastrar = async (req, res) => {
   try {
     const dadosUsuario = req.body;
     console.log("Recebendo dados do cadastro:", dadosUsuario);
@@ -12,24 +12,26 @@ exports.cadastrar = async (req, res) => {
       await repository.inserirEmpresa({
         nome_fantasia: dadosUsuario.nome_completo,
         email: dadosUsuario.email,
-        cnpj: dadosUsuario.cnpj.replace(/\D/g, ''),
-        senha_hash: await bcrypt.hash(dadosUsuario.senha, 10)
+        cnpj: dadosUsuario.cnpj.replace(/\D/g, ""),
+        senha_hash: await bcrypt.hash(dadosUsuario.senha, 10),
       });
 
-      req.session.usuario = repository.buscarCNPJ(dadosUsuario.cnpj.replace(/\D/g, ''));
-      return res.redirect('/fornecedores');
+      const empresa = await repository.buscarCNPJ(dadosUsuario.cnpj.replace(/\D/g, ""));
+      req.session.usuario = empresa;
+      return res.redirect("/fornecedores");
 
     } else if (dadosUsuario.cpf) {
       // Cadastro de fornecedor
       await repository.inserirFornecedor({
         nome_fantasia: dadosUsuario.nome_completo,
-        cpf: dadosUsuario.cpf.replace(/\D/g, ''),
+        cpf: dadosUsuario.cpf.replace(/\D/g, ""),
         email: dadosUsuario.email,
-        senha_hash: await bcrypt.hash(dadosUsuario.senha, 10)
+        senha_hash: await bcrypt.hash(dadosUsuario.senha, 10),
       });
 
-      req.session.usuario = repository.buscarCPF(dadosUsuario.cpf.replace(/\D/g, ''));
-      return res.redirect('/fornecedores');
+      const fornecedor = await repository.buscarCPF(dadosUsuario.cpf.replace(/\D/g, ""));
+      req.session.usuario = fornecedor;
+      return res.redirect("/fornecedores");
 
     } else {
       return res.status(400).send("Dados inválidos");
@@ -40,10 +42,10 @@ exports.cadastrar = async (req, res) => {
   }
 };
 
-exports.logar = async (req, res) => {
+export const logar = async (req, res) => {
   try {
     let { documento, senha } = req.body;
-    documento = documento.replace(/\D/g, '');
+    documento = documento.replace(/\D/g, "");
 
     let user;
 
@@ -54,19 +56,19 @@ exports.logar = async (req, res) => {
       user = await repository.buscarCNPJ(documento);
 
     } else {
-      return res.redirect("login", { mensagem: "Documento inválido" });
+      return res.render("login", { mensagem: "Documento inválido" });
     }
 
-    if (!user) return res.redirect("login", { mensagem: "Usuário não encontrado" });
+    if (!user) return res.render("login", { mensagem: "Usuário não encontrado" });
 
     const mesmaSenha = await bcrypt.compare(senha, user.senha_hash);
-    if (!mesmaSenha) return res.redirect("login", { mensagem: "Senha incorreta" });
+    if (!mesmaSenha) return res.render("login", { mensagem: "Senha incorreta" });
 
     req.session.usuario = user;
     return res.redirect("/fornecedores");
 
   } catch (err) {
     console.error(err);
-    return res.status(500).redirect("login", { mensagem: "Erro no servidor" });
+    return res.status(500).render("login", { mensagem: "Erro no servidor" });
   }
 };

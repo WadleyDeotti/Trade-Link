@@ -1,4 +1,6 @@
-class Fornecedor {
+// models/fornecedorModel.js
+
+export class Fornecedor {
   constructor({
     id_fornecedor = null,
     nome_fantasia,
@@ -61,6 +63,3 @@ class Fornecedor {
     this.timezone = timezone;
   }
 }
-
-module.exports = Fornecedor;
-

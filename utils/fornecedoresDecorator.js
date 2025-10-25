@@ -1,15 +1,17 @@
-const Renderizador = require('./Renderizador');
-const repository = require('../Repository');
+// decorators/FornecedorDecorator.js
+import Renderizador from './Renderizador.js';
+import repository from '../Repository.js';
 
-class FornecedorDecorator extends Renderizador {
+export default class FornecedorDecorator extends Renderizador {
   constructor(renderizador) {
     super();
     this.renderizador = renderizador;
   }
 
   async render(res, view, data = {}) {
-     if (!data) data = {};
-  data.produtos = [];
+    if (!data) data = {};
+    data.produtos = [];
+
     try {
       const fornecedores = await repository.getFornecedor();
       data.fornecedores = fornecedores;
@@ -22,5 +24,3 @@ class FornecedorDecorator extends Renderizador {
     this.renderizador.render(res, view, data);
   }
 }
-
-module.exports = FornecedorDecorator;

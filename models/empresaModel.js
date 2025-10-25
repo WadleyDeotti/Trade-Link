@@ -1,6 +1,6 @@
 // models/empresaModel.js
 
-class Empresa {
+export class Empresa {
   constructor({ 
     id_empresa = null, 
     nome_fantasia, 
@@ -57,6 +57,3 @@ class Empresa {
     this.timezone = timezone;
   }
 }
-
-// Agora sim, exporta a classe
-module.exports = Empresa;

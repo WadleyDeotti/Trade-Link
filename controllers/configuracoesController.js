@@ -1,8 +1,9 @@
-const repository = require('../Repository');
-const bcrypt = require('bcrypt');
+// controllers/usuarioController.js
+import bcrypt from "bcrypt";
+import * as repository from "../Repository.js"; // ajuste o caminho conforme seu arquivo
 const safeBool = val => val === 'on' ? 1 : 0;
 
-//atualizar dados salvos no server
+// atualizar dados salvos na sessão
 async function atualizarSessaoUsuario(req) {
   const usuario = req.session.usuario;
   if (!usuario) throw new Error('Usuário não está logado');
@@ -24,17 +25,14 @@ async function atualizarSessaoUsuario(req) {
   req.session.usuario = novoUsuario;
   console.log(req.session.usuario);
   return req.session.usuario;
-};
+}
 
-exports.salvarConfiguracoes = async (req, res) => {
+// ---------------- Funções exportadas ----------------
 
-  // Verifica se há sessão
+export const salvarConfiguracoes = async (req, res) => {
   const usuario = req.session.usuario;
-  if (!usuario) {
-    return res.status(401).send('Usuário não logado');
-  }
+  if (!usuario) return res.status(401).send('Usuário não logado');
 
-  // Pega os dados enviados pelo formulário
   const {
     visibility = 'public',
     data_sharing = 'off',
@@ -50,16 +48,12 @@ exports.salvarConfiguracoes = async (req, res) => {
     language = 'pt-br',
     datetime_format = '24h',
     timezone = '-3',
-
   } = req.body;
 
-
-  // Converte checkboxes ("on") em booleano (1/0)
   const safe = val => (val === undefined || val === '' ? null : val);
 
-  if (usuario.id_empresa) {
-    try {
-      // Atualiza no banco usando repository com async/await
+  try {
+    if (usuario.id_empresa) {
       await repository.updateEmpresa({
         visibility,
         data_sharing: safe(safeBool(data_sharing)),
@@ -77,18 +71,7 @@ exports.salvarConfiguracoes = async (req, res) => {
         timezone,
         id_empresa: usuario.id_empresa
       });
-
-      // Atualiza os dados na sessão
-      await atualizarSessaoUsuario(req);
-      console.log('Usuário atualizado com sucesso');
-      res.redirect("/configuracoes");
-
-    } catch (err) {
-      console.error('Erro ao atualizar usuário:', err);
-      res.status(500).send('Erro ao atualizar usuário');
-    }
-  } else if (usuario.id_fornecedor) {
-    try {
+    } else if (usuario.id_fornecedor) {
       await repository.updateFornecedor({
         visibility,
         data_sharing: safe(safeBool(data_sharing)),
@@ -106,128 +89,87 @@ exports.salvarConfiguracoes = async (req, res) => {
         timezone,
         id_fornecedor: usuario.id_fornecedor
       });
-
-      // Atualiza os dados na sessão
-      await atualizarSessaoUsuario(req);
-      console.log('Usuário atualizado com sucesso');
-      res.redirect('/configuracoes');
-
-    } catch (err) {
-      console.error('Erro ao atualizar usuário:', err);
-      res.status(500).send('Erro ao atualizar usuário');
     }
-  }
 
+    await atualizarSessaoUsuario(req);
+    console.log('Usuário atualizado com sucesso');
+    res.redirect("/configuracoes");
+  } catch (err) {
+    console.error('Erro ao atualizar usuário:', err);
+    res.status(500).send('Erro ao atualizar usuário');
+  }
 };
 
-exports.alterarSenha = async (req, res) => {
-
-  // Verifica se há sessão
+export const alterarSenha = async (req, res) => {
   const usuario = req.session.usuario;
   const { current_password, new_password, confirm_password } = req.body;
+
   if (!current_password || !new_password || !confirm_password) {
-    return res.redirect("configuracoes", { mensagem: "Preencha todos os campos", usuario: req.session.usuario });
+    return res.redirect("configuracoes");
   }
 
-  if (!usuario) {
-    return res.status(401).send('Usuário não logado');
+  if (!usuario) return res.status(401).send('Usuário não logado');
+
+  try {
+    if (usuario.id_empresa) {
+      const empresa = await repository.buscarSenhaEmpresa(usuario.id_empresa);
+      if (!empresa) return res.status(400).send("Usuário não encontrado.");
+
+      const senhaCorreta = await bcrypt.compare(current_password, empresa.senha_hash);
+      if (!senhaCorreta) return res.redirect("configuracoes");
+
+      if (new_password !== confirm_password) return res.redirect("configuracoes");
+
+      const senhaHash = await bcrypt.hash(new_password, 10);
+      await repository.updateSenhaEmpresa({ senha_hash: senhaHash, id_empresa: usuario.id_empresa });
+    } else if (usuario.id_fornecedor) {
+      const fornecedor = await repository.buscarSenhaFornecedor(usuario.id_fornecedor);
+      const senhaCorreta = await bcrypt.compare(current_password, fornecedor.senha_hash);
+      if (!senhaCorreta) return res.redirect("configuracoes");
+      if (new_password !== confirm_password) return res.redirect("configuracoes");
+
+      const senhaHash = await bcrypt.hash(new_password, 10);
+      await repository.updateSenhaFornecedor({ senha_hash: senhaHash, id_fornecedor: usuario.id_fornecedor });
+    }
+
+    await atualizarSessaoUsuario(req);
+    res.redirect("configuracoes");
+  } catch (err) {
+    console.error("Erro ao alterar senha:", err);
+    res.status(500).send("Erro ao alterar senha");
   }
-  if (usuario.id_empresa) {
-    // Busca o hash salvo no banco
-    const empresa = await repository.buscarSenhaEmpresa(usuario.id_empresa);
-
-    // Confere se retornou algo
-    if (!empresa) {
-      return res.status(400).send("Usuário não encontrado.");
-    }
-
-    // Compara a senha atual com o hash
-    const senhaCorreta = await bcrypt.compare(current_password, empresa.senha_hash);
-    if (!senhaCorreta) {
-      return res.redirect("configuracoes", { mensagem: "Senha atual incorreta", usuario: req.session.usuario });
-    }
-
-    // Verifica se as novas senhas coincidem
-    if (new_password !== confirm_password) {
-      return res.redirect("configuracoes", { mensagem: "As senhas não coincidem", usuario: req.session.usuario });
-    }
-
-    // Criptografa e atualiza
-    const senhaHash = await bcrypt.hash(new_password, 10);
-    await repository.updateSenhaEmpresa({ senha_hash: confirm_password, id_empresa: usuario.id_empresa });
-    await atualizarSessaoUsuario(req);
-    console.log('Senha alterada com sucesso');
-    res.redirect("configuracoes", { mensagem: "Senha alterada com sucesso!", usuario: req.session.usuario });
-  } else if (usuario.id_fornecedor) {
-    const fornecedor = await repository.buscarSenhaFornecedor(usuario.id_fornecedor);
-    console.log(current_password, fornecedor);
-    const senhaCorreta = await bcrypt.compare(current_password, fornecedor);
-
-    // Confere se retornou algo
-    if (!fornecedor) {
-      return res.status(400).send("Usuário não encontrado.");
-    }
-
-    // Compara a senha atual com o hash
-    if (!senhaCorreta) {
-      console.log('Senha atual incorreta');
-      return res.redirect("configuracoes", { mensagem: "Senha atual incorreta", usuario: req.session.usuario });
-    }
-
-    // Verifica se as novas senhas coincidem
-    if (new_password !== confirm_password) {
-      console.log('As senhas não coincidem');
-      return res.redirect("configuracoes", { mensagem: "As senhas não coincidem", usuario: req.session.usuario });
-    }
-
-    // Criptografa e atualiza
-    const senhaHash = await bcrypt.hash(new_password, 10);
-    await repository.updateSenhaFornecedor({ senha_hash: senhaHash, id_fornecedor: usuario.id_fornecedor });
-    await atualizarSessaoUsuario(req);
-    console.log('Senha alterada com sucesso');
-    res.redirect("configuracoes", { mensagem: "Senha alterada com sucesso!", usuario: req.session.usuario });
-  };
 };
 
-exports.updateDados = async (req, res) => {
-  let dadosFornecedor = req.body;
-  usuario = req.session.usuario;
-  
-  if (usuario.id_fornecedor) {
-    try {
-      dadosFornecedor.id_fornecedor = usuario.id_fornecedor;
-      await repository.atualizarFornecedor(dadosFornecedor);
-      console.log('Fornecedor atualizado com sucesso');
-      await atualizarSessaoUsuario(req);
-      res.redirect('/fornecedores');
-    } catch (err) {
-      console.error('Erro ao atualizar fornecedor:', err);
+export const updateDados = async (req, res) => {
+  const usuario = req.session.usuario;
+  const dados = req.body;
 
-    };
-  } else if (usuario.id_empresa) {
-    try {
-      dadosFornecedor.id_empresa = usuario.id_empresa;
-      console.log(dadosFornecedor);
-      await repository.atualizarEmpresa(dadosFornecedor);
-      console.log('Empresa atualizada com sucesso');
-      await atualizarSessaoUsuario(req);
-      res.redirect('/fornecedores');
-    } catch (err) {
-      console.error('Erro ao atualizar empresa:', err);
+  try {
+    if (usuario.id_fornecedor) {
+      dados.id_fornecedor = usuario.id_fornecedor;
+      await repository.atualizarFornecedor(dados);
+    } else if (usuario.id_empresa) {
+      dados.id_empresa = usuario.id_empresa;
+      await repository.atualizarEmpresa(dados);
     }
+    await atualizarSessaoUsuario(req);
+    res.redirect('/fornecedores');
+  } catch (err) {
+    console.error('Erro ao atualizar dados:', err);
+    res.status(500).send('Erro ao atualizar dados');
   }
-  
 };
-exports.cadastrarProduto = async (req, res) => {
-  let dadosProduto = req.body;
-  let id_fornecedor = req.session.usuario.id_fornecedor;
-  dadosProduto.id_fornecedor = id_fornecedor;
+
+export const cadastrarProduto = async (req, res) => {
+  const dadosProduto = req.body;
+  dadosProduto.id_fornecedor = req.session.usuario.id_fornecedor;
+
   try {
     await repository.cadastrarProduto(dadosProduto);
-    console.log('Produto cadastrado com sucesso');
+    await atualizarSessaoUsuario(req);
     res.redirect('/fornecedores');
   } catch (err) {
     console.error('Erro ao cadastrar produto:', err);
-  };
-  
+    res.status(500).send('Erro ao cadastrar produto');
+  }
 };

@@ -1,4 +1,6 @@
-class Produto {
+// models/produtoModel.js
+
+export class Produto {
   constructor(
     id_produto,
     id_fornecedor,
@@ -17,4 +19,3 @@ class Produto {
     this.nome_fantasia = nome_fantasia;
   }
 }
-module.exports = Produto;
