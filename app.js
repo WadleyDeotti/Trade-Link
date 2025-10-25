@@ -1,5 +1,4 @@
 import express from "express";
-import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
 import session from "express-session";
@@ -29,7 +28,7 @@ app.set("views", path.join(__dirname, "views"));
 
 // Rotas
 app.use("/chat", chatRoutes);
-app.use("/usuario", usuarioRoutes);
+app.use("/", usuarioRoutes);
 
 // 404
 app.use((req, res) => {
