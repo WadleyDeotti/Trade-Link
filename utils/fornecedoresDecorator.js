@@ -1,7 +1,6 @@
 // decorators/FornecedorDecorator.js
 import Renderizador from './Renderizador.js';
-import repository from '../Repository.js';
-
+import * as repository from '../Repository.js';
 export default class FornecedorDecorator extends Renderizador {
   constructor(renderizador) {
     super();

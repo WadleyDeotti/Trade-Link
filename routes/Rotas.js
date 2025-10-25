@@ -2,7 +2,6 @@
 import express from "express";
 import * as configuracoesController from "../controllers/configuracoesController.js";
 import * as loginController from "../controllers/loginController.js";
-import * as repository from "../Repository.js";
 import * as inicialController from "../controllers/inicialController.js";
 
 const router = express.Router();
@@ -28,21 +27,8 @@ router.get("/login", (req, res) => {
   res.render("login", { mensagem: mensagem || null });
 });
 
-// Inicial com produtos e fornecedor
-router.get("/inicial", async (req, res) => {
-  try {
-    const produtos = await repository.getProdutos();
-    const fornecedor = await repository.getFornecedor();
-    res.render("inicial", { produtos, fornecedor });
-  } catch (err) {
-    console.error("Erro ao carregar inicial:", err);
-    res.status(500).send("Erro ao carregar página inicial");
-  }
-});
-
-
 // Fornecedores
-router.get("/fornecedores", (req, res) => res.render("fornecedores"));
+router.get("/fornecedores", (req, res) => res.renderizador.render(res, 'fornecedores', {}));
 
 // Pedidos e Vendas
 router.get("/pedidos", (req, res) => res.render("pedidos"));
@@ -54,7 +40,7 @@ router.get("/historico", (req, res) => res.render("historico"));
 router.get("/mensagens", (req, res) => res.render("mensagens"));
 
 // Configurações
-router.get("/configuracoes", (req, res) => res.render("configuracoes", {}));
+router.get("/configuracoes", (req, res) => res.renderizador.render(res, 'configuracoes', {}));
 
 // ------------------- POSTs -------------------
 // Cadastro
