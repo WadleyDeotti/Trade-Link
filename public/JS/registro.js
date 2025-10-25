@@ -32,10 +32,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         </label>
                     </div>
                     <div class="loginTem">
-                        Já tem uma conta? <a class="loginSend" href="/login">LOGIN</a>
+                        Já tem uma conta? <a class="loginSend" href="/login/login.html">LOGIN</a>
                     </div>
                     <div class="loginTem">
-                        <a class="loginSend" href="/fornecedores">Fornecedores</a>
+                        <a class="loginSend" href="/fornecedores/fornecedores.html">Fornecedores</a>
                     </div>
                     <button type="submit" class="submit-btn" id="submit-btn" disabled>CONCLUIR</button>
                 `;
@@ -59,10 +59,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         </label>
                     </div>
                     <div class="loginTem">
-                        Já tem uma conta? <a class="loginSend" href="/login">LOGIN</a>
+                        Já tem uma conta? <a class="loginSend" href="/login/login.html">LOGIN</a>
                     </div>
                     <div class="loginTem">
-                        <a class="loginSend" href="/fornecedores">Fornecedores</a>
+                        <a class="loginSend" href="/fornecedores/fornecedores.html">Fornecedores</a>
                     </div>
                     <button type="submit" class="submit-btn" id="submit-btn" disabled>CONCLUIR</button>
                 `;
@@ -128,42 +128,60 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // formRegister.addEventListener('submit', function(e) {
-    //     e.preventDefault();
+    formRegister.addEventListener('submit', function(e) {
+        e.preventDefault();
         
-    //     if (senhaInput.value !== confirmarSenhaInput.value) {
-    //         const resultado = document.getElementById('resultado');
-    //         resultado.textContent = 'As senhas não coincidem!';
-    //         resultado.style.color = '#d9534f';
-    //         document.getElementById('meuDialog').showModal();
-    //         return;
-    //     }
+        if (senhaInput.value !== confirmarSenhaInput.value) {
+            const resultado = document.getElementById('resultado');
+            resultado.textContent = 'As senhas não coincidem!';
+            resultado.style.color = '#d9534f';
+            document.getElementById('meuDialog').showModal();
+            return;
+        }
         
-    //     if (senhaInput.value.length < 8) {
-    //         const resultado = document.getElementById('resultado');
-    //         resultado.textContent = 'A senha deve ter pelo menos 8 caracteres!';
-    //         resultado.style.color = '#d9534f';
-    //         document.getElementById('meuDialog').showModal();
-    //         return;
-    //     }
+        if (senhaInput.value.length < 8) {
+            const resultado = document.getElementById('resultado');
+            resultado.textContent = 'A senha deve ter pelo menos 8 caracteres!';
+            resultado.style.color = '#d9534f';
+            document.getElementById('meuDialog').showModal();
+            return;
+        }
         
-    //     let isValid = false;
-    //     const resultado = document.getElementById('resultado');
+        let isValid = false;
+        const resultado = document.getElementById('resultado');
         
-    //     if (tipoCadastroInput.value === 'fornecedor') {
-    //         isValid = validarCPF(document.getElementById('cpf'));
-    //     } else {
-    //         isValid = validarCNPJ(document.getElementById('cnpj'));
-    //     }
+        if (tipoCadastroInput.value === 'fornecedor') {
+            isValid = validarCPF(document.getElementById('cpf'));
+        } else {
+            isValid = validarCNPJ(document.getElementById('cnpj'));
+        }
         
-    //     if (!isValid) {
-    //         resultado.textContent = tipoCadastroInput.value === 'fornecedor' ? 'CPF inválido!' : 'CNPJ inválido!';
-    //         resultado.style.color = '#d9534f';
-    //         document.getElementById('meuDialog').showModal();
-    //         return;
-    //     }
-      
-    // });
+        if (!isValid) {
+            resultado.textContent = tipoCadastroInput.value === 'fornecedor' ? 'CPF inválido!' : 'CNPJ inválido!';
+            resultado.style.color = '#d9534f';
+            document.getElementById('meuDialog').showModal();
+            return;
+        }
+        
+        // Se passou em tudo: sucesso
+        resultado.textContent = 'Cadastro realizado com sucesso!';
+        resultado.style.color = '#5cb85c';
+        document.getElementById('meuDialog').showModal();
+
+        // Salvar dados do formulário no localStorage
+        const formData = new FormData(formRegister);
+        const dados = {};
+        formData.forEach((value, key) => {
+            dados[key] = value;
+        });
+        localStorage.setItem("dadosCadastro", JSON.stringify(dados));
+
+        // Configura o botão OK para redirecionar
+        const confirmarBtn = document.getElementById('confirmarModal');
+        confirmarBtn.onclick = function() {
+            window.location.href = "../views/fornecedores.html";
+        };
+    });
 });
 
 // ======= Funções auxiliares =======
