@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Status - TradeLink</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="status.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <img src="https://via.placeholder.com/150x50/172B4B/FFFFFF?text=TRADELINK" alt="TradeLink">
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="/Dashboard/dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="/fornecedores/fornecedores.html"><i class="fas fa-user"></i> Perfil</a></li>
+                    <li><a href="/pedidos/pedidos.html"><i class="fas fa-file-invoice"></i> Pedidos/Vendas</a></li>
+                    <li><a href="/contratos/contratos.html"><i class="fas fa-file-contract"></i> Contratos</a></li>
+                    <li class="active"><a href="/status/status.html"><i class="fas fa-chart-bar"></i> Status</a></li>
+                    <li><a href="/historico/historico.html"><i class="fas fa-history"></i> Histórico</a></li>
+                    <li><a href="/mensagens/mensagens.html"><i class="fas fa-envelope"></i> Mensagens</a></li>
+                    <li><a href="/configuracoes/configuracoes.html"><i class="fas fa-cog"></i> Configurações</a></li>
+                </ul>
+            </nav>
+        </div>
+
+        <div class="main-content">
+            <header>
+                <h1><i class="fas fa-chart-bar"></i> Status do Sistema</h1>
+                <div class="user-info">
+                    <span id="header-user-name">TradeLink</span>
+                    <img id="header-user-pic" src="https://via.placeholder.com/40x40/38528D/FFFFFF?text=TL" alt="Usuário">
+                </div>
+            </header>
+
+            <div class="content">
+                <div class="status-filters">
+                    <div class="filter-group">
+                        <label for="status-period"><i class="fas fa-calendar"></i> Período:</label>
+                        <select id="status-period">
+                            <option value="today">Hoje</option>
+                            <option value="week" selected>Esta semana</option>
+                            <option value="month">Este mês</option>
+                            <option value="quarter">Este trimestre</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="status-type"><i class="fas fa-filter"></i> Tipo:</label>
+                        <select id="status-type">
+                            <option value="all">Todos</option>
+                            <option value="orders">Pedidos</option>
+                            <option value="contracts">Contratos</option>
+                            <option value="messages">Mensagens</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="user-role"><i class="fas fa-user-tag"></i> Perfil:</label>
+                        <select id="user-role">
+                            <option value="all">Todos</option>
+                            <option value="supplier">Fornecedor</option>
+                            <option value="buyer">Comprador</option>
+                        </select>
+                    </div>
+                    
+                    <button class="btn btn-primary" id="refresh-status">
+                        <i class="fas fa-sync-alt"></i> Atualizar
+                    </button>
+                    
+                    <button class="btn btn-secondary" id="test-notifications">
+                        <i class="fas fa-bell"></i> Testar Notificações
+                    </button>
+                </div>
+
+                <div class="status-cards">
+                    <div class="status-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-shopping-cart"></i> Pedidos</h3>
+                            <span class="card-badge" id="orders-count">0</span>
+                        </div>
+                        <div class="card-content">
+                            <div class="stat-item">
+                                <span class="stat-label">Pendentes</span>
+                                <span class="stat-value" id="pending-orders">0</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Em Andamento</span>
+                                <span class="stat-value" id="processing-orders">0</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Concluídos</span>
+                                <span class="stat-value" id="completed-orders">0</span>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="trend positive" id="orders-trend">
+                                <i class="fas fa-arrow-up"></i> <span>0%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="status-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-file-contract"></i> Contratos</h3>
+                            <span class="card-badge" id="contracts-count">0</span>
+                        </div>
+                        <div class="card-content">
+                            <div class="stat-item">
+                                <span class="stat-label">Rascunhos</span>
+                                <span class="stat-value" id="draft-contracts">0</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Para Assinar</span>
+                                <span class="stat-value" id="pending-signature">0</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Assinados</span>
+                                <span class="stat-value" id="signed-contracts">0</span>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="trend positive" id="contracts-trend">
+                                <i class="fas fa-arrow-up"></i> <span>0%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="status-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-envelope"></i> Mensagens</h3>
+                            <span class="card-badge" id="messages-count">0</span>
+                        </div>
+                        <div class="card-content">
+                            <div class="stat-item">
+                                <span class="stat-label">Não Lidas</span>
+                                <span class="stat-value" id="unread-messages">0</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Enviadas</span>
+                                <span class="stat-value" id="sent-messages">0</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Recebidas</span>
+                                <span class="stat-value" id="received-messages">0</span>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="trend positive" id="messages-trend">
+                                <i class="fas fa-arrow-up"></i> <span>0%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="status-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-users"></i> Usuários</h3>
+                            <span class="card-badge" id="users-count">0</span>
+                        </div>
+                        <div class="card-content">
+                            <div class="stat-item">
+                                <span class="stat-label">Ativos</span>
+                                <span class="stat-value" id="active-users">0</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Fornecedores</span>
+                                <span class="stat-value" id="suppliers-count">0</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Compradores</span>
+                                <span class="stat-value" id="buyers-count">0</span>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="trend positive" id="users-trend">
+                                <i class="fas fa-arrow-up"></i> <span>0%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="status-charts">
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3>Atividade em Tempo Real</h3>
+                            <div class="chart-actions">
+                                <button class="btn btn-secondary" id="export-activity">
+                                    <i class="fas fa-download"></i> Exportar
+                                </button>
+                            </div>
+                        </div>
+                        <div class="chart-content">
+                            <div class="activity-timeline" id="activity-timeline">
+                                <div class="empty-state">
+                                    <i class="fas fa-chart-line"></i>
+                                    <h3>Nenhuma atividade recente</h3>
+                                    <p>As atividades aparecerão aqui em tempo real</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3>Status de Pedidos</h3>
+                            <div class="chart-actions">
+                                <button class="btn btn-secondary" id="export-orders">
+                                    <i class="fas fa-download"></i> Exportar
+                                </button>
+                            </div>
+                        </div>
+                        <div class="chart-content">
+                            <div class="orders-distribution" id="orders-distribution">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="notifications-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-bell"></i> Notificações Recentes</h2>
+                        <div class="section-actions">
+                            <button class="btn btn-secondary" id="mark-all-read">
+                                <i class="fas fa-check-double"></i> Marcar Todas como Lidas
+                            </button>
+                            <button class="btn btn-secondary" id="clear-notifications">
+                                <i class="fas fa-trash"></i> Limpar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="notifications-list" id="notifications-list">
+                        <div class="empty-state">
+                            <i class="fas fa-bell-slash"></i>
+                            <h3>Nenhuma notificação</h3>
+                            <p>As notificações aparecerão aqui automaticamente</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="connection-status" id="connection-status">
+                    <i class="fas fa-wifi"></i>
+                    <span>Conectado ao sistema em tempo real</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="details-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Detalhes</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="modal-content">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="close-modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toast-message">Operação realizada com sucesso!</span>
+    </div>
+
+    <script src="status.js"></script>
+</body>
+</html>
