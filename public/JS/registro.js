@@ -3,6 +3,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const typeOptions = document.querySelectorAll('.typeOption');
     const tipoCadastroInput = document.getElementById('tipoCadastro');
     const docField = document.getElementById('campoTroca');
+    const submitBtn = document.getElementById('submit-btn');
+    const togglePasswordButtons = document.querySelectorAll('.toggle-password');
     const senhaInput = document.getElementById('senha');
     const confirmarSenhaInput = document.getElementById('confirmarSenha');
 
@@ -103,7 +105,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const icon = this.querySelector('svg');
                 if (input.type === 'password') {
                     input.type = 'text';
-                    icon.innerHTML = '<path d="M12 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-4.5c-5 0-9.27 3.11-11 7.5 1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5m0 10a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1-2.5 2.5z"/>';
+                    icon.innerHTML = '<path d="M12 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-4.5c-5 0-9.27 3.11-11 7.5 1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5m0 10a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5z"/>';
                 } else {
                     input.type = 'password';
                     icon.innerHTML = '<path d="M12 9a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0-4.5c5 0 9.27 3.11 11 7.5-1.73 4.39-6 7.5-11 7.5S2.73 16.39 1 12c1.73-4.39 6-7.5 11-7.5M3.18 12a9.821 9.821 0 0 0 17.64 0 9.821 9.821 0 0 0-17.64 0z"/>';
@@ -163,28 +165,13 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
-        // Se passou em tudo: sucesso
         resultado.textContent = 'Cadastro realizado com sucesso!';
         resultado.style.color = '#5cb85c';
         document.getElementById('meuDialog').showModal();
-
-        // Salvar dados do formulário no localStorage
-        const formData = new FormData(formRegister);
-        const dados = {};
-        formData.forEach((value, key) => {
-            dados[key] = value;
-        });
-        localStorage.setItem("dadosCadastro", JSON.stringify(dados));
-
-        // Configura o botão OK para redirecionar
-        const confirmarBtn = document.getElementById('confirmarModal');
-        confirmarBtn.onclick = function() {
-            window.location.href = "../views/fornecedores.html";
-        };
+        
+        console.log('Dados do formulário:', new FormData(formRegister));
     });
 });
-
-// ======= Funções auxiliares =======
 
 function mascaraCpf(input) {
     let value = input.value.replace(/\D/g, '').slice(0, 11);

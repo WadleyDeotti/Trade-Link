@@ -7,11 +7,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/charts.css/dist/charts.min.css">
     <link rel="stylesheet" href="../public/css/dashboard.css">
-    <script src="../public/JS/dashboard.js"></script>
 </head>
 <body>
     <div class="dashboard-container">
-        
+        <!-- Sidebar -->
         <div class="sidebar">
             <div class="logo">
                 <img src="logo.png" alt="TradeLink">
@@ -21,6 +20,8 @@
                     <li class="active"><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
                     <li><a href="fornecedores.html"><i class="fas fa-user"></i> Perfil</a></li>
                     <li><a href="pedidos.html"><i class="fas fa-file-invoice"></i> Pedidos/Vendas</a></li>
+                    <li><a href="contratos.html"><i class="fas fa-file-contract"></i> Contratos</a></li>
+                    <li><a href="status.html"><i class="fas fa-chart-bar"></i> Status</a></li>
                     <li><a href="historico.html"><i class="fas fa-history"></i> Histórico</a></li>
                     <li><a href="mensagens.html"><i class="fas fa-envelope"></i> Mensagens</a></li>
                     <li><a href="configuracoes.html"><i class="fas fa-cog"></i> Configurações</a></li>
@@ -28,7 +29,7 @@
             </nav>
         </div>
 
-        
+        <!-- Main Content -->
         <div class="main-content">
             <header>
                 <h1><i class="fas fa-home"></i> Dashboard</h1>
@@ -39,7 +40,7 @@
             </header>
 
             <div class="content">
-                
+                <!-- Filtros e Período -->
                 <div class="dashboard-filters">
                     <div class="filter-group">
                         <label for="dashboard-period"><i class="fas fa-calendar"></i> Período:</label>
@@ -73,7 +74,7 @@
                     </button>
                 </div>
 
-                
+                <!-- Resumo Financeiro -->
                 <div class="financial-summary">
                     <div class="summary-card">
                         <div class="summary-icon">
@@ -128,7 +129,7 @@
                     </div>
                 </div>
 
-                
+                <!-- Gráficos e Visualizações -->
                 <div class="dashboard-charts">
                     <div class="chart-container large">
                         <div class="chart-header">
@@ -197,7 +198,7 @@
                     </div>
                 </div>
 
-                
+                <!-- Pedidos Recentes -->
                 <div class="recent-orders">
                     <div class="section-header">
                         <h2>Pedidos Recentes</h2>
@@ -236,7 +237,7 @@
                     </div>
                 </div>
 
-                
+                <!-- Formulário de Dados de Teste (inicialmente oculto) -->
                 <div class="test-data-form" id="test-data-form" style="display: none;">
                     <div class="section-header">
                         <h2>Configuração de Dados de Teste</h2>
@@ -308,7 +309,7 @@
         </div>
     </div>
 
-    
+    <!-- Modal de Pedidos -->
     <div id="orders-modal" class="modal">
         <div class="modal-content large">
             <div class="modal-header">
@@ -377,14 +378,14 @@
         </div>
     </div>
 
-    
+    <!-- Toast Notification -->
     <div id="toast" class="toast">
         <i class="fas fa-check-circle"></i>
         <span id="toast-message">Operação realizada com sucesso!</span>
     </div>
 
-    
+    <!-- Scripts para gráficos -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-   
+    <script src="../public/JS/dashboard.js"></script>
 </body>
 </html>

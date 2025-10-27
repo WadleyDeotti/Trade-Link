@@ -9,6 +9,7 @@
 </head>
 <body>
     <div class="dashboard-container">
+        <!-- Sidebar -->
         <div class="sidebar">
             <div class="logo">
                 <img src="logo.png" alt="TradeLink">
@@ -18,8 +19,6 @@
                     <li><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
                     <li class="active"><a href="fornecedores.html"><i class="fas fa-user"></i> Perfil</a></li>
                     <li><a href="pedidos.html"><i class="fas fa-file-invoice"></i> Pedidos/Vendas</a></li>
-                    <li><a href="contratos.html"><i class="fas fa-file-contract"></i> Contratos</a></li>
-                    <li><a href="status.html"><i class="fas fa-chart-bar"></i> Status</a></li>
                     <li><a href="historico.html"><i class="fas fa-history"></i> Histórico</a></li>
                     <li><a href="mensagens.html"><i class="fas fa-envelope"></i> Mensagens</a></li>
                     <li><a href="configuracoes.html"><i class="fas fa-cog"></i> Configurações</a></li>
@@ -27,6 +26,7 @@
             </nav>
         </div>
 
+        <!-- Main Content -->
         <div class="main-content">
             <header>
                 <h1><i class="fas fa-user"></i> Perfil do Fornecedor</h1>
@@ -37,9 +37,10 @@
             </header>
 
             <div class="content">
+                <!-- Banner e Avatar -->
                 <div class="profile-container">
                     <div class="profile-banner">
-                        <img id="banner-image" src="" alt="Banner">
+                        <img id="banner-image" src="images/banner.jpg" alt="Banner">
                     </div>
                     <div class="profile-info">
                         <div class="profile-avatar">
@@ -56,7 +57,7 @@
                             </p>
                             <div class="profile-stats">
                                 <div class="stat-item">
-                                    <span class="stat-value">15</span>
+                                    <span class="stat-value" id="products-count">0</span>
                                     <span class="stat-label">Produtos</span>
                                 </div>
                                 <div class="stat-item">
@@ -72,7 +73,7 @@
                     </div>
                 </div>
 
-                <!-- From 1 Salvar dados pessoais -->
+                <!-- Formulário de Edição -->
                 <form id="formPerfil" method="POST" action="">
                     <div class="form-section">
                         <h2>Informações Pessoais</h2>
@@ -94,8 +95,14 @@
                                 <input id="fornecedor-local" name="localizacao" type="text" placeholder="Cidade, Estado" required>
                             </div>
                             <div class="form-group">
-                                <label>Senha:</label>
-                                <button type="button" class="btn btn-secondary" id="change-password-btn">
+                                <label for="fornecedor-senha">Senha:</label>
+                                <div class="input-with-icon">
+                                    <input id="fornecedor-senha" name="senha" type="password" value="••••••••" readonly>
+                                    <button type="button" class="toggle-password" id="view-password-btn">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                                <button type="button" class="btn btn-secondary" id="change-password-btn" style="margin-top: 10px;">
                                     <i class="fas fa-key"></i> Alterar Senha
                                 </button>
                             </div>
@@ -114,6 +121,29 @@
                         </div>
                     </div>
 
+                    <!-- Seção de Produtos -->
+                    <div class="form-section">
+                        <h2>Produtos do Fornecedor</h2>
+                        <div class="products-section">
+                            <div class="products-carousel">
+                                <button class="carousel-button carousel-button-prev">
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+                                <div class="carousel-container">
+                                    <div class="carousel-track">
+                                        <!-- Produtos serão adicionados aqui via JavaScript -->
+                                    </div>
+                                </div>
+                                <button class="carousel-button carousel-button-next">
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
+                            <button class="btn btn-primary" id="add-product-btn">
+                                <i class="fas fa-plus"></i> Adicionar Produto
+                            </button>
+                        </div>
+                    </div>
+
                     <div class="form-actions">
                         <button type="button" class="btn btn-secondary" id="cancel-btn">Cancelar</button>
                         <button type="submit" class="btn btn-primary" id="save-btn">
@@ -126,6 +156,7 @@
         </div>
     </div>
 
+    <!-- Modal para Alterar Senha -->
     <div id="password-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -133,19 +164,18 @@
                 <span class="close">&times;</span>
             </div>
             <div class="modal-body">
-                <!-- Form 2 Salvar senha -->
-                <form id="formSenha" method="POST" action="">
+                <form id="formSenha">
                     <div class="form-group">
                         <label for="current-password">Senha Atual:</label>
-                        <input id="current-password" name="senha_atual" type="password" required>
+                        <input id="current-password" type="password" required>
                     </div>
                     <div class="form-group">
                         <label for="new-password">Nova Senha:</label>
-                        <input id="new-password" name="nova_senha" type="password" required>
+                        <input id="new-password" type="password" required>
                     </div>
                     <div class="form-group">
                         <label for="confirm-password">Confirmar Nova Senha:</label>
-                        <input id="confirm-password" name="confirmar_senha" type="password" required>
+                        <input id="confirm-password" type="password" required>
                     </div>
                 </form>
             </div>
@@ -156,65 +186,114 @@
         </div>
     </div>
 
-    <div id="avatar-modal" class="modal">
+    <!-- Modal para Upload de Imagem -->
+    <div id="image-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Alterar Foto de Perfil</h2>
+                <h2 id="image-modal-title">Alterar Imagem</h2>
                 <span class="close">&times;</span>
             </div>
             <div class="modal-body">
-                <!-- Form 3 Salvar avatar/foto de perfil -->
-                <form id="formAvatar" method="POST" action="" enctype="multipart/form-data">
-                    <div class="form-group">
-                        <label>Selecionar imagem:</label>
-                        <input type="file" name="avatar" id="avatar-upload" accept="image/*" required>
-                    </div>
-                    <div id="avatar-preview-container" style="display: none;">
-                        <label>Pré-visualização:</label>
-                        <div id="avatar-preview" style="max-width: 100%; max-height: 300px; margin-top: 10px;"></div>
-                    </div>
-                </form>
+                <div class="form-group">
+                    <label>Selecionar imagem:</label>
+                    <input type="file" id="image-upload" accept="image/*">
+                </div>
+                <div id="image-preview-container" style="display: none;">
+                    <label>Pré-visualização:</label>
+                    <div id="image-preview" style="max-width: 100%; max-height: 300px; margin-top: 10px;"></div>
+                </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" id="cancel-avatar-btn">Cancelar</button>
-                <button type="button" class="btn btn-primary" id="save-avatar-btn">Salvar Imagem</button>
+                <button type="button" class="btn btn-secondary" id="cancel-image-btn">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="save-image-btn">Salvar Imagem</button>
             </div>
         </div>
     </div>
 
-    <div id="banner-modal" class="modal">
+    <!-- Modal para Adicionar/Editar Produto -->
+    <div id="product-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Alterar Banner</h2>
+                <h2 id="product-modal-title">Adicionar Produto</h2>
                 <span class="close">&times;</span>
             </div>
             <div class="modal-body">
-                <!-- Form 4 Salvar imagem banner -->
-                <form id="formBanner" method="POST" action="" enctype="multipart/form-data">
+                <form id="formProduct">
                     <div class="form-group">
-                        <label>Selecionar imagem:</label>
-                        <input type="file" name="banner" id="banner-upload" accept="image/*" required>
+                        <label for="product-name">Nome do Produto:</label>
+                        <input id="product-name" type="text" required>
                     </div>
-                    <div id="banner-preview-container" style="display: none;">
-                        <label>Pré-visualização:</label>
-                        <div id="banner-preview" style="max-width: 100%; max-height: 300px; margin-top: 10px;"></div>
+                    <div class="form-group">
+                        <label for="product-description">Descrição:</label>
+                        <textarea id="product-description" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="product-price">Preço (R$):</label>
+                        <input id="product-price" type="number" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="product-category">Categoria:</label>
+                        <input id="product-category" type="text" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="product-image">Imagem do Produto:</label>
+                        <input type="file" id="product-image" accept="image/*">
+                        <div id="product-image-preview" style="margin-top: 10px; display: none;">
+                            <img id="product-preview-img" src="#" alt="Preview" style="max-width: 100%; max-height: 200px;">
+                        </div>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" id="cancel-banner-btn">Cancelar</button>
-                <button type="button" class="btn btn-primary" id="save-banner-btn">Salvar Banner</button>
+                <button type="button" class="btn btn-secondary" id="cancel-product-btn">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="save-product-btn">Salvar Produto</button>
             </div>
         </div>
     </div>
 
+    <!-- Modal de Visualização/Edição do Produto -->
+    <div id="product-view-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="product-view-title">Detalhes do Produto</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="product-view-content">
+                    <!-- Conteúdo será preenchido via JavaScript -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="close-product-btn">Fechar</button>
+                <button type="button" class="btn btn-primary" id="edit-product-btn">Editar</button>
+                <button type="button" class="btn btn-danger" id="delete-product-btn">Excluir</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmação de Exclusão -->
+    <div id="delete-confirm-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Confirmar Exclusão</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p>Tem certeza que deseja excluir este produto?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancel-delete-btn">Cancelar</button>
+                <button type="button" class="btn btn-danger" id="confirm-delete-btn">Excluir</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
     <div id="toast" class="toast">
         <i class="fas fa-check-circle"></i>
         <span id="toast-message">Operação realizada com sucesso!</span>
     </div>
 
     <script src="../public/JS/fornecedores.js"></script>
-  <link rel="stylesheet" href="../public/css/fix-modal.css">
-  <script src="../public/JS/fix-modal.js"></script>
 </body>
 </html>

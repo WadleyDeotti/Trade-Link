@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editor de Contratos - TradeLink</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <link rel="stylesheet" href="../public/css/editor-contratos.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <img src="logo.png" alt="TradeLink">
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="fornecedores.html"><i class="fas fa-user"></i> Perfil</a></li>
+                    <li><a href="pedidos.html"><i class="fas fa-file-invoice"></i> Pedidos/Vendas</a></li>
+                    <li class="active"><a href="contratos.html"><i class="fas fa-file-contract"></i> Contratos</a></li>
+                    <li><a href="status.html"><i class="fas fa-chart-bar"></i> Status</a></li>
+                    <li><a href="historico.html"><i class="fas fa-history"></i> Histórico</a></li>
+                    <li><a href="mensagens.html"><i class="fas fa-envelope"></i> Mensagens</a></li>
+                    <li><a href="configuracoes.html"><i class="fas fa-cog"></i> Configurações</a></li>
+                </ul>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <header>
+                <h1><i class="fas fa-edit"></i> Editor de Contratos</h1>
+                <div class="user-info">
+                    <span id="header-user-name">TradeLink</span>
+                    <img id="header-user-pic" src="profile.jpg" alt="Usuário">
+                </div>
+            </header>
+
+            <div class="content">
+                <!-- Barra de Ferramentas do Editor -->
+                <div class="editor-toolbar">
+                    <div class="toolbar-left">
+                        <button class="btn btn-secondary" id="back-btn">
+                            <i class="fas fa-arrow-left"></i> Voltar
+                        </button>
+                        <span class="document-info">
+                            <span id="doc-title">Novo Contrato</span>
+                            <span class="autosave-status" id="autosave-status">
+                                <i class="fas fa-save"></i> Salvando automaticamente...
+                            </span>
+                        </span>
+                    </div>
+                    <div class="toolbar-right">
+                        <button class="btn btn-secondary" id="clear-btn">
+                            <i class="fas fa-eraser"></i> Limpar
+                        </button>
+                        <button class="btn btn-secondary" id="upload-btn">
+                            <i class="fas fa-upload"></i> Upload
+                        </button>
+                        <button class="btn btn-primary" id="save-btn">
+                            <i class="fas fa-save"></i> Salvar
+                        </button>
+                        <button class="btn btn-success" id="download-btn">
+                            <i class="fas fa-download"></i> Download
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Área do Editor -->
+                <div class="editor-container">
+                    <div class="editor-sidebar">
+                        <div class="sidebar-section">
+                            <h3><i class="fas fa-magic"></i> Templates Rápidos</h3>
+                            <div class="template-buttons">
+                                <button class="template-btn" data-template="comercial">
+                                    <i class="fas fa-building"></i> Comercial
+                                </button>
+                                <button class="template-btn" data-template="servicos">
+                                    <i class="fas fa-concierge-bell"></i> Prestação de Serviços
+                                </button>
+                                <button class="template-btn" data-template="confidencialidade">
+                                    <i class="fas fa-shield-alt"></i> Confidencialidade
+                                </button>
+                                <button class="template-btn" data-template="parceria">
+                                    <i class="fas fa-handshake"></i> Parceria
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="sidebar-section">
+                            <h3><i class="fas fa-file-import"></i> Anexos</h3>
+                            <div class="attachments-list" id="attachments-list">
+                                <!-- Lista de anexos será carregada aqui -->
+                                <div class="empty-attachments">
+                                    <i class="fas fa-paperclip"></i>
+                                    <p>Nenhum anexo adicionado</p>
+                                </div>
+                            </div>
+                            <button class="btn btn-outline" id="add-attachment">
+                                <i class="fas fa-plus"></i> Adicionar Anexo
+                            </button>
+                        </div>
+
+                        <div class="sidebar-section">
+                            <h3><i class="fas fa-history"></i> Versões</h3>
+                            <div class="versions-list" id="versions-list">
+                                <!-- Histórico de versões será carregado aqui -->
+                                <div class="empty-versions">
+                                    <i class="fas fa-clock"></i>
+                                    <p>Nenhuma versão salva</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="editor-main">
+                        <div id="editor-container">
+                            <!-- Editor Quill será inicializado aqui -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmação de Limpeza -->
+    <div id="clear-confirm-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Limpar Documento</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p>Tem certeza que deseja limpar todo o conteúdo do documento? Esta ação não pode ser desfeita.</p>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="save-before-clear"> 
+                        Salvar versão atual antes de limpar
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="clear-cancel">Cancelar</button>
+                <button class="btn btn-danger" id="clear-confirm">Limpar Tudo</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toast-message">Operação realizada com sucesso!</span>
+    </div>
+
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <script src="../public/JS/editor-contratos.js"></script>
+</body>
+</html>
