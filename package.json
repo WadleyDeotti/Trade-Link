@@ -29,6 +29,7 @@
     "express-session": "^1.18.2",
     "mysql2": "^3.15.3",
     "nodemailer": "^7.0.6",
-    "socket.io": "^4.8.1"
+    "socket.io": "^4.8.1",
+    "xlsx": "^0.18.5"
   }
 }

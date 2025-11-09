@@ -6,7 +6,6 @@ import { fileURLToPath } from "url";
 
 // Importa rotas
 import Rotas from './routes/Rotas.js';
-import chatRoutes from "./routes/chatRoutes.js";
 
 // Decorators
 import Renderizador from "./utils/Renderizador.js";
@@ -49,17 +48,19 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Rota principal
-app.get('/', (req, res) => {
-  if (req.session.usuario) {
+// app.get('/', (req, res) => {
+//   if (req.session.usuario) {
+//     res.renderizador.render(res, 'fornecedores', {});
+//   }
+//   else { res.redirect('/login'); }
+// });
 
-    res.renderizador.render(res, 'fornecedores', {});
-  }
-  else { res.redirect('/login'); }
+app.get('/', (req, res) => {
+  res.redirect('/categoria');
 });
 
 // Rotas da aplicação
 app.use('/', Rotas);
-app.use("/chat", chatRoutes);
 
 // 404
 app.use((req, res) => {

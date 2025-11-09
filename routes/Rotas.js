@@ -3,7 +3,7 @@ import express from "express";
 import * as configuracoesController from "../controllers/configuracoesController.js";
 import * as loginController from "../controllers/loginController.js";
 import * as inicialController from "../controllers/inicialController.js";
-
+import { sendMessage } from "../controllers/chatController.js"; // usar .js com ES Module
 const router = express.Router();
 
 // ------------------- GETs -------------------
@@ -44,7 +44,12 @@ router.get("/configuracoes", (req, res) => res.renderizador.render(res, 'configu
 
 router.get("/categoria", (req, res) => res.render("categoria"));
 
+router.get("/chat", (req, res) => res.render("chat"));
+
 // ------------------- POSTs -------------------
+//Mensagem chat
+router.post("/send", sendMessage);
+
 // Cadastro
 router.post("/cadastrar", loginController.cadastrar);
 
