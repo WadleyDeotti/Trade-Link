@@ -1,4 +1,4 @@
-class Mensagem {
+export class Mensagem {
     constructor(id_mensagem, id_conversa, remetente_id, tipo_remetente, conteudo, enviado_em, lida) {
         this.id_mensagem = id_mensagem;
         this.id_conversa = id_conversa;
@@ -9,5 +9,3 @@ class Mensagem {
         this.lida = lida;
     }
 }
-
-module.exports = { Mensagem };

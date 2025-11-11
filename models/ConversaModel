@@ -1,4 +1,4 @@
-class Conversa {
+export class Conversa {
     constructor(id_conversa, usuario1_id, usuario2_id, tipo1, tipo2, criado_em) {
         this.id_conversa = id_conversa;
         this.usuario1_id = usuario1_id;
@@ -8,5 +8,3 @@ class Conversa {
         this.criado_em = criado_em;
     }
 }
-
-module.exports = { Conversa };
