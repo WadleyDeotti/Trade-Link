@@ -173,6 +173,9 @@ export async function cadastrarProduto({ id_fornecedor, nome_produto, descricao,
   return resultado;
 }
 
+// ---------------- MENSAGENS ----------------
+
+// Enviar mensagem
 export async function enviarMensagem({ remetente_id, destinatario_id, conteudo }) {
   const sql = `
     INSERT INTO mensagens (remetente_id, destinatario_id, conteudo)

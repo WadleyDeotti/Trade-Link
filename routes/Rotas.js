@@ -3,6 +3,7 @@ import express from "express";
 import * as configuracoesController from "../controllers/configuracoesController.js";
 import * as loginController from "../controllers/loginController.js";
 import * as inicialController from "../controllers/inicialController.js";
+import * as MessageController from "../controllers/MessageController.js";
 import { sendMessage } from "../controllers/chatController.js"; // usar .js com ES Module
 const router = express.Router();
 
@@ -46,6 +47,9 @@ router.get("/categoria", (req, res) => res.render("categoria"));
 
 router.get("/chat", (req, res) => res.render("chat"));
 
+// obter conversa com um contato
+router.get("/conversa/:contatoId", MessageController.conversa);
+
 // ------------------- POSTs -------------------
 //Mensagem chat
 router.post("/send", sendMessage);
@@ -67,5 +71,12 @@ router.post("/updateDados", configuracoesController.updateDados);
 
 // Cadastrar produto
 router.post("/cadastrarProduto", configuracoesController.cadastrarProduto);
+
+// enviar mensagem no chat
+router.post("/send", MessageController.enviar);
+
+
+
+
 
 export default router;

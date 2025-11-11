@@ -1,25 +1,13 @@
-import pool from "../utils/db.js";
-
-class MessageModel {
-  async create(remetenteId, destinatarioId, conteudo) {
-    const [result] = await pool.query(
-      "INSERT INTO mensagens (remetente_id, destinatario_id, conteudo) VALUES (?, ?, ?)",
-      [remetenteId, destinatarioId, conteudo]
-    );
-    return { id: result.insertId, remetenteId, destinatarioId, conteudo };
-  }
-
-  async getConversa(usuarioId, contatoId) {
-    const [rows] = await pool.query(
-      `SELECT * FROM mensagens
-       WHERE (remetente_id = ? AND destinatario_id = ?)
-       OR (remetente_id = ? AND destinatario_id = ?)
-       ORDER BY data_envio ASC`,
-      [usuarioId, contatoId, contatoId, usuarioId]
-    );
-    return rows;
-    // passar pra repository , consultas em banco devem ser feitas na repository
-  }
+class Mensagem {
+    constructor(id_mensagem, id_conversa, remetente_id, tipo_remetente, conteudo, enviado_em, lida) {
+        this.id_mensagem = id_mensagem;
+        this.id_conversa = id_conversa;
+        this.remetente_id = remetente_id;
+        this.tipo_remetente = tipo_remetente;
+        this.conteudo = conteudo;
+        this.enviado_em = enviado_em;
+        this.lida = lida;
+    }
 }
 
-export default new MessageModel();
+module.exports = { Mensagem };

@@ -1,31 +1,55 @@
-import MessageModel from "../models/MessageModel.js";
-import MessageObserver from "../utils/MessageObserver.js";
+import { 
+  enviarMensagem,
+  buscarMensagensEntre,
+  marcarComoLida
+} from "../Repository.js";
+import Mensagem from "../models/Mensagem.js";
+import { buscarMensagensEntre } from "../Repository.js";
+import Conversa from "../models/Conversa.js";
+import { buscarConversasDoUsuario } from "../Repository.js";
 
-class MessageController {
-  async enviarMensagem(req, res) {
-    const { remetenteId, destinatarioId, conteudo } = req.body;
+const conversas = await buscarConversasDoUsuario(req.session.usuario.id);
 
+res.json(conversas.map(c => Conversa(c)));
+
+const msgs = await buscarMensagensEntre(usuario, contatoId);
+res.json(msgs.map(m => Mensagem(m)));
+
+class ChatController {
+
+  async enviar(req, res) {
     try {
-      const msg = await MessageModel.create(remetenteId, destinatarioId, conteudo);
-      MessageObserver.notify(msg);
-      res.status(201).json(msg);
+      const remetente_id = req.session.usuario.id_usuario;
+      const { destinatario_id, conteudo } = req.body;
+
+      const msg = await enviarMensagem({
+        remetente_id,
+        destinatario_id,
+        conteudo
+      });
+
+      res.json(msg);
+
     } catch (err) {
       console.error(err);
       res.status(500).json({ error: "Erro ao enviar mensagem" });
     }
   }
 
-  async listarMensagens(req, res) {
-    const { usuarioId, contatoId } = req.params;
-
+  async conversa(req, res) {
     try {
-      const mensagens = await MessageModel.getConversa(usuarioId, contatoId);
-      res.json(mensagens);
+      const usuario = req.session.usuario.id_usuario;
+      const { contatoId } = req.params;
+
+      const msgs = await buscarMensagensEntre(usuario, contatoId);
+
+      res.json(msgs);
+
     } catch (err) {
       console.error(err);
-      res.status(500).json({ error: "Erro ao buscar mensagens" });
+      res.status(500).json({ error: "Erro ao carregar conversa" });
     }
   }
 }
 
-export default new MessageController();
+export default new ChatController();
