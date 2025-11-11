@@ -173,77 +173,103 @@ export async function cadastrarProduto({ id_fornecedor, nome_produto, descricao,
   return resultado;
 }
 
-// ---------------- MENSAGENS ----------------
+// ========== CONVERSAS ==========
 
-// Enviar mensagem
-export async function enviarMensagem({ remetente_id, destinatario_id, conteudo }) {
-  const sql = `
-    INSERT INTO mensagens (remetente_id, destinatario_id, conteudo)
-    VALUES (?, ?, ?)
-  `;
-  const [resultado] = await conexao.execute(sql, [
-    remetente_id,
-    destinatario_id,
-    conteudo
-  ]);
+export async function buscarOuCriarConversa(usuario1, usuario2, tipo1, tipo2) {
+    const sql = `
+        SELECT * FROM conversas 
+        WHERE (usuario1_id = ? AND usuario2_id = ?)
+        OR (usuario1_id = ? AND usuario2_id = ?)
+    `;
 
-  return {
-    id_mensagem: resultado.insertId,
-    remetente_id,
-    destinatario_id,
-    conteudo,
-    data_envio: new Date()
-  };
+    const [rows] = await this.pool.query(sql, [
+        usuario1, usuario2,
+        usuario2, usuario1
+    ]);
+
+    if (rows.length > 0) return rows[0];
+
+    const insert = `
+        INSERT INTO conversas (usuario1_id, usuario2_id, tipo1, tipo2)
+        VALUES (?, ?, ?, ?)
+    `;
+
+    const [result] = await this.pool.query(insert, [
+        usuario1, usuario2,
+        tipo1, tipo2
+    ]);
+
+    return {
+        id_conversa: result.insertId,
+        usuario1_id: usuario1,
+        usuario2_id: usuario2,
+        tipo1,
+        tipo2
+    };
 }
 
-// Buscar conversa entre dois usuários
-export async function buscarMensagensEntre(remetente_id, destinatario_id) {
-  const sql = `
-    SELECT *
-    FROM mensagens
-    WHERE 
-      (remetente_id = ? AND destinatario_id = ?)
-      OR
-      (remetente_id = ? AND destinatario_id = ?)
-    ORDER BY data_envio ASC
-  `;
+export async function listarConversasDoUsuario(id_usuario) {
+    const sql = `
+        SELECT c.*,
+            (SELECT conteudo FROM mensagens 
+              WHERE id_conversa = c.id_conversa 
+              ORDER BY id_mensagem DESC LIMIT 1) AS ultima_msg,
 
-  const [rows] = await conexao.execute(sql, [
-    remetente_id,
-    destinatario_id,
-    destinatario_id,
-    remetente_id
-  ]);
+            (SELECT COUNT(*) FROM mensagens 
+              WHERE id_conversa = c.id_conversa 
+              AND lida = 0
+              AND remetente_id != ?) AS nao_lidas
 
-  return rows;
+        FROM conversas c
+        WHERE c.usuario1_id = ? OR c.usuario2_id = ?
+    `;
+
+    const [rows] = await this.pool.query(sql, [
+        id_usuario,
+        id_usuario,
+        id_usuario
+    ]);
+
+    return rows;
 }
 
-// Marcar mensagens como lidas
-export async function marcarComoLida(id_mensagem) {
-  const sql = "UPDATE mensagens SET lida = 1 WHERE id_mensagem = ?";
-  const [resultado] = await conexao.execute(sql, [id_mensagem]);
-  return resultado;
+// ========== MENSAGENS ==========
+
+export async function salvarMensagem(id_conversa, remetente_id, tipo_remetente, conteudo) {
+    const sql = `
+        INSERT INTO mensagens (id_conversa, remetente_id, tipo_remetente, conteudo)
+        VALUES (?, ?, ?, ?)
+    `;
+
+    const [result] = await this.pool.query(sql, [
+        id_conversa,
+        remetente_id,
+        tipo_remetente,
+        conteudo
+    ]);
+
+    return result.insertId;
 }
 
-// Buscar últimas mensagens para lista de conversas (igual WhatsApp)
-export async function listarUltimasConversas(id_usuario) {
-  const sql = `
-    SELECT 
-      m.*,
-      u.nome AS nome_contato
-    FROM mensagens m
-    JOIN usuarios u 
-      ON (u.id_usuario = CASE 
-          WHEN m.remetente_id = ? THEN m.destinatario_id
-          ELSE m.remetente_id 
-      END)
-    WHERE remetente_id = ? OR destinatario_id = ?
-    GROUP BY 
-      LEAST(remetente_id, destinatario_id),
-      GREATEST(remetente_id, destinatario_id)
-    ORDER BY data_envio DESC;
-  `;
-  
-  const [rows] = await conexao.execute(sql, [id_usuario, id_usuario, id_usuario]);
-  return rows;
+export async function listarMensagens(id_conversa) {
+    const sql = `
+        SELECT *
+        FROM mensagens
+        WHERE id_conversa = ?
+        ORDER BY enviado_em ASC
+    `;
+
+    const [rows] = await this.pool.query(sql, [id_conversa]);
+    return rows;
+}
+
+export async function marcarLidas(id_conversa, usuario_id) {
+    const sql = `
+        UPDATE mensagens
+        SET lida = 1
+        WHERE id_conversa = ?
+          AND remetente_id != ?
+    `;
+
+    await this.pool.query(sql, [id_conversa, usuario_id]);
 }

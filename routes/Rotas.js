@@ -48,7 +48,8 @@ router.get("/categoria", (req, res) => res.render("categoria"));
 router.get("/chat", (req, res) => res.render("chat"));
 
 // obter conversa com um contato
-router.get("/conversa/:contatoId", MessageController.conversa);
+router.get("/listar-conversas/:id_usuario", MessageController.listarConversas);
+router.get("/listar-mensagens/:id_conversa", MessageController.listarMensagens);
 
 // ------------------- POSTs -------------------
 //Mensagem chat
@@ -73,10 +74,7 @@ router.post("/updateDados", configuracoesController.updateDados);
 router.post("/cadastrarProduto", configuracoesController.cadastrarProduto);
 
 // enviar mensagem no chat
-router.post("/send", MessageController.enviar);
-
-
-
+router.post("/enviar", MessageController.enviar);
 
 
 export default router;

@@ -1,32 +1,70 @@
-import { 
-  enviarMensagem,
+import {
+  buscarConversasDoUsuario,
   buscarMensagensEntre,
+  enviarMensagem as repoEnviarMensagem,
   marcarComoLida
-} from "../Repository.js";
-import Mensagem from "../models/Mensagem.js";
-import { buscarMensagensEntre } from "../Repository.js";
-import Conversa from "../models/Conversa.js";
-import { buscarConversasDoUsuario } from "../Repository.js";
+} from "Repository.js";
 
-const conversas = await buscarConversasDoUsuario(req.session.usuario.id);
+import ChatService from "../service.js";
+import chatObserver from "../utils/MessageObserver.js";
 
-res.json(conversas.map(c => Conversa(c)));
-
-const msgs = await buscarMensagensEntre(usuario, contatoId);
-res.json(msgs.map(m => Mensagem(m)));
+const service = new ChatService(chatObserver);
 
 class ChatController {
 
+  // =======================
+  // LISTAR CONVERSAS
+  // =======================
+  async listarConversas(req, res) {
+    try {
+      const id_usuario = req.session.usuario.id_usuario;
+
+      const conversas = await buscarConversasDoUsuario(id_usuario);
+
+      res.json(conversas);
+
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "Erro ao listar conversas" });
+    }
+  }
+
+  // =======================
+  // LISTAR MENSAGENS
+  // =======================
+  async listarMensagens(req, res) {
+    try {
+      const usuario = req.session.usuario.id_usuario;
+      const { id_conversa } = req.params;
+
+      const msgs = await service.listarMensagens(id_conversa);
+
+      // marca como lidas
+      await marcarComoLida(id_conversa, usuario);
+
+      res.json(msgs);
+
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "Erro ao carregar mensagens" });
+    }
+  }
+
+  // =======================
+  // ENVIAR MENSAGEM
+  // =======================
   async enviar(req, res) {
     try {
       const remetente_id = req.session.usuario.id_usuario;
-      const { destinatario_id, conteudo } = req.body;
+      const { id_conversa, tipo_remetente, conteudo } = req.body;
 
-      const msg = await enviarMensagem({
+      // Salva + notifica via Observer
+      const msg = await service.enviarMensagem(
+        id_conversa,
         remetente_id,
-        destinatario_id,
+        tipo_remetente,
         conteudo
-      });
+      );
 
       res.json(msg);
 
@@ -36,6 +74,9 @@ class ChatController {
     }
   }
 
+  // =======================
+  // CARREGAR CONVERSA (versão antiga compatível)
+  // =======================
   async conversa(req, res) {
     try {
       const usuario = req.session.usuario.id_usuario;
