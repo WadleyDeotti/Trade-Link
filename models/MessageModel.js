@@ -18,6 +18,7 @@ class MessageModel {
       [usuarioId, contatoId, contatoId, usuarioId]
     );
     return rows;
+    // passar pra repository , consultas em banco devem ser feitas na repository
   }
 }
 

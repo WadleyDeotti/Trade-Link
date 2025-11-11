@@ -3,11 +3,13 @@ import mysql from 'mysql2/promise';
 import { Empresa } from './models/empresaModel.js';
 import { Fornecedor } from './models/fornecedorModel.js';
 import { Produto } from './models/produtoModel.js';
+
+
 // 🧩 Cria a conexão (ou pool)
 const conexao = mysql.createPool({
-  host: "localhost",
-  user: "root",
-  password: "zasx",
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
   database: "pit",
   namedPlaceholders: true
 });
@@ -169,4 +171,76 @@ export async function cadastrarProduto({ id_fornecedor, nome_produto, descricao,
   const sql = "INSERT INTO produtos (id_fornecedor, nome_produto, descricao, preco, categoria) VALUES (?,?,?,?,?)";
   const [resultado] = await conexao.execute(sql, [id_fornecedor, nome_produto, descricao, preco, categoria]);
   return resultado;
+}
+
+export async function enviarMensagem({ remetente_id, destinatario_id, conteudo }) {
+  const sql = `
+    INSERT INTO mensagens (remetente_id, destinatario_id, conteudo)
+    VALUES (?, ?, ?)
+  `;
+  const [resultado] = await conexao.execute(sql, [
+    remetente_id,
+    destinatario_id,
+    conteudo
+  ]);
+
+  return {
+    id_mensagem: resultado.insertId,
+    remetente_id,
+    destinatario_id,
+    conteudo,
+    data_envio: new Date()
+  };
+}
+
+// Buscar conversa entre dois usuários
+export async function buscarMensagensEntre(remetente_id, destinatario_id) {
+  const sql = `
+    SELECT *
+    FROM mensagens
+    WHERE 
+      (remetente_id = ? AND destinatario_id = ?)
+      OR
+      (remetente_id = ? AND destinatario_id = ?)
+    ORDER BY data_envio ASC
+  `;
+
+  const [rows] = await conexao.execute(sql, [
+    remetente_id,
+    destinatario_id,
+    destinatario_id,
+    remetente_id
+  ]);
+
+  return rows;
+}
+
+// Marcar mensagens como lidas
+export async function marcarComoLida(id_mensagem) {
+  const sql = "UPDATE mensagens SET lida = 1 WHERE id_mensagem = ?";
+  const [resultado] = await conexao.execute(sql, [id_mensagem]);
+  return resultado;
+}
+
+// Buscar últimas mensagens para lista de conversas (igual WhatsApp)
+export async function listarUltimasConversas(id_usuario) {
+  const sql = `
+    SELECT 
+      m.*,
+      u.nome AS nome_contato
+    FROM mensagens m
+    JOIN usuarios u 
+      ON (u.id_usuario = CASE 
+          WHEN m.remetente_id = ? THEN m.destinatario_id
+          ELSE m.remetente_id 
+      END)
+    WHERE remetente_id = ? OR destinatario_id = ?
+    GROUP BY 
+      LEAST(remetente_id, destinatario_id),
+      GREATEST(remetente_id, destinatario_id)
+    ORDER BY data_envio DESC;
+  `;
+  
+  const [rows] = await conexao.execute(sql, [id_usuario, id_usuario, id_usuario]);
+  return rows;
 }
