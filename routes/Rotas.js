@@ -3,8 +3,9 @@ import express from "express";
 import * as configuracoesController from "../controllers/configuracoesController.js";
 import * as loginController from "../controllers/loginController.js";
 import * as inicialController from "../controllers/inicialController.js";
-import * as MessageController from "../controllers/MessageController.js";
+import MessageController from "../controllers/MessageController.js";
 import { sendMessage } from "../controllers/chatController.js"; // usar .js com ES Module
+
 const router = express.Router();
 
 // ------------------- GETs -------------------

@@ -1,3 +1,7 @@
+//DOTENV
+import dotenv from 'dotenv';
+dotenv.config();
+
 // repository.js
 import mysql from 'mysql2/promise';
 import { Empresa } from './models/empresaModel.js';

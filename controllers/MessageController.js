@@ -1,10 +1,9 @@
 import {
-  buscarConversasDoUsuario,
-  buscarMensagensEntre,
-  enviarMensagem as repoEnviarMensagem,
-  marcarComoLida
-} from "Repository.js";
-
+  listarConversasDoUsuario,
+  listarMensagens,
+  salvarMensagem,
+  marcarLidas
+} from "../Repository.js";
 import ChatService from "../service.js";
 import chatObserver from "../utils/MessageObserver.js";
 
@@ -13,13 +12,13 @@ const service = new ChatService(chatObserver);
 class ChatController {
 
   // =======================
-  // LISTAR CONVERSAS
+  // LISTAR CONVERSAS\
   // =======================
   async listarConversas(req, res) {
     try {
       const id_usuario = req.session.usuario.id_usuario;
 
-      const conversas = await buscarConversasDoUsuario(id_usuario);
+      const conversas = await listarConversasDoUsuario(id_usuario);
 
       res.json(conversas);
 
@@ -40,7 +39,7 @@ class ChatController {
       const msgs = await service.listarMensagens(id_conversa);
 
       // marca como lidas
-      await marcarComoLida(id_conversa, usuario);
+      await marcarLidas(id_conversa, usuario);
 
       res.json(msgs);
 
@@ -59,7 +58,7 @@ class ChatController {
       const { id_conversa, tipo_remetente, conteudo } = req.body;
 
       // Salva + notifica via Observer
-      const msg = await service.enviarMensagem(
+      const msg = await service.salvarMensagem(
         id_conversa,
         remetente_id,
         tipo_remetente,
@@ -82,7 +81,7 @@ class ChatController {
       const usuario = req.session.usuario.id_usuario;
       const { contatoId } = req.params;
 
-      const msgs = await buscarMensagensEntre(usuario, contatoId);
+      const msgs = await listarMensagens(usuario, contatoId);
 
       res.json(msgs);
 

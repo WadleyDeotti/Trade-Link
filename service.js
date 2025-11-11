@@ -1,5 +1,5 @@
-import Repository from "../Repository/Repository.js";
-import { Mensagem } from "../models/MessageModel.js";
+import * as Repository from "./Repository.js";
+import { Mensagem } from "./models/MessageModel.js";
 
 class MessageService {
     constructor(observer) {

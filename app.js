@@ -12,6 +12,7 @@ import Renderizador from "./utils/Renderizador.js";
 import UsuarioDecorator from "./utils/usuarioDecorator.js";
 import ProdutoDecorator from "./utils/produtoDecorator.js";
 import FornecedorDecorator from "./utils/fornecedoresDecorator.js";
+import { testeUsuario } from "./Repository.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -55,8 +56,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 //   else { res.redirect('/login'); }
 // });
 
-app.get('/', (req, res) => {
-  res.redirect('/categoria');
+app.get('/', async (req, res) => {
+  req.session.usuario = await testeUsuario(); // Simula usuário logador
+  res.renderizador.render(res, 'fornecedores', {});
 });
 
 // Rotas da aplicação
