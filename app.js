@@ -2,6 +2,14 @@ const express = require("express");
 const path = require("path");
 const session = require("express-session")
 const app = express();
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+const historicoRoutes = require('./routes/Mai');
+>>>>>>> Stashed changes
+=======
+const historicoRoutes = require('./routes/Mai');
+>>>>>>> Stashed changes
 
 
 app.use(express.urlencoded({ extended: true }));
