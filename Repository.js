@@ -13,7 +13,7 @@ import { Produto } from './models/produtoModel.js';
 const conexao = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
+  password: "espes201005",
   database: "pit",
   namedPlaceholders: true
 });
@@ -418,3 +418,136 @@ export const buscarHistorico = async ({ year, type, search }) => {
         throw error;
     }
 };
+
+
+// =================================================
+// DASHBOARD DO FORNECEDOR - VERSÃO FINAL OTIMIZADA
+// =================================================
+
+// 1. Faturamento no período selecionado (contratos ativos + compras concluídas)
+export async function getFaturamentoPeriodoFornecedor(id_fornecedor, dataInicio, dataFim) {
+  const sql = `
+    SELECT COALESCE(SUM(valor_calculado), 0) AS faturamento
+    FROM (
+      SELECT (cp.quantidade * cp.preco_unitario) AS valor_calculado
+      FROM contratos c
+      JOIN contrato_produtos cp ON c.id_contrato = cp.id_contrato
+      WHERE c.id_fornecedor = ?
+        AND c.status = 'ativo'
+        AND c.data_inicio BETWEEN ? AND ?
+
+      UNION ALL
+
+      SELECT (cp.quantidade * cp.preco_unitario) AS valor_calculado
+      FROM compras c
+      JOIN compra_produtos cp ON c.id_compra = cp.id_compra
+      WHERE c.id_fornecedor = ?
+        AND c.status IN ('aprovada', 'enviada', 'concluída')
+        AND c.data_compra BETWEEN ? AND ?
+    ) AS vendas
+  `;
+
+  const [rows] = await conexao.execute(sql, [
+    id_fornecedor, dataInicio, dataFim,
+    id_fornecedor, dataInicio, dataFim
+  ]);
+
+  return parseFloat(rows[0].faturamento) || 0;
+}
+
+// 2. Faturamento mensal (últimos 12 meses) - com meses completos e zerados
+export async function getFaturamentoMensalFornecedor(id_fornecedor) {
+  const sql = `
+    SELECT 
+      DATE_FORMAT(data_ref, '%Y-%m') AS mes,
+      COALESCE(SUM(valor_calculado), 0) AS valor
+    FROM (
+      SELECT c.data_inicio AS data_ref, (cp.quantidade * cp.preco_unitario) AS valor_calculado
+      FROM contratos c
+      JOIN contrato_produtos cp ON c.id_contrato = cp.id_contrato
+      WHERE c.id_fornecedor = ? AND c.status = 'ativo'
+        AND c.data_inicio >= DATE_SUB(CURDATE(), INTERVAL 12 MONTH)
+
+      UNION ALL
+
+      SELECT c.data_compra AS data_ref, (cp.quantidade * cp.preco_unitario) AS valor_calculado
+      FROM compras c
+      JOIN compra_produtos cp ON c.id_compra = cp.id_compra
+      WHERE c.id_fornecedor = ?
+        AND c.status IN ('aprovada', 'enviada', 'concluída')
+        AND c.data_compra >= DATE_SUB(CURDATE(), INTERVAL 12 MONTH)
+    ) AS todas_vendas
+    GROUP BY YEAR(data_ref), MONTH(data_ref)
+    ORDER BY mes
+  `;
+
+  const [rows] = await conexao.execute(sql, [id_fornecedor, id_fornecedor]);
+
+  const hoje = new Date();
+  const resultado = [];
+
+  for (let i = 11; i >= 0; i--) {
+    const data = new Date(hoje.getFullYear(), hoje.getMonth() - i, 1);
+    const mesStr = data.toISOString().slice(0, 7);
+
+    const encontrado = rows.find(r => r.mes === mesStr);
+    resultado.push({
+      mes: mesStr,
+      valor: encontrado ? parseFloat(encontrado.valor) : 0
+    });
+  }
+
+  return resultado;
+}
+
+// 3. Métricas rápidas do fornecedor
+export async function getMetricasFornecedor(id_fornecedor) {
+  const [metricas] = await conexao.execute(`
+    SELECT
+      (SELECT COUNT(DISTINCT c.id_contrato) FROM contratos c WHERE c.id_fornecedor = ? AND c.status = 'ativo') +
+      (SELECT COUNT(DISTINCT c.id_compra) FROM compras c WHERE c.id_fornecedor = ? AND c.status IN ('aprovada', 'enviada', 'concluída')) AS total_pedidos,
+
+      (SELECT COUNT(*) FROM compras WHERE id_fornecedor = ? AND status = 'pendente') AS pedidos_pendentes,
+
+      (SELECT COUNT(DISTINCT id_empresa)
+       FROM (
+         SELECT c.id_empresa FROM compras c
+         WHERE c.id_fornecedor = ? AND c.status IN ('aprovada', 'enviada', 'concluída')
+           AND c.data_compra >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
+         UNION
+         SELECT ct.id_empresa FROM contratos ct
+         WHERE ct.id_fornecedor = ? AND ct.status = 'ativo'
+           AND ct.data_inicio >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
+       ) AS clientes_recentes
+      ) AS novos_clientes
+  `, [id_fornecedor, id_fornecedor, id_fornecedor, id_fornecedor, id_fornecedor]);
+
+  const m = metricas[0];
+  return {
+    total_pedidos: Number(m.total_pedidos) || 0,
+    pedidos_pendentes: Number(m.pedidos_pendentes) || 0,
+    novos_clientes: Number(m.novos_clientes) || 0
+  };
+}
+
+// 4. Tendência de faturamento (% em relação ao período anterior)
+export async function getTendenciaFornecedor(id_fornecedor, dataInicio, dataFim) {
+  const inicioAtual = new Date(dataInicio);
+  const fimAtual = new Date(dataFim);
+  const duracaoMs = fimAtual - inicioAtual;
+
+  const inicioAnterior = new Date(inicioAtual);
+  inicioAnterior.setTime(inicioAtual.getTime() - duracaoMs - 1);
+  const fimAnterior = new Date(inicioAtual);
+  fimAnterior.setTime(inicioAtual.getTime() - 1);
+
+  const formatar = (date) => date.toISOString().slice(0, 19).replace('T', ' ');
+
+  const atual = await getFaturamentoPeriodoFornecedor(id_fornecedor, formatar(inicioAtual), formatar(fimAtual));
+  const anterior = await getFaturamentoPeriodoFornecedor(id_fornecedor, formatar(inicioAnterior), formatar(fimAnterior));
+
+  if (anterior === 0) return atual > 0 ? 100.0 : 0.0;
+
+  const tendencia = ((atual - anterior) / anterior) * 100;
+  return Math.round(tendencia * 10) / 10;
+}

@@ -6,6 +6,8 @@ import * as inicialController from "../controllers/inicialController.js";
 import MessageController from "../controllers/MessageController.js";
 import { sendMessage } from "../controllers/chatController.js"; // usar .js com ES Module
 import * as historicoController from "../controllers/historicoController.js";
+import { getDashboard } from "../controllers/dashboardController.js";
+
 
 const router = express.Router();
 
@@ -14,7 +16,23 @@ const router = express.Router();
 router.get('/inicial', inicialController.IniciarSite);
 
 // Dashboard
-router.get("/dashboard", (req, res) => res.render("dashboard"));
+
+router.get("/dashboard", (req, res) => {
+  // Se o usuário não estiver logado como fornecedor, redireciona pro login
+  if (!req.session.user || req.session.user.tipo !== 'fornecedor') {
+    req.session.mensagem = "Acesso restrito a fornecedores";
+    return res.redirect("/login");
+  }
+  res.render("dashboard");
+});
+
+
+router.get("/api/dashboard", (req, res) => {
+  if (!req.session.user || req.session.user.tipo !== 'fornecedor') {
+    return res.status(401).json({ success: false, message: "Não autorizado" });
+  }
+  getDashboard(req, res); // chama o controller normalmente
+});
 
 // Registro
 router.get("/registro", (req, res) => {
