@@ -5,6 +5,7 @@ import * as loginController from "../controllers/loginController.js";
 import * as inicialController from "../controllers/inicialController.js";
 import MessageController from "../controllers/MessageController.js";
 import { sendMessage } from "../controllers/chatController.js"; // usar .js com ES Module
+import * as historicoController from "../controllers/historicoController.js";
 
 const router = express.Router();
 
@@ -37,6 +38,12 @@ router.get("/pedidos", (req, res) => res.render("pedidos"));
 
 // Histórico
 router.get("/historico", (req, res) => res.render("historico"));
+
+router.get("/api/historico", historicoController.getHistorico);
+
+router.get("/api/historico/resumo", historicoController.getResumo);
+
+router.get("/api/historico/grafico", historicoController.getGrafico);
 
 // Mensagens
 router.get("/mensagens", (req, res) => res.render("mensagens"));
@@ -79,3 +86,4 @@ router.post("/enviar", MessageController.enviar);
 
 
 export default router;
+

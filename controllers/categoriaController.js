@@ -1,5 +1,3 @@
-const usuarioRepository = require('../repository/usuarioRepository');
-
-exports.getCategoriasPage = (req, res) => {
-    res.render('categoria'); // Renderiza o views/categoria.ejs
+export const getCategoriasPage = (req, res) => {
+    res.render('categoria'); 
 };

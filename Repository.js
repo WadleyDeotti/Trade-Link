@@ -277,3 +277,144 @@ export async function marcarLidas(id_conversa, usuario_id) {
 
     await this.pool.query(sql, [id_conversa, usuario_id]);
 }
+
+
+
+
+// Historico completo
+// ------------------- Funções de token -------------------
+export const salvarTokenE = (empresa, callback) => {
+const sql = 'UPDATE empresas SET token_redefinicao=?, expira_token=? WHERE cnpj=?';
+pool.query(sql, [empresa.token_redefinicao, empresa.expira_token, empresa.cnpj], callback);
+};
+
+
+export const salvarTokenF = (fornecedor, callback) => {
+const sql = 'UPDATE fornecedores SET token_redefinicao=?, expira_token=? WHERE cpf=?';
+pool.query(sql, [fornecedor.token_redefinicao, fornecedor.expira_token, fornecedor.cpf], callback);
+};
+
+
+export const procurarTokenE = (token, callback) => {
+const sql = 'SELECT * FROM empresas WHERE token_redefinicao=?';
+pool.query(sql, [token], (err, resultados) => {
+if (err) return callback(err);
+callback(null, resultados?.[0] || null);
+});
+};
+
+
+export const procurarTokenF = (token, callback) => {
+const sql = 'SELECT * FROM fornecedores WHERE token_redefinicao=?';
+pool.query(sql, [token], (err, resultados) => {
+if (err) return callback(err);
+callback(null, resultados?.[0] || null);
+});
+};
+
+
+// ------------------- HISTÓRICO / RELATÓRIOS -------------------
+export const buscarHistorico = async ({ year, type, search }) => {
+    try {
+        let resultados = [];
+
+        const searchTerm = search ? `%${search}%` : null;
+
+        const isPurchase =
+            type === "all" || type === "compra" || type === "purchase";
+
+        const isSale =
+            type === "all" || type === "venda" || type === "sale";
+
+        const isCategoryFilter =
+            type === "purchase" ||
+            type === "sale" ||
+            type === "compra" ||
+            type === "venda";
+
+        // --------------------------- COMPRAS ---------------------------
+
+        if (isPurchase) {
+            let queryCompras = `
+                SELECT 
+                    c.id_compra AS id,
+                    'compra' AS tipo,
+                    c.data_compra AS data,
+                    c.valor_total AS valor,
+                    c.status,
+                    NULL AS nome_empresa,
+                    f.nome_fantasia AS nome_fornecedor
+                FROM compras c
+                LEFT JOIN fornecedores f ON c.id_fornecedor = f.id_fornecedor
+                WHERE 1 = 1
+            `;
+
+            const paramsCompras = [];
+
+            if (year) {
+                queryCompras += " AND YEAR(c.data_compra) = ?";
+                paramsCompras.push(year);
+            }
+
+            // filtra status apenas se o tipo NÃO for compra/venda puro
+            if (type && type !== "all" && !isCategoryFilter) {
+                queryCompras += " AND c.status = ?";
+                paramsCompras.push(type);
+            }
+
+            if (searchTerm) {
+                queryCompras += " AND f.nome_fantasia LIKE ?";
+                paramsCompras.push(searchTerm);
+            }
+
+            const [compras] = await conexao.execute(queryCompras, paramsCompras);
+            resultados.push(...compras);
+        }
+
+        // --------------------------- VENDAS / CONTRATOS ---------------------------
+
+        if (isSale) {
+            let queryVendas = `
+                SELECT 
+                    ct.id_contrato AS id,
+                    'venda' AS tipo,
+                    ct.data_inicio AS data,
+                    ct.valor_total AS valor,
+                    ct.status,
+                    e.nome_fantasia AS nome_empresa,
+                    NULL AS nome_fornecedor
+                FROM contratos ct
+                LEFT JOIN empresas e ON ct.id_empresa = e.id_empresa
+                WHERE 1 = 1
+            `;
+
+            const paramsVendas = [];
+
+            if (year) {
+                queryVendas += " AND YEAR(ct.data_inicio) = ?";
+                paramsVendas.push(year);
+            }
+
+            if (type && type !== "all" && !isCategoryFilter) {
+                queryVendas += " AND ct.status = ?";
+                paramsVendas.push(type);
+            }
+
+            if (searchTerm) {
+                queryVendas += " AND e.nome_fantasia LIKE ?";
+                paramsVendas.push(searchTerm);
+            }
+
+            const [vendas] = await conexao.execute(queryVendas, paramsVendas);
+            resultados.push(...vendas);
+        }
+
+        // --------------------------- Ordenação Final ---------------------------
+
+        return resultados.sort((a, b) => new Date(b.data) - new Date(a.data));
+
+    } catch (error) {
+        console.error("Erro no repository buscarHistorico:", error);
+        throw error;
+    }
+};

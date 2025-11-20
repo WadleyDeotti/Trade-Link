@@ -1,10 +1,10 @@
-const usuarioRepository = require('../repository/usuarioRepository');
+import * as Repository from '../Repository.js';
 
 // Buscar histórico
-exports.getHistorico = async (req, res) => {
+export const getHistorico = async (req, res) => {
   try {
     const { year, type, search } = req.query;
-    const historico = await usuarioRepository.buscarHistorico({ year, type, search });
+    const historico = await Repository.buscarHistorico({ year, type, search });
     res.json(historico);
   } catch (err) {
     console.error('Erro ao buscar histórico:', err);
@@ -13,9 +13,9 @@ exports.getHistorico = async (req, res) => {
 };
 
 // Resumo financeiro
-exports.getResumo = async (req, res) => {
+export const getResumo = async (req, res) => {
   try {
-    const resumo = await usuarioRepository.resumoFinanceiro();
+    const resumo = await Repository.resumoFinanceiro();
     res.json(resumo);
   } catch (err) {
     console.error('Erro ao calcular resumo:', err);
@@ -24,9 +24,9 @@ exports.getResumo = async (req, res) => {
 };
 
 // Dados para gráfico mensal
-exports.getGrafico = async (req, res) => {
+export const getGrafico = async (req, res) => {
   try {
-    const grafico = await usuarioRepository.dadosGrafico();
+    const grafico = await Repository.dadosGrafico();
     res.json(grafico);
   } catch (err) {
     console.error('Erro ao gerar gráfico:', err);
