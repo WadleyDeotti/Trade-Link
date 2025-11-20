@@ -62,6 +62,9 @@ router.post("/cadastrar", loginController.cadastrar);
 // Login
 router.post("/logar", loginController.logar);
 
+// Login 2fat
+router.post("/login/2fa", loginController.validar2FA);
+
 // Alterar senha
 router.post("/alterarSenha", configuracoesController.alterarSenha);
 

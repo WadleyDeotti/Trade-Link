@@ -277,3 +277,36 @@ export async function marcarLidas(id_conversa, usuario_id) {
 
     await this.pool.query(sql, [id_conversa, usuario_id]);
 }
+
+export async function getDashboard({ year }) {
+
+  // -------------------------------
+  // 1. FATURAMENTO TOTAL (VENDAS)
+  // -------------------------------
+  const sqlFat = `
+    SELECT SUM(valor_total) AS total
+    FROM contratos
+    ${year ? "WHERE YEAR(data_inicio) = ?" : ""}
+  `;
+  const [fatRows] = await conexao.execute(sqlFat, year ? [year] : []);
+  const faturamento_total = fatRows[0].total || 0;
+
+
+ const sqlCompras = `
+    SELECT COUNT(*) AS total
+    FROM compras
+    ${year ? "WHERE YEAR(data_compra) = ?" : ""}
+  `;
+  const [comprasRows] = await conexao.execute(sqlCompras, year ? [year] : []);
+  const totalCompras = comprasRows[0].total || 0;
+
+  const sqlVendas = `
+    SELECT COUNT(*) AS total
+    FROM contratos
+    ${year ? "WHERE YEAR(data_inicio) = ?" : ""}
+  `;
+  const [vendasRows] = await conexao.execute(sqlVendas, year ? [year] : []);
+  const totalVendas = vendasRows[0].total || 0;
+
+  const total_pedidos = totalCompras + totalVendas;
+}
