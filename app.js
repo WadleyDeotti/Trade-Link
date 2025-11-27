@@ -49,16 +49,13 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Rota principal
-// app.get('/', (req, res) => {
-//   if (req.session.usuario) {
-//     res.renderizador.render(res, 'fornecedores', {});
-//   }
-//   else { res.redirect('/login'); }
-// });
-
 app.get('/', async (req, res) => {
-  req.session.usuario = await testeUsuario(); // Simula usuário logador
-  res.renderizador.render(res, 'fornecedores', {});
+  if (req.session.usuario) {
+    res.renderizador.render(res, 'fornecedores', {});
+  } else {
+    req.session.usuario = await testeUsuario(); // Simula usuário logado
+    res.renderizador.render(res, 'fornecedores', {});
+  }
 });
 
 // Rotas da aplicação
