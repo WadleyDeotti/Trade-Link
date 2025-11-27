@@ -237,6 +237,49 @@
             </div>
         </div>
     </form>
+
+    <!-- Modal para Editar Produto -->
+    <form id="formEditProduct" method="POST">
+        <div id="edit-product-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Editar Produto</h2>
+                    <span class="close">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="edit-product-id" name="id_produto">
+                    <div class="form-group">
+                        <label for="edit-product-name">Nome do Produto:</label>
+                        <input id="edit-product-name" type="text" name="nome_produto" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-product-description">Descrição:</label>
+                        <textarea id="edit-product-description" name="descricao" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-product-price">Preço (R$):</label>
+                        <input id="edit-product-price" type="number" step="0.01" name="preco" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-categoria">Categoria:</label>
+                        <select id="edit-categoria" name="categoria" required>
+                            <option value="">Selecione uma categoria</option>
+                            <option value="eletronicos">Eletrônicos</option>
+                            <option value="roupas">Roupas</option>
+                            <option value="alimentos">Alimentos</option>
+                            <option value="livros">Livros</option>
+                            <option value="outros">Outros</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="fecharModalEdicao()">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                </div>
+            </div>
+        </div>
+    </form>
+
     <!-- Modal de Visualização/Edição do Produto -->
     <div id="product-view-modal" class="modal">
         <div class="modal-content">
@@ -250,9 +293,9 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" id="close-product-btn">Fechar</button>
-                <button type="button" class="btn btn-primary" id="edit-product-btn">Editar</button>
-                <button type="button" class="btn btn-danger" id="delete-product-btn">Excluir</button>
+                <button type="button" class="btn btn-secondary" onclick="fecharModal()">Fechar</button>
+                <button type="button" class="btn btn-primary" onclick="editarProduto()">Editar</button>
+                <button type="button" class="btn btn-danger" onclick="excluirProduto()">Excluir</button>
             </div>
         </div>
     </div>
@@ -280,6 +323,10 @@
         <span id="toast-message">Operação realizada com sucesso!</span>
     </div>
 
+    <script>
+        // Disponibilizar dados do usuário para o JavaScript
+        window.usuario = <%- JSON.stringify(usuario) %>;
+    </script>
     <script src="JS/fornecedores.js"></script>
 </body>
 

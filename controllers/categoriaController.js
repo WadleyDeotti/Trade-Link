@@ -1,5 +1,5 @@
-const usuarioRepository = require('../repository/usuarioRepository');
+import usuarioRepository from '../repository/usuarioRepository.js';
 
-exports.getCategoriasPage = (req, res) => {
+export const getCategoriasPage = (req, res) => {
     res.render('categoria'); // Renderiza o views/categoria.ejs
 };

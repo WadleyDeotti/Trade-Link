@@ -1,6 +1,7 @@
 // routes/usuarioRoutes.js
 import express from "express";
 import * as configuracoesController from "../controllers/configuracoesController.js";
+import { editarProduto, buscarProduto, buscarProdutosFornecedor, excluirProduto } from "../controllers/configuracoesController.js";
 import * as loginController from "../controllers/loginController.js";
 import * as inicialController from "../controllers/inicialController.js";
 import MessageController from "../controllers/MessageController.js";
@@ -76,6 +77,18 @@ router.post("/updateDados", configuracoesController.updateDados);
 
 // Cadastrar produto
 router.post("/cadastrarProduto", configuracoesController.cadastrarProduto);
+
+// Editar produto
+router.post("/editarProduto/:id", editarProduto);
+
+// Buscar produto
+router.get("/produto/:id", buscarProduto);
+
+// Buscar produtos do fornecedor
+router.get("/produtos/fornecedor/:id", buscarProdutosFornecedor);
+
+// Excluir produto
+router.post("/excluirProduto/:id", excluirProduto);
 
 // enviar mensagem no chat
 router.post("/enviar", MessageController.enviar);

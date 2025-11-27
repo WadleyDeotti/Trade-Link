@@ -1,6 +1,6 @@
-const mysql = require('mysql2');
-const empresa = require('../models/empresaModel');
-const fornecedor = require('../models/fornecedorModel');
+import mysql from 'mysql2';
+import { Empresa } from '../models/empresaModel.js';
+import { Fornecedor } from '../models/fornecedorModel.js';
 
 const conexao = mysql.createConnection({
     host: "localhost",
@@ -19,7 +19,7 @@ conexao.connect(err => {
 
 const db = conexao.promise(); // Versão Promise para usar async/await nas novas funções
 
-module.exports = {
+export default {
     // ------------------- Métodos Antigos (Padrão Callback) -------------------
     conexao, // Necessário se você usa 'conexao.query' em outros lugares
 
@@ -27,7 +27,7 @@ module.exports = {
         const sql = "select cnpj,senha_hash,email from empresas where cnpj = ?";
         conexao.query(sql, [cnpj], (err, resultado) => {
             if (err) { return callback(err); }
-            const empresas = resultado.map(row => new empresa(row));
+            const empresas = resultado.map(row => new Empresa(row));
             callback(null, empresas);
         });
     },
@@ -36,7 +36,7 @@ module.exports = {
         const sql = "select cpf,senha_hash,email from fornecedores where cpf = ?";
         conexao.query(sql, [cpf], (err, resultado) => {
             if (err) { return callback(err); }
-            const fornecedores = resultado.map(row => new fornecedor(row));
+            const fornecedores = resultado.map(row => new Fornecedor(row));
             callback(null, fornecedores);
         });
     },

@@ -1,5 +1,5 @@
-const mysql = require('mysql2/promise');
-const Produto = require('../models/produtoModel');
+import mysql from 'mysql2/promise';
+import { Produto } from '../models/produtoModel.js';
 
 
 const conexao = mysql.createPool({
@@ -10,7 +10,7 @@ const conexao = mysql.createPool({
   namedPlaceholders: true
 });
 
-module.exports = {
+export default {
       async inserirProduto(produto) {
       const sql = `
       INSERT INTO produtos (

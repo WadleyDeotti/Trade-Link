@@ -1,7 +1,7 @@
-const usuarioRepository = require('../repository/usuarioRepository');
+import usuarioRepository from '../repository/usuarioRepository.js';
 
 // Rota para exibir a página de detalhes do produto
-exports.getProdutoPage = async (req, res) => {
+export const getProdutoPage = async (req, res) => {
     // 1. Pega o ID do produto da URL (ex: /produto/15 -> id é 15)
     const id_produto = req.params.id; 
 
@@ -37,7 +37,7 @@ exports.getProdutoPage = async (req, res) => {
 
 
 // Função para exibir a página principal de produtos (Lista)
-exports.getListaProdutos = async (req, res) => {
+export const getListaProdutos = async (req, res) => {
     try {
         // Renderiza a view de produto, mas com dados vazios para evitar quebra no EJS
         res.render('produto', {

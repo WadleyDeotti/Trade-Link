@@ -1,9 +1,9 @@
-const { ExportSourceType } = require('@aws-sdk/client-sesv2');
-const produto = require ('../repository/ProdutoRepository');
-const bcrypt = require ('bcrypt')
+import { ExportSourceType } from '@aws-sdk/client-sesv2';
+import produto from '../repository/ProdutoRepository.js';
+import bcrypt from 'bcrypt';
 
 // Função para cadastrar um novo produto
-exports.cadastrarProduto = async (req, res) => {
+export const cadastrarProduto = async (req, res) => {
   try {
     const { nome, preco} = req.body;
 

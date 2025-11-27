@@ -177,6 +177,34 @@ export async function cadastrarProduto({ id_fornecedor, nome_produto, descricao,
   return resultado;
 }
 
+// Buscar produto por ID
+export async function buscarProdutoPorId(id_produto) {
+  const sql = "SELECT * FROM produtos WHERE id_produto = ?";
+  const [rows] = await conexao.execute(sql, [id_produto]);
+  return rows.length > 0 ? new Produto(rows[0]) : null;
+}
+
+// Atualizar produto
+export async function atualizarProduto({ id_produto, nome_produto, descricao, preco, categoria }) {
+  const sql = "UPDATE produtos SET nome_produto = ?, descricao = ?, preco = ?, categoria = ? WHERE id_produto = ?";
+  const [resultado] = await conexao.execute(sql, [nome_produto, descricao, preco, categoria, id_produto]);
+  return resultado;
+}
+
+// Buscar produtos do fornecedor
+export async function buscarProdutosFornecedor(id_fornecedor) {
+  const sql = "SELECT * FROM produtos WHERE id_fornecedor = ?";
+  const [rows] = await conexao.execute(sql, [id_fornecedor]);
+  return rows.map(row => new Produto(row));
+}
+
+// Excluir produto
+export async function excluirProduto(id_produto) {
+  const sql = "DELETE FROM produtos WHERE id_produto = ?";
+  const [resultado] = await conexao.execute(sql, [id_produto]);
+  return resultado;
+}
+
 // ========== CONVERSAS ==========
 
 export async function buscarOuCriarConversa(usuario1, usuario2, tipo1, tipo2) {

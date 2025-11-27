@@ -79,58 +79,7 @@ function gerarCodigo2FA() {
   return Math.floor(100000 + Math.random() * 900000); // 6 dígitos
 }
 
-exports.logar = async (req, res) => {
-  const { email, senha } = req.body;
-
-
-  try {
-    const usuario = await usuarioRepo.buscarPorEmail(email);
-
-    if (!usuario) {
-      return res.status(400).json({ erro: "Usuário não encontrado" });
-    }
-
-    const senhaOk = await bcrypt.compare(senha, usuario.senha_hash);
-    if (!senhaOk) {
-      return res.status(400).json({ erro: "Senha incorreta" });
-    }
-
-    // Aqui você gera e envia o código 2FA
-
-    console.log("Email encontrado:", usuario.email);
-
-    await transporter.sendMail({
-      to: usuario.email,
-      subject: "Código 2FA",
-      text: `Seu código é ${codigo}`
-    });
-
-    const codigo = gerarCodigo2FA();
-    req.session.codigo2FA = {
-      userId: usuario.id,
-      codigo,
-      expira: Date.now() + 5 * 60 * 1000
-    };
-
-    await transporter.sendMail({
-      to: usuario.email,
-      subject: "Código 2FA",
-      text: `Seu código é ${codigo}`
-    });
-
-    return res.json({ etapa: "2FA_REQUIRED" });
-
-  } catch (erro) {
-    console.error(erro);
-    return res.status(500).json({ erro: "Erro no servidor." });
-  }
-};
-
-
-// ================================
-// MÉTODO 2 — VALIDAR O CÓDIGO DIGITADO
-// ================================
-exports.validar2FA = (req, res) => {
+export const validar2FA = (req, res) => {
   const { codigoDigitado } = req.body;
 
   if (!req.session.codigo2FA) {

@@ -1,5 +1,5 @@
-const repository = require('../repository/fornecedoresRepository');
-const conexao = require("../database/conexao");
+import repository from '../repository/fornecedoresRepository.js';
+import conexao from '../database/conexao.js';
 
 // Função auxiliar para tratar valores vazios
 const safe = val => (val === undefined || val === '' ? null : val);
@@ -39,4 +39,4 @@ async function atualizarFornecedor(req, res) {
 }
 
 
-module.exports = { atualizarFornecedor };
+export { atualizarFornecedor };

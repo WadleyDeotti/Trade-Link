@@ -1,7 +1,7 @@
-const usuarioRepository = require('../repository/usuarioRepository');
+import usuarioRepository from '../repository/usuarioRepository.js';
 
 // Buscar histórico
-exports.getHistorico = async (req, res) => {
+export const getHistorico = async (req, res) => {
   try {
     const { year, type, search } = req.query;
     const historico = await usuarioRepository.buscarHistorico({ year, type, search });
@@ -13,7 +13,7 @@ exports.getHistorico = async (req, res) => {
 };
 
 // Resumo financeiro
-exports.getResumo = async (req, res) => {
+export const getResumo = async (req, res) => {
   try {
     const resumo = await usuarioRepository.resumoFinanceiro();
     res.json(resumo);
@@ -24,7 +24,7 @@ exports.getResumo = async (req, res) => {
 };
 
 // Dados para gráfico mensal
-exports.getGrafico = async (req, res) => {
+export const getGrafico = async (req, res) => {
   try {
     const grafico = await usuarioRepository.dadosGrafico();
     res.json(grafico);
