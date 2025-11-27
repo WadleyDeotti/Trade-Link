@@ -37,11 +37,68 @@ export async function testeUsuario() {
 
 export async function getProdutos() {
   const [rows] = await conexao.execute(`
-    SELECT p.id_produto, p.id_fornecedor, p.nome_produto, p.descricao, p.preco, p.disponivel,
+    SELECT p.id_produto, p.id_fornecedor, p.nome_produto, p.descricao, p.preco, p.disponivel, p.categoria,
            f.nome_fantasia
     FROM produtos p
     JOIN fornecedores f USING(id_fornecedor)
   `);
+  return rows.map(row => new Produto(row));
+}
+
+export async function getProdutosPorCategoria(categoria) {
+  const [rows] = await conexao.execute(`
+    SELECT p.id_produto, p.id_fornecedor, p.nome_produto, p.descricao, p.preco, p.disponivel, p.categoria,
+           f.nome_fantasia
+    FROM produtos p
+    JOIN fornecedores f USING(id_fornecedor)
+    WHERE p.categoria = ?
+  `, [categoria]);
+  return rows.map(row => new Produto(row));
+}
+
+export async function getCategorias() {
+  const [rows] = await conexao.execute(`
+    SELECT DISTINCT categoria
+    FROM produtos
+    WHERE categoria IS NOT NULL
+    ORDER BY categoria
+  `);
+  return rows.map(row => row.categoria);
+}
+
+export async function buscarProdutos(termo, categoria, precoMin, precoMax) {
+  let sql = `
+    SELECT p.id_produto, p.id_fornecedor, p.nome_produto, p.descricao, p.preco, p.disponivel, p.categoria,
+           f.nome_fantasia
+    FROM produtos p
+    JOIN fornecedores f USING(id_fornecedor)
+    WHERE 1=1
+  `;
+  const params = [];
+
+  if (termo) {
+    sql += ` AND (p.nome_produto LIKE ? OR p.descricao LIKE ?)`;
+    params.push(`%${termo}%`, `%${termo}%`);
+  }
+
+  if (categoria) {
+    sql += ` AND p.categoria = ?`;
+    params.push(categoria);
+  }
+
+  if (precoMin) {
+    sql += ` AND p.preco >= ?`;
+    params.push(precoMin);
+  }
+
+  if (precoMax) {
+    sql += ` AND p.preco <= ?`;
+    params.push(precoMax);
+  }
+
+  sql += ` ORDER BY p.nome_produto`;
+
+  const [rows] = await conexao.execute(sql, params);
   return rows.map(row => new Produto(row));
 }
 

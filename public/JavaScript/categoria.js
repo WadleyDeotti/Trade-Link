@@ -1,15 +1,12 @@
 document.addEventListener('DOMContentLoaded', function() {
     const categoriaSelect = document.getElementById('categoria-select');
-    const catTitle = document.getElementById('cat_title');
     const catName = document.getElementById('cat_name');
     const catIcon = document.getElementById('cat_icon');
     const produtosContainer = document.getElementById('produtos-container');
     const aplicarPrecoBtn = document.getElementById('aplicar-preco');
-    const aplicarQtdBtn = document.getElementById('aplicar-qtd');
     const precoMin = document.getElementById('preco-min');
     const precoMax = document.getElementById('preco-max');
-    const qtdMin = document.getElementById('qtd-min');
-    const qtdMax = document.getElementById('qtd-max');
+    const searchInput = document.querySelector('.search');
 
     const categorias = {
         'eletronicos': { nome: 'Eletrônicos', icon: 'fas fa-laptop' },
@@ -22,76 +19,79 @@ document.addEventListener('DOMContentLoaded', function() {
     // Mudança de categoria
     categoriaSelect.addEventListener('change', function() {
         const categoria = this.value;
-        const catInfo = categorias[categoria];
-        
-        catName.textContent = catInfo.nome;
-        catIcon.className = catInfo.icon;
-        
-        filtrarProdutos();
+        window.location.href = `/categoria?categoria=${categoria}`;
     });
 
     // Filtro de preço
     aplicarPrecoBtn.addEventListener('click', function() {
-        filtrarProdutos();
+        buscarProdutos();
     });
 
-    // Filtro de quantidade
-    aplicarQtdBtn.addEventListener('click', function() {
-        filtrarProdutos();
+    // Busca em tempo real
+    let timeoutId;
+    searchInput.addEventListener('input', function() {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+            buscarProdutos();
+        }, 500);
     });
 
-    // Função principal de filtro
-    function filtrarProdutos() {
-        const categoriaSelecionada = categoriaSelect.value;
-        const minPreco = parseFloat(precoMin.value) || 0;
-        const maxPreco = parseFloat(precoMax.value) || Infinity;
-        const minQtd = parseInt(qtdMin.value) || 0;
-        const maxQtd = parseInt(qtdMax.value) || Infinity;
-
-        const produtos = produtosContainer.querySelectorAll('.produto');
+    // Função para buscar produtos via API
+    async function buscarProdutos() {
+        const params = new URLSearchParams();
         
-        produtos.forEach(produto => {
-            const categoria = produto.dataset.categoria;
-            const preco = parseFloat(produto.dataset.preco);
-            const qtd = parseInt(produto.dataset.qtd);
+        const termo = searchInput.value.trim();
+        const categoria = categoriaSelect.value;
+        const minPreco = precoMin.value;
+        const maxPreco = precoMax.value;
+        
+        if (termo) params.append('termo', termo);
+        if (categoria) params.append('categoria', categoria);
+        if (minPreco) params.append('precoMin', minPreco);
+        if (maxPreco) params.append('precoMax', maxPreco);
+        
+        try {
+            const response = await fetch(`/api/produtos/buscar?${params}`);
+            const data = await response.json();
             
-            const categoriaMatch = categoria === categoriaSelecionada;
-            const precoMatch = preco >= minPreco && preco <= maxPreco;
-            const qtdMatch = qtd >= minQtd && qtd <= maxQtd;
-            
-            if (categoriaMatch && precoMatch && qtdMatch) {
-                produto.style.display = 'block';
-            } else {
-                produto.style.display = 'none';
-            }
-        });
+            renderizarProdutos(data.produtos);
+        } catch (error) {
+            console.error('Erro ao buscar produtos:', error);
+        }
     }
 
-    // Filtros de checkbox
-    const checkboxes = document.querySelectorAll('.filter-group input[type="checkbox"]');
-    checkboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', function() {
-            // Implementar lógica adicional para filtros de checkbox se necessário
-            console.log(`Filtro ${this.id}: ${this.checked}`);
-        });
-    });
-
-    // Busca
-    const searchInput = document.querySelector('.search');
-    searchInput.addEventListener('input', function() {
-        const termo = this.value.toLowerCase();
-        const produtos = produtosContainer.querySelectorAll('.produto');
+    // Função para renderizar produtos
+    function renderizarProdutos(produtos) {
+        if (!produtos || produtos.length === 0) {
+            produtosContainer.innerHTML = '<div class="no-products"><p>Nenhum produto encontrado.</p></div>';
+            return;
+        }
         
-        produtos.forEach(produto => {
-            const nome = produto.querySelector('.nome').textContent.toLowerCase();
-            if (nome.includes(termo)) {
-                produto.style.display = 'block';
-            } else {
-                produto.style.display = 'none';
-            }
-        });
-    });
+        produtosContainer.innerHTML = produtos.map(prod => `
+            <div class="produto" data-preco="${prod.preco}" data-categoria="${prod.categoria}"
+                 style="cursor: pointer;" onclick="window.location.href='/produto/${prod.id_produto}'">
+                <div class="imagem"></div>
+                <div class="info">
+                    <p class="nome">${prod.nome_produto}</p>
+                    <p class="preco">R$ ${parseFloat(prod.preco).toFixed(2)}</p>
+                    ${prod.descricao ? `<p class="descricao">${prod.descricao.substring(0, 60)}...</p>` : ''}
+                    <p class="disponibilidade" style="color: ${prod.disponivel ? 'green' : 'red'};">
+                        ${prod.disponivel ? 'Disponível' : 'Indisponível'}
+                    </p>
+                </div>
+            </div>
+        `).join('');
+    }
 
-    // Inicializar com categoria padrão
-    filtrarProdutos();
+    // Atualizar ícone da categoria
+    function atualizarIconeCategoria() {
+        const categoria = categoriaSelect.value;
+        const catInfo = categorias[categoria];
+        if (catInfo) {
+            catIcon.className = catInfo.icon;
+        }
+    }
+
+    // Inicializar
+    atualizarIconeCategoria();
 });

@@ -3,6 +3,7 @@ import express from "express";
 import * as configuracoesController from "../controllers/configuracoesController.js";
 import * as loginController from "../controllers/loginController.js";
 import * as inicialController from "../controllers/inicialController.js";
+import * as categoriaController from "../controllers/categoriaController.js";
 import MessageController from "../controllers/MessageController.js";
 import { sendMessage } from "../controllers/chatController.js";
 import * as historicoController from "../controllers/historicoController.js";

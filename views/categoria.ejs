@@ -53,11 +53,19 @@
             <div class="filter-section">
               <h4><i class="fas fa-list"></i> Categoria</h4>
               <select id="categoria-select" class="filter-select">
-                <option value="eletronicos">Eletrônicos</option>
-                <option value="roupas">Roupas</option>
-                <option value="casa">Casa e Jardim</option>
-                <option value="esportes">Esportes</option>
-                <option value="livros">Livros</option>
+                <% if (typeof categorias !== 'undefined' && categorias.length > 0) { %>
+                  <% categorias.forEach(cat => { %>
+                    <option value="<%= cat %>" <%= cat === categoriaAtual ? 'selected' : '' %>>
+                      <%= cat.charAt(0).toUpperCase() + cat.slice(1) %>
+                    </option>
+                  <% }) %>
+                <% } else { %>
+                  <option value="eletronicos">Eletrônicos</option>
+                  <option value="roupas">Roupas</option>
+                  <option value="casa">Casa e Jardim</option>
+                  <option value="esportes">Esportes</option>
+                  <option value="livros">Livros</option>
+                <% } %>
               </select>
             </div>
 
@@ -94,35 +102,40 @@
 
           <section class="conteudo">
             <h2 id="cat_title"><i class="fas fa-laptop" id="cat_icon"></i> Categoria: <span
-                id="cat_name">Eletrônicos</span></h2>
+                id="cat_name"><%= typeof categoriaAtual !== 'undefined' ? categoriaAtual.charAt(0).toUpperCase() + categoriaAtual.slice(1) : 'Eletrônicos' %></span></h2>
             <div class="produtos-grid" id="produtos-container">
-              <% produtos.forEach(prod=> { %>
-                <div class="produto" data-preco="<%= prod.preco %>" data-categoria="<%= prod.categoria %>"
-                  style="cursor: pointer;" onclick="window.location.href='/produto/<%= prod.id_produto %>'">
+              <% if (typeof produtos !== 'undefined' && produtos.length > 0) { %>
+                <% produtos.forEach(prod => { %>
+                  <div class="produto" data-preco="<%= prod.preco %>" data-categoria="<%= prod.categoria %>"
+                    style="cursor: pointer;" onclick="window.location.href='/produto/<%= prod.id_produto %>'">
 
-                  <div class="imagem"></div>
-                  <div class="info">
-                    <p class="nome">
-                      <%= prod.nome_produto %>
-                    </p>
-                    <p class="preco">R$ <%= parseFloat(prod.preco).toFixed(2) %>
-                    </p>
-
-                    <% if (prod.descricao) { %>
-                      <p class="descricao">
-                        <%= prod.descricao.substring(0, 60) %>...
+                    <div class="imagem"></div>
+                    <div class="info">
+                      <p class="nome">
+                        <%= prod.nome_produto %>
                       </p>
+                      <p class="preco">R$ <%= parseFloat(prod.preco).toFixed(2) %>
+                      </p>
+
+                      <% if (prod.descricao) { %>
+                        <p class="descricao">
+                          <%= prod.descricao.substring(0, 60) %>...
+                        </p>
                       <% } %>
 
-                        <% if (prod.disponivel) { %>
-                          <p class="disponibilidade" style="color: green;">Disponível</p>
-                          <% } else { %>
-                            <p class="disponibilidade" style="color: red;">Indisponível</p>
-                            <% } %>
+                      <% if (prod.disponivel) { %>
+                        <p class="disponibilidade" style="color: green;">Disponível</p>
+                      <% } else { %>
+                        <p class="disponibilidade" style="color: red;">Indisponível</p>
+                      <% } %>
+                    </div>
                   </div>
-                </div>
                 <% }) %>
-
+              <% } else { %>
+                <div class="no-products">
+                  <p>Nenhum produto encontrado nesta categoria.</p>
+                </div>
+              <% } %>
             </div>
           </section>
         </div>
