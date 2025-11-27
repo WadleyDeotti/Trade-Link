@@ -9,14 +9,16 @@ export default class ProdutoDecorator {
   async render(res, view, data = {}) {
     if (!data) data = {};
     try {
-      // Busca todos os produtos
-      const produtos = await repository.getProdutos();
-      data.produtos = produtos;
+      // Busca todos os produtos apenas se não for página de fornecedores
+      if (view !== 'fornecedores') {
+        const produtos = await repository.getProdutos();
+        data.produtos = produtos;
+      }
     } catch (err) {
       console.error('Erro ao carregar produtos:', err);
     }
 
     // Chama o renderizador interno (decorator ou renderizador base)
-    this.renderizador.render(res, view, data);
+    await this.renderizador.render(res, view, data);
   }
 }

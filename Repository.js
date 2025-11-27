@@ -124,6 +124,16 @@ export async function buscarProdutosRelacionados(categoria, id_produto_atual) {
   return rows.map(row => new Produto(row));
 }
 
+export async function buscarProdutosPorFornecedor(id_fornecedor) {
+  const [rows] = await conexao.execute(`
+    SELECT p.id_produto, p.id_fornecedor, p.nome_produto, p.descricao, p.preco, p.disponivel, p.categoria
+    FROM produtos p
+    WHERE p.id_fornecedor = ?
+    ORDER BY p.nome_produto
+  `, [id_fornecedor]);
+  return rows.map(row => new Produto(row));
+}
+
 export async function getFornecedor() {
   const [rows] = await conexao.execute("SELECT * FROM fornecedores");
   return rows.map(row => new Fornecedor(row));
@@ -253,6 +263,12 @@ export async function atualizarEmpresa({ id_empresa, nome_fantasia, email, local
 export async function cadastrarProduto({ id_fornecedor, nome_produto, descricao, preco, categoria }) {
   const sql = "INSERT INTO produtos (id_fornecedor, nome_produto, descricao, preco, categoria) VALUES (?,?,?,?,?)";
   const [resultado] = await conexao.execute(sql, [id_fornecedor, nome_produto, descricao, preco, categoria]);
+  return resultado;
+}
+
+export async function editarProduto(id_produto, { nome_produto, descricao, preco, categoria }) {
+  const sql = "UPDATE produtos SET nome_produto = ?, descricao = ?, preco = ?, categoria = ? WHERE id_produto = ?";
+  const [resultado] = await conexao.execute(sql, [nome_produto, descricao, preco, categoria, id_produto]);
   return resultado;
 }
 

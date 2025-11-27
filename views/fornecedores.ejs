@@ -66,7 +66,7 @@
                             </p>
                             <div class="profile-stats">
                                 <div class="stat-item">
-                                    <span class="stat-value" id="products-count">0</span>
+                                    <span class="stat-value" id="products-count"><%= produtosFornecedor ? produtosFornecedor.length : 0 %></span>
                                     <span class="stat-label">Produtos</span>
                                 </div>
                                 <div class="stat-item">
@@ -145,8 +145,34 @@
                                     <i class="fas fa-chevron-left"></i>
                                 </button>
                                 <div class="carousel-container">
-                                    <div class="carousel-track">
-                                        <!-- Produtos serão adicionados aqui via JavaScript -->
+                                    <div class="carousel-track" id="products-track">
+                                        <% if (produtosFornecedor && produtosFornecedor.length > 0) { %>
+                                            <% produtosFornecedor.forEach(produto => { %>
+                                                <div class="product-card" data-product-id="<%= produto.id_produto %>">
+                                                    <div class="product-image">
+                                                        <img src="https://via.placeholder.com/200x150?text=<%= produto.nome_produto.substring(0,3) %>" alt="<%= produto.nome_produto %>">
+                                                    </div>
+                                                    <div class="product-info">
+                                                        <h3 class="product-name"><%= produto.nome_produto %></h3>
+                                                        <p class="product-price">R$ <%= parseFloat(produto.preco).toFixed(2) %></p>
+                                                        <p class="product-category"><%= produto.categoria %></p>
+                                                        <div class="product-status <%= produto.disponivel ? 'available' : 'unavailable' %>">
+                                                            <%= produto.disponivel ? 'Disponível' : 'Indisponível' %>
+                                                        </div>
+                                                    </div>
+                                                    <div class="product-actions">
+                                                        <button class="btn-edit" onclick="editProduct(<%= produto.id_produto %>)">
+                                                            <i class="fas fa-edit"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            <% }) %>
+                                        <% } else { %>
+                                            <div class="no-products">
+                                                <p>Nenhum produto cadastrado ainda.</p>
+                                                <p>Clique em "Adicionar Produto" para começar.</p>
+                                            </div>
+                                        <% } %>
                                     </div>
                                 </div>
                                 <button class="carousel-button carousel-button-next">

@@ -1,6 +1,8 @@
 // routes/usuarioRoutes.js
 import express from "express";
-import * as configuracoesController from "../controllers/configuracoesController.js";
+import * as usuarioController from "../controllers/usuarioController.js";
+import * as produtoManagementController from "../controllers/produtoManagementController.js";
+import * as configController from "../controllers/configController.js";
 import * as loginController from "../controllers/loginController.js";
 import * as inicialController from "../controllers/inicialController.js";
 import * as categoriaController from "../controllers/categoriaController.js";
@@ -85,16 +87,19 @@ router.get("/listar-mensagens/:id_conversa", autenticar, MessageController.lista
 router.post("/send", autenticar, sendMessage);
 
 // Alterar senha
-router.post("/alterarSenha", autenticar, configuracoesController.alterarSenha);
+router.post("/alterarSenha", autenticar, usuarioController.alterarSenha);
 
 // Salvar configurações
-router.post("/salvarConfiguracoes", autenticar, configuracoesController.salvarConfiguracoes);
+router.post("/salvarConfiguracoes", autenticar, configController.salvarConfiguracoes);
 
 // Atualizar dados
-router.post("/updateDados", autenticar, configuracoesController.updateDados);
+router.post("/updateDados", autenticar, usuarioController.updateDados);
 
 // Cadastrar produto
-router.post("/cadastrarProduto", autenticar, configuracoesController.cadastrarProduto);
+router.post("/cadastrarProduto", autenticar, produtoManagementController.cadastrarProduto);
+
+// Editar produto
+router.post("/editarProduto/:id", autenticar, produtoManagementController.editarProduto);
 
 // enviar mensagem no chat
 router.post("/enviar", autenticar, MessageController.enviar);
