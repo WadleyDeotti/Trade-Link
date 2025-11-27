@@ -1,62 +1,79 @@
 // controllers/loginController.js
-import * as repository from "../Repository.js"; // ajuste o caminho conforme seu projeto
+import * as repository from "../Repository.js";
+import nodemailer from "nodemailer";
 import bcrypt from "bcrypt";
 
+// ================================
+// CONFIGURAÇÃO DO TRANSPORTER (EMAIL)
+// ================================
+const transporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST,
+  port: Number(process.env.SMTP_PORT || 587),
+  secure: process.env.SMTP_SECURE === "TRUE", 
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
+  },
+});
+
+// ================================
+// FUNÇÃO GERADORA DO CÓDIGO
+// ================================
+function gerarCodigo2FA() {
+  return Math.floor(100000 + Math.random() * 900000); // 6 dígitos
+}
+
+// ================================
+// CADASTRAR (CPF / CNPJ)
+// ================================
 export const cadastrar = async (req, res) => {
   try {
     const dadosUsuario = req.body;
-    console.log("Recebendo dados do cadastro:", dadosUsuario);
+
+    const senhaHash = await bcrypt.hash(dadosUsuario.senha, 10);
 
     if (dadosUsuario.cnpj) {
-      // Cadastro de empresa
       await repository.inserirEmpresa({
         nome_fantasia: dadosUsuario.nome_completo,
         email: dadosUsuario.email,
         cnpj: dadosUsuario.cnpj.replace(/\D/g, ""),
-        senha_hash: await bcrypt.hash(dadosUsuario.senha, 10),
+        senha_hash: senhaHash,
       });
 
       const empresa = await repository.buscarCNPJ(dadosUsuario.cnpj.replace(/\D/g, ""));
       req.session.usuario = empresa;
       return res.redirect("/fornecedores");
+    }
 
-    } else if (dadosUsuario.cpf) {
-      // Cadastro de fornecedor
+    if (dadosUsuario.cpf) {
       await repository.inserirFornecedor({
         nome_fantasia: dadosUsuario.nome_completo,
         cpf: dadosUsuario.cpf.replace(/\D/g, ""),
         email: dadosUsuario.email,
-        senha_hash: await bcrypt.hash(dadosUsuario.senha, 10),
+        senha_hash: senhaHash,
       });
 
       const fornecedor = await repository.buscarCPF(dadosUsuario.cpf.replace(/\D/g, ""));
       req.session.usuario = fornecedor;
       return res.redirect("/fornecedores");
-
-    } else {
-      return res.status(400).send("Dados inválidos");
     }
+
+    return res.status(400).send("Dados inválidos");
   } catch (err) {
     console.error(err);
     return res.status(500).send("Erro ao cadastrar usuário");
   }
 };
 
+// ================================
+// LOGIN – INICIA 2FA
+// ================================
 export const logar = async (req, res) => {
   try {
-    let { documento, senha } = req.body;
-    documento = documento.replace(/\D/g, "");
+    const { email, senha } = req.body;
 
-    let user;
-
-    if (documento.length === 11) {
-      user = await repository.buscarCPF(documento);
-
-    } else if (documento.length === 14) {
-      user = await repository.buscarCNPJ(documento);
-
-    } else {
-      return res.render("login", { mensagem: "Documento inválido" });
+    if (!email || !senha) {
+      return res.status(400).json({ erro: "Email e senha são obrigatórios" });
     }
 
     if (!user) return res.render("login", { mensagem: "Usuário não encontrado" });
@@ -89,6 +106,7 @@ export const validar2FA = (req, res) => {
   const { codigo, expira, userId } = req.session.codigo2FA;
 
   if (Date.now() > expira) {
+    delete req.session.codigo2FA;
     return res.status(400).json({ erro: "Código expirado." });
   }
 
@@ -96,9 +114,8 @@ export const validar2FA = (req, res) => {
     return res.status(400).json({ erro: "Código incorreto." });
   }
 
-  // Sucesso! Finaliza login do usuário
+  // Sucesso
   req.session.usuario = { id: userId };
-
   delete req.session.codigo2FA;
 
   return res.json({ sucesso: true, mensagem: "Login concluído!" });
