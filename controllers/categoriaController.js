@@ -1,7 +1,10 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 export const getCategoriasPage = (req, res) => {
     res.render('categoria'); 
 =======
+=======
+>>>>>>> Stashed changes
 import * as repository from "../Repository.js";
 
 export const getCategoriasPage = async (req, res) => {
@@ -41,5 +44,8 @@ export const getCategoriasProdutos = async (req, res) => {
     console.error('Erro ao buscar produtos por categoria:', error);
     res.status(500).json({ error: 'Erro interno do servidor' });
   }
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 };
