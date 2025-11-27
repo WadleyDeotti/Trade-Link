@@ -6,7 +6,7 @@
     <title>Mensagens - TradeLink</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/css/mensagens.css">
-    <script src="/JS/mensagens.js"></script>
+
 </head>
 <body>
     <div class="dashboard-container">
@@ -337,10 +337,9 @@
     </div>
 
     <script>
-        const USER_ID = "<%= usuario.id_usuario %>";
-        const USER_TIPO = "<%= usuario.tipo %>";
+        const USER_ID = "<%= usuario && usuario.id_usuario ? usuario.id_usuario : '' %>";
+        const USER_TIPO = "<%= usuario && usuario.tipo ? usuario.tipo : '' %>";
     </script>
-    <script src="/node_modules/socket.io/socket.io.js"></script>
-    <script src="mensagens.js"></script>  
+    <script src="/JS/mensagens.js"></script>  
 </body>
 </html>
