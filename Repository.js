@@ -102,6 +102,28 @@ export async function buscarProdutos(termo, categoria, precoMin, precoMax) {
   return rows.map(row => new Produto(row));
 }
 
+export async function buscarProdutoPorId(id_produto) {
+  const [rows] = await conexao.execute(`
+    SELECT p.id_produto, p.id_fornecedor, p.nome_produto, p.descricao, p.preco, p.disponivel, p.categoria,
+           f.nome_fantasia, f.telefone, f.email
+    FROM produtos p
+    JOIN fornecedores f USING(id_fornecedor)
+    WHERE p.id_produto = ?
+  `, [id_produto]);
+  return rows.length > 0 ? new Produto(rows[0]) : null;
+}
+
+export async function buscarProdutosRelacionados(categoria, id_produto_atual) {
+  const [rows] = await conexao.execute(`
+    SELECT p.id_produto, p.nome_produto, p.preco, p.categoria
+    FROM produtos p
+    WHERE p.categoria = ? AND p.id_produto != ? AND p.disponivel = 1
+    ORDER BY RAND()
+    LIMIT 3
+  `, [categoria, id_produto_atual]);
+  return rows.map(row => new Produto(row));
+}
+
 export async function getFornecedor() {
   const [rows] = await conexao.execute("SELECT * FROM fornecedores");
   return rows.map(row => new Fornecedor(row));

@@ -1,9 +1,6 @@
 // utils/UsuarioDecorator.js
-import Renderizador from './Renderizador.js';
-
-export default class UsuarioDecorator extends Renderizador {
+export default class UsuarioDecorator {
   constructor(renderizador) {
-    super();
     this.renderizador = renderizador;
   }
 

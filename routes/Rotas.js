@@ -4,9 +4,11 @@ import * as configuracoesController from "../controllers/configuracoesController
 import * as loginController from "../controllers/loginController.js";
 import * as inicialController from "../controllers/inicialController.js";
 import * as categoriaController from "../controllers/categoriaController.js";
-import MessageController from "../controllers/MessageController.js";
-import { sendMessage } from "../controllers/chatController.js";
+import * as produtoController from "../controllers/produtoController.js";
 import * as historicoController from "../controllers/historicoController.js";
+import MessageController from "../controllers/MessageController.js";
+<<<<<<< Updated upstream
+import { sendMessage } from "../controllers/chatController.js"; // usar .js com ES Module
 import { autenticar } from "../middleware/auth.js";
 
 const router = express.Router();
@@ -55,8 +57,22 @@ router.get("/configuracoes", autenticar, (req, res) =>
   res.renderizador.render(res, "configuracoes", {})
 );
 
-router.get("/categoria", autenticar, (req, res) => res.render("categoria"));
+// Categorias
+router.get("/categoria", autenticar, (req, res) => {
+  if (req.query.categoria) {
+    return categoriaController.getCategoriasPage(req, res);
+  }
+  res.renderizador.render(res, 'categoria', { produtos: [], categorias: [], categoriaAtual: 'eletronicos' });
+});
+router.get("/api/produtos/buscar", autenticar, categoriaController.buscarProdutos);
+router.get("/api/categoria/:categoria", autenticar, categoriaController.getCategoriasProdutos);
 
+// Produtos
+router.get("/produto", autenticar, (req, res) => res.renderizador.render(res, 'produto', { produto: null, produtosRelacionados: [], produtos: [] }));
+router.get("/produto/:id", autenticar, produtoController.getProdutoPage);
+router.get("/produtos", autenticar, produtoController.getListaProdutos);
+
+// Chat
 router.get("/chat", autenticar, (req, res) => res.render("chat"));
 
 // Conversas e mensagens (API)

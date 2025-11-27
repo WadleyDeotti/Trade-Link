@@ -1,10 +1,8 @@
 // decorators/ProdutoDecorator.js
-import Renderizador from './Renderizador.js';
 import * as repository from '../Repository.js';
 
-export default class ProdutoDecorator extends Renderizador {
+export default class ProdutoDecorator {
   constructor(renderizador) {
-    super();
     this.renderizador = renderizador;
   }
 
