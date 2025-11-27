@@ -24,12 +24,10 @@ export const sendMessage = async (req, res) => {
     if (localAnswer) return res.json({ reply: localAnswer });
 
     // Chamada correta usando nova lib
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents: `Você é um assistente do Trade Link. Responda de forma breve e útil:\nUsuário: ${message}`
-    });
+    const model = ai.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const response = await model.generateContent(`Você é um assistente do Trade Link. Responda de forma breve e útil:\nUsuário: ${message}`);
 
-    const reply = response?.text || "Desculpe, não consegui gerar uma resposta.";
+    const reply = response.response.text() || "Desculpe, não consegui gerar uma resposta.";
 
     res.json({ reply });
   } catch (error) {

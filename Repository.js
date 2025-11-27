@@ -13,8 +13,8 @@ import { Produto } from './models/produtoModel.js';
 const conexao = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
-  password: "espes201005",
-  database: "pit",
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
   namedPlaceholders: true
 });
 
@@ -186,7 +186,7 @@ export async function buscarOuCriarConversa(usuario1, usuario2, tipo1, tipo2) {
         OR (usuario1_id = ? AND usuario2_id = ?)
     `;
 
-    const [rows] = await this.pool.query(sql, [
+    const [rows] = await conexao.query(sql, [
         usuario1, usuario2,
         usuario2, usuario1
     ]);
@@ -198,7 +198,7 @@ export async function buscarOuCriarConversa(usuario1, usuario2, tipo1, tipo2) {
         VALUES (?, ?, ?, ?)
     `;
 
-    const [result] = await this.pool.query(insert, [
+    const [result] = await conexao.query(insert, [
         usuario1, usuario2,
         tipo1, tipo2
     ]);
@@ -228,7 +228,7 @@ export async function listarConversasDoUsuario(id_usuario) {
         WHERE c.usuario1_id = ? OR c.usuario2_id = ?
     `;
 
-    const [rows] = await this.pool.query(sql, [
+    const [rows] = await conexao.query(sql, [
         id_usuario,
         id_usuario,
         id_usuario
@@ -245,7 +245,7 @@ export async function salvarMensagem(id_conversa, remetente_id, tipo_remetente, 
         VALUES (?, ?, ?, ?)
     `;
 
-    const [result] = await this.pool.query(sql, [
+    const [result] = await conexao.query(sql, [
         id_conversa,
         remetente_id,
         tipo_remetente,
@@ -263,7 +263,7 @@ export async function listarMensagens(id_conversa) {
         ORDER BY enviado_em ASC
     `;
 
-    const [rows] = await this.pool.query(sql, [id_conversa]);
+    const [rows] = await conexao.query(sql, [id_conversa]);
     return rows;
 }
 
@@ -275,7 +275,7 @@ export async function marcarLidas(id_conversa, usuario_id) {
           AND remetente_id != ?
     `;
 
-    await this.pool.query(sql, [id_conversa, usuario_id]);
+    await conexao.query(sql, [id_conversa, usuario_id]);
 }
 
 
@@ -283,33 +283,28 @@ export async function marcarLidas(id_conversa, usuario_id) {
 
 // Historico completo
 // ------------------- Funções de token -------------------
-export const salvarTokenE = (empresa, callback) => {
-const sql = 'UPDATE empresas SET token_redefinicao=?, expira_token=? WHERE cnpj=?';
-pool.query(sql, [empresa.token_redefinicao, empresa.expira_token, empresa.cnpj], callback);
+export const salvarTokenE = async (empresa) => {
+  const sql = 'UPDATE empresas SET token_redefinicao=?, expira_token=? WHERE cnpj=?';
+  const [result] = await conexao.execute(sql, [empresa.token_redefinicao, empresa.expira_token, empresa.cnpj]);
+  return result;
 };
 
-
-export const salvarTokenF = (fornecedor, callback) => {
-const sql = 'UPDATE fornecedores SET token_redefinicao=?, expira_token=? WHERE cpf=?';
-pool.query(sql, [fornecedor.token_redefinicao, fornecedor.expira_token, fornecedor.cpf], callback);
+export const salvarTokenF = async (fornecedor) => {
+  const sql = 'UPDATE fornecedores SET token_redefinicao=?, expira_token=? WHERE cpf=?';
+  const [result] = await conexao.execute(sql, [fornecedor.token_redefinicao, fornecedor.expira_token, fornecedor.cpf]);
+  return result;
 };
 
-
-export const procurarTokenE = (token, callback) => {
-const sql = 'SELECT * FROM empresas WHERE token_redefinicao=?';
-pool.query(sql, [token], (err, resultados) => {
-if (err) return callback(err);
-callback(null, resultados?.[0] || null);
-});
+export const procurarTokenE = async (token) => {
+  const sql = 'SELECT * FROM empresas WHERE token_redefinicao=?';
+  const [rows] = await conexao.execute(sql, [token]);
+  return rows.length > 0 ? rows[0] : null;
 };
 
-
-export const procurarTokenF = (token, callback) => {
-const sql = 'SELECT * FROM fornecedores WHERE token_redefinicao=?';
-pool.query(sql, [token], (err, resultados) => {
-if (err) return callback(err);
-callback(null, resultados?.[0] || null);
-});
+export const procurarTokenF = async (token) => {
+  const sql = 'SELECT * FROM fornecedores WHERE token_redefinicao=?';
+  const [rows] = await conexao.execute(sql, [token]);
+  return rows.length > 0 ? rows[0] : null;
 };
 
 
@@ -551,3 +546,58 @@ export async function getTendenciaFornecedor(id_fornecedor, dataInicio, dataFim)
   const tendencia = ((atual - anterior) / anterior) * 100;
   return Math.round(tendencia * 10) / 10;
 }
+
+export const dashboardRepository = {
+    totalFaturamento(id_fornecedor) {
+        return new Promise((resolve, reject) => {
+            conexao.query(
+                `SELECT SUM(valor_total) AS total FROM pedidos WHERE id_fornecedor = ?`,
+                [id_fornecedor],
+                (err, result) => err ? reject(err) : resolve(result[0])
+            );
+        });
+    },
+
+    totalPedidos(id_fornecedor) {
+        return new Promise((resolve, reject) => {
+            conexao.query(
+                `SELECT COUNT(*) AS total FROM pedidos WHERE id_fornecedor = ?`,
+                [id_fornecedor],
+                (err, result) => err ? reject(err) : resolve(result[0])
+            );
+        });
+    },
+
+    totalPendentes(id_fornecedor) {
+        return new Promise((resolve, reject) => {
+            conexao.query(
+                `SELECT COUNT(*) AS total FROM pedidos WHERE status = 'pendente' AND id_fornecedor = ?`,
+                [id_fornecedor],
+                (err, result) => err ? reject(err) : resolve(result[0])
+            );
+        });
+    },
+
+    totalClientes(id_fornecedor) {
+        return new Promise((resolve, reject) => {
+            conexao.query(
+                `SELECT COUNT(DISTINCT id_cliente) AS total FROM pedidos WHERE id_fornecedor = ?`,
+                [id_fornecedor],
+                (err, result) => err ? reject(err) : resolve(result[0])
+            );
+        });
+    },
+
+    pedidosRecentes(id_fornecedor) {
+        return new Promise((resolve, reject) => {
+            conexao.query(
+                `SELECT id_pedido AS id, nome_cliente AS customer, data AS date, valor_total AS value, status, tipo AS type 
+                 FROM pedidos 
+                 WHERE id_fornecedor = ?
+                 ORDER BY data DESC LIMIT 10`,
+                [id_fornecedor],
+                (err, result) => err ? reject(err) : resolve(result)
+            );
+        });
+    },
+};  

@@ -33,8 +33,7 @@
         <!-- Main Content -->
         <div class="main-content">
             <header>
-                <h1><i class="fas fa-user"></i> Perfil do Fornecedor</h1> 
-                </h1>
+                <h1><i class="fas fa-user"></i> Perfil do Fornecedor</h1>
                 <div class="user-info">
                     <span id="header-user-name">TradeLink</span>
                     <img id="header-user-pic" src="images/profile.jpg" alt="Usuário">
@@ -53,16 +52,16 @@
                         </div>
                         <div class="profile-details">
                             <h1 class="profile-name" id="profile-name">
-                                <%= usuario.nome_fantasia %>
+                                <%= usuario && usuario.nome_fantasia ? usuario.nome_fantasia : 'Nome não definido' %>
                             </h1>
                             <div class="profile-location">
                                 <i class="fas fa-map-marker-alt"></i>
                                 <span id="profile-location">
-                                    <%= usuario.localizacao || 'Sua localizacao' %>
+                                    <%= usuario && usuario.localizacao ? usuario.localizacao : 'Sua localização' %>
                                 </span>
                             </div>
                             <p class="profile-description" id="profile-description">
-                                <%= usuario.descricao || 'Sua descricao' %>
+                                <%= usuario && usuario.descricao ? usuario.descricao : 'Sua descrição' %>
                             </p>
                             <div class="profile-stats">
                                 <div class="stat-item">
@@ -90,28 +89,28 @@
                             <div class="form-group">
                                 <label for="fornecedor-nome">Nome:</label>
                                 <input id="fornecedor-nome" name="nome_fantasia" type="text"
-                                    value="<%= usuario.nome_fantasia %>" required>
+                                    value="<%= usuario && usuario.nome_fantasia ? usuario.nome_fantasia : '' %>" required>
                             </div>
                             <div class="form-group">
                                 <label for="fornecedor-email">Email:</label>
-                                <input id="fornecedor-email" name="email" type="email" value="<%= usuario.email || ''%>"
+                                <input id="fornecedor-email" name="email" type="email" value="<%= usuario && usuario.email ? usuario.email : '' %>"
                                     required>
                             </div>
                             <div class="form-group">
                                 <label for="fornecedor-cpf">CPF/CNPJ:</label>
-                                <input disabled id="fornecedor-cpf" name="<%= usuario.cnpj? 'cnpj' : 'cpf' %>"
-                                    type="text" value="<%= usuario.cnpj || usuario.cpf %>" required><label></label>
+                                <input disabled id="fornecedor-cpf" name="<%= usuario && usuario.cnpj ? 'cnpj' : 'cpf' %>"
+                                    type="text" value="<%= usuario && (usuario.cnpj || usuario.cpf) ? (usuario.cnpj || usuario.cpf) : '' %>" required><label></label>
                             </div>
                             <div class="form-group">
                                 <label for="fornecedor-local">Localização:</label>
                                 <input id="fornecedor-local" name="localizacao" type="text"
-                                    value="<%= usuario.localizacao || 'não definido'%>" required>
+                                    value="<%= usuario && usuario.localizacao ? usuario.localizacao : 'não definido' %>" required>
                             </div>
 
                             <div class="form-group">
                                 <label for="fornecedor-telefone">Telefone:</label>
                                 <input id="fornecedor-telefone" name="telefone" type="tel"
-                                    value="<%= usuario.telefone || 'não definido' %>" required>
+                                    value="<%= usuario && usuario.telefone ? usuario.telefone : 'não definido' %>" required>
                             </div>
                         </div>
                     </div>
@@ -121,7 +120,7 @@
                         <div class="form-group">
                             <label for="fornecedor-descricao">Descreva seu negócio:</label>
                             <textarea id="fornecedor-descricao" name="descricao"
-                                placeholder="<%= usuario.descricao || 'Descreva seu negocio' %>" required></textarea>
+                                placeholder="Descreva seu negócio" required><%= usuario && usuario.descricao ? usuario.descricao : '' %></textarea>
                         </div>
                     </div>
 
@@ -136,7 +135,7 @@
                         </button>
                     </div>
                 </form>
-                <% if(usuario.id_fornecedor){ %>
+                <% if(usuario && usuario.id_fornecedor){ %>
                     <div class="form-section">
                         <h2>Produtos do Fornecedor</h2>
                         <div class="products-section">

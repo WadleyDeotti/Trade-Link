@@ -59,6 +59,19 @@ export const logar = async (req, res) => {
       return res.render("login", { mensagem: "Documento inválido" });
     }
 
+    if (user.tipo === "fornecedor") {
+    req.session.usuario = {
+        id_fornecedor: user.id_fornecedor,
+        nome: user.nome_fantasia,
+        email: user.email,
+        tipo: "fornecedor"
+    };
+}
+
+
+console.log(req.session.usuario);
+
+
     if (!user) return res.render("login", { mensagem: "Usuário não encontrado" });
 
     const mesmaSenha = await bcrypt.compare(senha, user.senha_hash);

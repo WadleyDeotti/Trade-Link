@@ -1,5 +1,37 @@
 // dashboard.js - TradeLink Dashboard Refatorado
 document.addEventListener('DOMContentLoaded', function () {
+
+async function fetchDashboardData() {
+    try {
+        const response = await fetch('/api/dashboard');
+        if (!response.ok) throw new Error('Erro ao buscar dashboard');
+
+        const data = await response.json();
+
+        // Atualiza os valores no objeto existente
+        dashboardData = {
+            revenue: data.totalFaturamento,
+            orders: data.totalPedidos,
+            pending: data.totalPendentes,
+            customers: data.totalClientes,
+            revenueTrend: data.trendFaturamento || 0,
+            ordersTrend: data.trendPedidos || 0,
+            pendingTrend: data.trendPendentes || 0,
+            customersTrend: data.trendClientes || 0
+        };
+
+        ordersData = data.pedidosRecentes;
+
+        updateDashboardData();
+        loadRecentOrders();
+        console.log("Dashboard atualizado com dados reais.");
+    } catch (err) {
+        console.error("Erro no dashboard:", err);
+        showToast("Erro ao carregar dados do dashboard", "error");
+    }
+}
+
+
     // -----------------------------
     // Elementos do DOM
     // -----------------------------
@@ -68,6 +100,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Inicialização
     // -----------------------------
     initDashboard();
+    fetchDashboardData(); 
 
     function initDashboard() {
         initCharts();

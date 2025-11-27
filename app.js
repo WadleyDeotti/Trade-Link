@@ -1,4 +1,7 @@
 // app.js
+import dotenv from 'dotenv';
+dotenv.config();
+
 import express from "express";
 import path from "path";
 import session from "express-session";
@@ -57,7 +60,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 // });
 
 app.get('/', async (req, res) => {
-  req.session.usuario = await testeUsuario(); // Simula usuário logador
+  const usuario = await testeUsuario(); // Simula usuário logado
+  req.session.usuario = usuario;
+  req.session.user = usuario; // Para compatibilidade
+  console.log('Usuario definido na sessão:', usuario);
   res.renderizador.render(res, 'fornecedores', {});
 });
 

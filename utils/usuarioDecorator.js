@@ -8,9 +8,9 @@ export default class UsuarioDecorator extends Renderizador {
   }
 
   render(res, view, data = {}) {
-    const usuario = res.req.session?.usuario || null;
+    const usuario = res.req.session?.usuario || res.req.session?.user || null;
     data.usuario = usuario;
-    console.log(usuario);
+    console.log('Usuario na sessão:', usuario);
     this.renderizador.render(res, view, data);
   }
 }
