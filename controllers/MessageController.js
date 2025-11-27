@@ -4,10 +4,10 @@ import {
   salvarMensagem,
   marcarLidas
 } from "../Repository.js";
-import MessageService from "../service.js";
+import ChatService from "../service.js";
 import chatObserver from "../utils/MessageObserver.js";
 
-const service = new MessageService(chatObserver);
+const service = new ChatService(chatObserver);
 
 class ChatController {
 
@@ -58,7 +58,7 @@ class ChatController {
       const { id_conversa, tipo_remetente, conteudo } = req.body;
 
       // Salva + notifica via Observer
-      const msg = await service.enviarMensagem(
+      const msg = await service.salvarMensagem(
         id_conversa,
         remetente_id,
         tipo_remetente,

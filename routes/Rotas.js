@@ -52,9 +52,7 @@ router.get("/api/historico/resumo", autenticar, historicoController.getResumo);
 router.get("/api/historico/grafico", autenticar, historicoController.getGrafico);
 
 // Mensagens
-router.get("/mensagens", autenticar, (req, res) => {
-  res.render("mensagens", { usuario: req.session.usuario });
-});
+router.get("/mensagens", autenticar, (req, res) => res.render("mensagens"));
 
 // Configurações
 router.get("/configuracoes", autenticar, (req, res) =>

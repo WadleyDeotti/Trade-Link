@@ -281,7 +281,7 @@ export async function buscarOuCriarConversa(usuario1, usuario2, tipo1, tipo2) {
         OR (usuario1_id = ? AND usuario2_id = ?)
     `;
 
-    const [rows] = await conexao.query(sql, [
+    const [rows] = await this.pool.query(sql, [
         usuario1, usuario2,
         usuario2, usuario1
     ]);
@@ -293,7 +293,7 @@ export async function buscarOuCriarConversa(usuario1, usuario2, tipo1, tipo2) {
         VALUES (?, ?, ?, ?)
     `;
 
-    const [result] = await conexao.query(insert, [
+    const [result] = await this.pool.query(insert, [
         usuario1, usuario2,
         tipo1, tipo2
     ]);
@@ -323,7 +323,7 @@ export async function listarConversasDoUsuario(id_usuario) {
         WHERE c.usuario1_id = ? OR c.usuario2_id = ?
     `;
 
-    const [rows] = await conexao.query(sql, [
+    const [rows] = await this.pool.query(sql, [
         id_usuario,
         id_usuario,
         id_usuario
@@ -340,7 +340,7 @@ export async function salvarMensagem(id_conversa, remetente_id, tipo_remetente, 
         VALUES (?, ?, ?, ?)
     `;
 
-    const [result] = await conexao.query(sql, [
+    const [result] = await this.pool.query(sql, [
         id_conversa,
         remetente_id,
         tipo_remetente,
@@ -358,7 +358,7 @@ export async function listarMensagens(id_conversa) {
         ORDER BY enviado_em ASC
     `;
 
-    const [rows] = await conexao.query(sql, [id_conversa]);
+    const [rows] = await this.pool.query(sql, [id_conversa]);
     return rows;
 }
 
@@ -370,7 +370,7 @@ export async function marcarLidas(id_conversa, usuario_id) {
           AND remetente_id != ?
     `;
 
-    await conexao.query(sql, [id_conversa, usuario_id]);
+    await this.pool.query(sql, [id_conversa, usuario_id]);
 }
 
 
@@ -380,19 +380,19 @@ export async function marcarLidas(id_conversa, usuario_id) {
 // ------------------- Funções de token -------------------
 export const salvarTokenE = (empresa, callback) => {
 const sql = 'UPDATE empresas SET token_redefinicao=?, expira_token=? WHERE cnpj=?';
-conexao.query(sql, [empresa.token_redefinicao, empresa.expira_token, empresa.cnpj], callback);
+pool.query(sql, [empresa.token_redefinicao, empresa.expira_token, empresa.cnpj], callback);
 };
 
 
 export const salvarTokenF = (fornecedor, callback) => {
 const sql = 'UPDATE fornecedores SET token_redefinicao=?, expira_token=? WHERE cpf=?';
-conexao.query(sql, [fornecedor.token_redefinicao, fornecedor.expira_token, fornecedor.cpf], callback);
+pool.query(sql, [fornecedor.token_redefinicao, fornecedor.expira_token, fornecedor.cpf], callback);
 };
 
 
 export const procurarTokenE = (token, callback) => {
 const sql = 'SELECT * FROM empresas WHERE token_redefinicao=?';
-conexao.query(sql, [token], (err, resultados) => {
+pool.query(sql, [token], (err, resultados) => {
 if (err) return callback(err);
 callback(null, resultados?.[0] || null);
 });
@@ -401,10 +401,11 @@ callback(null, resultados?.[0] || null);
 
 export const procurarTokenF = (token, callback) => {
 const sql = 'SELECT * FROM fornecedores WHERE token_redefinicao=?';
-conexao.query(sql, [token], (err, resultados) => {
+pool.query(sql, [token], (err, resultados) => {
 if (err) return callback(err);
 callback(null, resultados?.[0] || null);
-});};
+});
+};
 
 
 // ------------------- HISTÓRICO / RELATÓRIOS -------------------

@@ -9,10 +9,10 @@ let socket = io(); // se ainda não tiver socket.io, pode comentar esta linha
 // ==============================
 async function carregarConversas() {
   try {
-    const res = await fetch(`/listar-conversas/${usuarioId}`);
+    const res = await fetch(`/chat/conversas/${usuarioId}`);
     const conversas = await res.json();
 
-    const lista = document.getElementById("conversations-list");
+    const lista = document.getElementById("listaConversas");
     lista.innerHTML = "";
 
     conversas.forEach(c => {
@@ -37,10 +37,10 @@ async function carregarConversas() {
 async function abrirConversa(id_conversa) {
   conversaAtiva = id_conversa;
 
-  document.getElementById("messages-container").innerHTML = "<p>Carregando...</p>";
+  document.getElementById("mensagens").innerHTML = "<p>Carregando...</p>";
 
   try {
-    const res = await fetch(`/listar-mensagens/${id_conversa}`);
+    const res = await fetch(`/chat/mensagens/${id_conversa}`);
     const msgs = await res.json();
 
     renderMensagens(msgs);
@@ -53,7 +53,7 @@ async function abrirConversa(id_conversa) {
 // 3️⃣ Enviar mensagem
 // ==============================
 async function enviarMensagem() {
-  const input = document.getElementById("message-text");
+  const input = document.getElementById("inputMensagem");
   const conteudo = input.value.trim();
   if (!conteudo || !conversaAtiva) return;
 
@@ -65,7 +65,7 @@ async function enviarMensagem() {
   };
 
   try {
-    const res = await fetch("/enviar", {
+    const res = await fetch("/chat/enviar", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
@@ -84,7 +84,7 @@ async function enviarMensagem() {
 // 4️⃣ Renderizar mensagens
 // ==============================
 function renderMensagens(msgs) {
-  const container = document.getElementById("messages-container");
+  const container = document.getElementById("mensagens");
   container.innerHTML = "";
 
   msgs.forEach(m => adicionarMensagemNaTela(m));
@@ -95,7 +95,7 @@ function renderMensagens(msgs) {
 // 5️⃣ Adicionar mensagem à tela
 // ==============================
 function adicionarMensagemNaTela(msg) {
-  const container = document.getElementById("messages-container");
+  const container = document.getElementById("mensagens");
   const div = document.createElement("div");
   div.classList.add("mensagem");
   div.classList.add(msg.remetente_id === usuarioId ? "enviada" : "recebida");
@@ -134,8 +134,8 @@ if (socket) {
 // ==============================
 // 8️⃣ Eventos do front
 // ==============================
-document.getElementById("send-message").addEventListener("click", enviarMensagem);
-document.getElementById("message-text").addEventListener("keypress", e => {
+document.getElementById("btnEnviar").addEventListener("click", enviarMensagem);
+document.getElementById("inputMensagem").addEventListener("keypress", e => {
   if (e.key === "Enter") enviarMensagem();
 });
 
