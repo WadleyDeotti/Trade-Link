@@ -7,7 +7,7 @@ import * as categoriaController from "../controllers/categoriaController.js";
 import * as produtoController from "../controllers/produtoController.js";
 import * as historicoController from "../controllers/historicoController.js";
 import MessageController from "../controllers/MessageController.js";
-<<<<<<< Updated upstream
+
 import { sendMessage } from "../controllers/chatController.js"; // usar .js com ES Module
 import { autenticar } from "../middleware/auth.js";
 
