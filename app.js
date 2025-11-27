@@ -58,7 +58,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', async (req, res) => {
   req.session.usuario = await testeUsuario(); // Simula usuário logador
-  res.renderizador.render(res, 'fornecedores', {});
+  res.renderizador.render(res, 'inicial', {});
 });
 
 // Rotas da aplicação
