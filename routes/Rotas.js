@@ -3,6 +3,7 @@ import express from "express";
 import * as configuracoesController from "../controllers/configuracoesController.js";
 import * as loginController from "../controllers/loginController.js";
 import * as inicialController from "../controllers/inicialController.js";
+import * as categoriaController from "../controllers/categoriaController.js";
 import MessageController from "../controllers/MessageController.js";
 import { sendMessage } from "../controllers/chatController.js"; // usar .js com ES Module
 import * as historicoController from "../controllers/historicoController.js";
@@ -51,7 +52,14 @@ router.get("/mensagens", (req, res) => res.render("mensagens"));
 // Configurações
 router.get("/configuracoes", (req, res) => res.renderizador.render(res, 'configuracoes', {}));
 
-router.get("/categoria", (req, res) => res.render("categoria"));
+router.get("/categoria", (req, res) => {
+  if (req.query.categoria) {
+    return categoriaController.getCategoriasPage(req, res);
+  }
+  res.renderizador.render(res, 'categoria', { produtos: [], categorias: [], categoriaAtual: 'eletronicos' });
+});
+router.get("/api/produtos/buscar", categoriaController.buscarProdutos);
+router.get("/api/categoria/:categoria", categoriaController.getCategoriasProdutos);
 
 router.get("/chat", (req, res) => res.render("chat"));
 
