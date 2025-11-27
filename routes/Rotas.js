@@ -19,7 +19,7 @@ const router = express.Router();
 // Página inicial pública
 router.get('/inicial', inicialController.IniciarSite);
 
-// Login e Registro (públicas)
+// Login e Registro (públicas)  
 router.get("/registro", (req, res) => {
   const mensagem = req.session.mensagem;
   delete req.session.mensagem;

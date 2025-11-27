@@ -48,18 +48,18 @@ app.set('views', path.join(__dirname, 'views'));
 // Arquivos estáticos
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Rota principal
-// app.get('/', (req, res) => {
-//   if (req.session.usuario) {
-//     res.renderizador.render(res, 'fornecedores', {});
-//   }
-//   else { res.redirect('/login'); }
-// });
+//Rota principal
+ app.get('/', (req, res) => {
+   if (req.session.usuario) {
+     res.renderizador.render(res, 'fornecedores', {});
+   }
+   else { res.redirect('/login'); }
+ });
 
-app.get('/', async (req, res) => {
-  req.session.usuario = await testeUsuario(); // Simula usuário logador
-  res.renderizador.render(res, 'inicial', {});
-});
+// app.get('/', async (req, res) => {
+//   req.session.usuario = await testeUsuario(); // Simula usuário logador
+//   res.renderizador.render(res, 'inicial', {});
+// });
 
 // Rotas da aplicação
 app.use('/', Rotas);
