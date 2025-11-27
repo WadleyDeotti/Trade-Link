@@ -4,86 +4,89 @@ import * as configuracoesController from "../controllers/configuracoesController
 import * as loginController from "../controllers/loginController.js";
 import * as inicialController from "../controllers/inicialController.js";
 import MessageController from "../controllers/MessageController.js";
-import { sendMessage } from "../controllers/chatController.js"; // usar .js com ES Module
+import { sendMessage } from "../controllers/chatController.js";
 import * as historicoController from "../controllers/historicoController.js";
+import { autenticar } from "../middleware/auth.js";
 
 const router = express.Router();
 
 // ------------------- GETs -------------------
-// Inicial
+// Página inicial pública
 router.get('/inicial', inicialController.IniciarSite);
 
-// Dashboard
-router.get("/dashboard", (req, res) => res.render("dashboard"));
-
-// Registro
+// Login e Registro (públicas)
 router.get("/registro", (req, res) => {
   const mensagem = req.session.mensagem;
   delete req.session.mensagem;
   res.render("registro", { mensagem: mensagem || null });
 });
 
-// Login
 router.get("/login", (req, res) => {
   const mensagem = req.session.mensagem;
   delete req.session.mensagem;
   res.render("login", { mensagem: mensagem || null });
 });
 
+// ---------------- ROTAS PROTEGIDAS ----------------
+
+// Dashboard
+router.get("/dashboard", autenticar, (req, res) => res.render("dashboard"));
+
 // Fornecedores
-router.get("/fornecedores", (req, res) => res.renderizador.render(res, 'fornecedores', {}));
+router.get("/fornecedores", autenticar, (req, res) =>
+  res.renderizador.render(res, "fornecedores", {})
+);
 
 // Pedidos e Vendas
-router.get("/pedidos", (req, res) => res.render("pedidos"));
+router.get("/pedidos", autenticar, (req, res) => res.render("pedidos"));
 
-// Histórico
-router.get("/historico", (req, res) => res.render("historico"));
-
-router.get("/api/historico", historicoController.getHistorico);
-
-router.get("/api/historico/resumo", historicoController.getResumo);
-
-router.get("/api/historico/grafico", historicoController.getGrafico);
+// Histórico (páginas + API)
+router.get("/historico", autenticar, (req, res) => res.render("historico"));
+router.get("/api/historico", autenticar, historicoController.getHistorico);
+router.get("/api/historico/resumo", autenticar, historicoController.getResumo);
+router.get("/api/historico/grafico", autenticar, historicoController.getGrafico);
 
 // Mensagens
-router.get("/mensagens", (req, res) => res.render("mensagens"));
+router.get("/mensagens", autenticar, (req, res) => res.render("mensagens"));
 
 // Configurações
-router.get("/configuracoes", (req, res) => res.renderizador.render(res, 'configuracoes', {}));
+router.get("/configuracoes", autenticar, (req, res) =>
+  res.renderizador.render(res, "configuracoes", {})
+);
 
-router.get("/categoria", (req, res) => res.render("categoria"));
+router.get("/categoria", autenticar, (req, res) => res.render("categoria"));
 
-router.get("/chat", (req, res) => res.render("chat"));
+router.get("/chat", autenticar, (req, res) => res.render("chat"));
 
-// obter conversa com um contato
-router.get("/listar-conversas/:id_usuario", MessageController.listarConversas);
-router.get("/listar-mensagens/:id_conversa", MessageController.listarMensagens);
+// Conversas e mensagens (API)
+router.get("/listar-conversas/:id_usuario", autenticar, MessageController.listarConversas);
+router.get("/listar-mensagens/:id_conversa", autenticar, MessageController.listarMensagens);
 
-// ------------------- POSTs -------------------
-//Mensagem chat
-router.post("/send", sendMessage);
+// ------------------- POSTs (PROTEGIDOS) -------------------
 
+// Mensagem chat
+router.post("/send", autenticar, sendMessage);
+
+// Alterar senha
+router.post("/alterarSenha", autenticar, configuracoesController.alterarSenha);
+
+// Salvar configurações
+router.post("/salvarConfiguracoes", autenticar, configuracoesController.salvarConfiguracoes);
+
+// Atualizar dados
+router.post("/updateDados", autenticar, configuracoesController.updateDados);
+
+// Cadastrar produto
+router.post("/cadastrarProduto", autenticar, configuracoesController.cadastrarProduto);
+
+// enviar mensagem no chat
+router.post("/enviar", autenticar, MessageController.enviar);
+
+// ------------------- POSTs PÚBLICAS -------------------
 // Cadastro
 router.post("/cadastrar", loginController.cadastrar);
 
 // Login
 router.post("/logar", loginController.logar);
 
-// Alterar senha
-router.post("/alterarSenha", configuracoesController.alterarSenha);
-
-// Salvar configurações
-router.post("/salvarConfiguracoes", configuracoesController.salvarConfiguracoes);
-
-// Atualizar dados
-router.post("/updateDados", configuracoesController.updateDados);
-
-// Cadastrar produto
-router.post("/cadastrarProduto", configuracoesController.cadastrarProduto);
-
-// enviar mensagem no chat
-router.post("/enviar", MessageController.enviar);
-
-
 export default router;
-
