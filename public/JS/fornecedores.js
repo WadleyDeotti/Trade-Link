@@ -95,17 +95,6 @@ console.log("JS visual carregado com sucesso 🎨");
 
 // Abrir modal ao clicar no botão "Adicionar Produto"
 addProductBtn.addEventListener('click', () => {
-    // Resetar o modal para modo de adição
-    document.getElementById('product-name').value = '';
-    document.getElementById('product-description').value = '';
-    document.getElementById('product-price').value = '';
-    document.getElementById('categoria').value = '';
-    document.getElementById('product-modal-title').textContent = 'Adicionar Produto';
-    
-    // Restaurar action do form para adição
-    const form = document.querySelector('#product-modal form');
-    form.action = '/cadastrarProduto';
-    
     productModal.style.display = 'block';
 });
 
@@ -128,68 +117,171 @@ window.addEventListener('click', (event) => {
     }
 });
 
-// Função para visualizar produto
-function viewProduct(productId) {
-    // Buscar dados do produto e mostrar no modal de visualização
-    const productCard = document.querySelector(`[data-product-id="${productId}"]`);
-    if (productCard) {
-        const name = productCard.querySelector('.product-name').textContent;
-        const price = productCard.querySelector('.product-price').textContent;
-        const category = productCard.querySelector('.product-category').textContent;
-        
-        showToast(`Visualizando: ${name}`, 'info');
+// Variável global para armazenar o ID do produto sendo editado
+let produtoAtualId = null;
+
+// Função para abrir modal de edição
+function editarProduto() {
+    const editModal = document.getElementById('edit-product-modal');
+    const viewModal = document.getElementById('product-view-modal');
+    
+    if (produtoAtualId) {
+        // Buscar dados do produto
+        fetch(`/produto/${produtoAtualId}`)
+            .then(response => response.json())
+            .then(produto => {
+                // Preencher campos do modal de edição
+                document.getElementById('edit-product-id').value = produto.id_produto;
+                document.getElementById('edit-product-name').value = produto.nome_produto;
+                document.getElementById('edit-product-description').value = produto.descricao;
+                document.getElementById('edit-product-price').value = produto.preco;
+                document.getElementById('edit-categoria').value = produto.categoria;
+                
+                // Atualizar action do form
+                document.getElementById('formEditProduct').action = `/editarProduto/${produto.id_produto}`;
+                
+                // Fechar modal de visualização e abrir modal de edição
+                viewModal.style.display = 'none';
+                editModal.style.display = 'block';
+            })
+            .catch(error => {
+                console.error('Erro ao buscar produto:', error);
+                showToast('Erro ao carregar dados do produto', 'error');
+            });
     }
 }
 
-// Função para editar produto
-function editProduct(productId) {
-    const productCard = document.querySelector(`[data-product-id="${productId}"]`);
-    if (productCard) {
-        const name = productCard.querySelector('.product-name').textContent;
-        const price = productCard.querySelector('.product-price').textContent.replace('R$ ', '');
-        const category = productCard.querySelector('.product-category').textContent;
-        
-        // Preencher o modal com dados do produto
-        document.getElementById('product-name').value = name;
-        document.getElementById('product-price').value = price;
-        document.getElementById('categoria').value = category;
-        document.getElementById('product-modal-title').textContent = 'Editar Produto';
-        
-        // Alterar action do form para edição
-        const form = document.querySelector('#product-modal form');
-        form.action = `/editarProduto/${productId}`;
-        
-        productModal.style.display = 'block';
-    }
+// Função para fechar modal de edição
+function fecharModalEdicao() {
+    document.getElementById('edit-product-modal').style.display = 'none';
 }
 
-// Carrossel de produtos
-const carouselTrack = document.getElementById('products-track');
-const prevBtn = document.querySelector('.carousel-button-prev');
-const nextBtn = document.querySelector('.carousel-button-next');
-
-if (prevBtn && nextBtn && carouselTrack) {
-    let currentIndex = 0;
-    const productCards = carouselTrack.querySelectorAll('.product-card');
-    const cardsPerView = 3;
-    const maxIndex = Math.max(0, productCards.length - cardsPerView);
-
-    nextBtn.addEventListener('click', () => {
-        if (currentIndex < maxIndex) {
-            currentIndex++;
-            updateCarousel();
+// Fechar modal de edição ao clicar no X
+document.addEventListener('DOMContentLoaded', function() {
+    const editModal = document.getElementById('edit-product-modal');
+    const closeEditBtns = editModal.querySelectorAll('.close');
+    
+    closeEditBtns.forEach(btn => {
+        btn.addEventListener('click', fecharModalEdicao);
+    });
+    
+    // Fechar modal clicando fora
+    window.addEventListener('click', (event) => {
+        if(event.target === editModal){
+            fecharModalEdicao();
         }
     });
+});
 
-    prevBtn.addEventListener('click', () => {
-        if (currentIndex > 0) {
-            currentIndex--;
-            updateCarousel();
-        }
-    });
+// Função para definir o produto atual (deve ser chamada quando um produto é selecionado)
+function setProdutoAtual(id) {
+    produtoAtualId = id;
+}
 
-    function updateCarousel() {
-        const translateX = currentIndex * (100 / cardsPerView);
-        carouselTrack.style.transform = `translateX(-${translateX}%)`;
+// Função para fechar modal de visualização
+function fecharModal() {
+    document.getElementById('product-view-modal').style.display = 'none';
+}
+
+// Função para excluir produto
+function excluirProduto() {
+    if (produtoAtualId && confirm('Tem certeza que deseja excluir este produto?')) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = `/excluirProduto/${produtoAtualId}`;
+        document.body.appendChild(form);
+        form.submit();
     }
 }
+
+// Carregar produtos do fornecedor
+function carregarProdutos() {
+    const usuario = window.usuario || {};
+    if (usuario.id_fornecedor) {
+        fetch(`/produtos/fornecedor/${usuario.id_fornecedor}`)
+            .then(response => response.json())
+            .then(produtos => {
+                const carouselTrack = document.querySelector('.carousel-track');
+                const productsCount = document.getElementById('products-count');
+                
+                if (carouselTrack) {
+                    carouselTrack.innerHTML = '';
+                    
+                    if (produtos.length === 0) {
+                        carouselTrack.innerHTML = '<p class="no-products">Nenhum produto cadastrado ainda.</p>';
+                    } else {
+                        produtos.forEach(produto => {
+                            const produtoCard = document.createElement('div');
+                            produtoCard.className = 'product-card';
+                            produtoCard.innerHTML = `
+                                <div class="product-image">
+                                    <img src="/imagens/produto-default.jpg" alt="${produto.nome_produto}">
+                                </div>
+                                <div class="product-info">
+                                    <h3>${produto.nome_produto}</h3>
+                                    <p class="product-description">${produto.descricao || 'Sem descrição'}</p>
+                                    <p class="product-price">R$ ${parseFloat(produto.preco).toFixed(2)}</p>
+                                    <p class="product-category">${produto.categoria || 'Sem categoria'}</p>
+                                    <div class="product-actions">
+                                        <button class="btn btn-sm btn-primary" onclick="abrirModalVisualizacao(${produto.id_produto})">
+                                            <i class="fas fa-eye"></i> Ver
+                                        </button>
+                                        <button class="btn btn-sm btn-secondary" onclick="abrirModalEdicao(${produto.id_produto})">
+                                            <i class="fas fa-edit"></i> Editar
+                                        </button>
+                                    </div>
+                                </div>
+                            `;
+                            carouselTrack.appendChild(produtoCard);
+                        });
+                    }
+                    
+                    if (productsCount) {
+                        productsCount.textContent = produtos.length;
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Erro ao carregar produtos:', error);
+                const carouselTrack = document.querySelector('.carousel-track');
+                if (carouselTrack) {
+                    carouselTrack.innerHTML = '<p class="error-message">Erro ao carregar produtos.</p>';
+                }
+            });
+    } else {
+        console.log('Usuário não é fornecedor');
+    }
+}
+
+// Função para abrir modal de visualização
+function abrirModalVisualizacao(id) {
+    setProdutoAtual(id);
+    fetch(`/produto/${id}`)
+        .then(response => response.json())
+        .then(produto => {
+            const viewContent = document.getElementById('product-view-content');
+            viewContent.innerHTML = `
+                <div class="product-details">
+                    <h3>${produto.nome_produto}</h3>
+                    <p><strong>Descrição:</strong> ${produto.descricao}</p>
+                    <p><strong>Preço:</strong> R$ ${parseFloat(produto.preco).toFixed(2)}</p>
+                    <p><strong>Categoria:</strong> ${produto.categoria}</p>
+                </div>
+            `;
+            document.getElementById('product-view-modal').style.display = 'block';
+        })
+        .catch(error => {
+            console.error('Erro ao buscar produto:', error);
+        });
+}
+
+// Função para abrir modal de edição diretamente
+function abrirModalEdicao(id) {
+    setProdutoAtual(id);
+    editarProduto();
+}
+
+// Carregar produtos quando a página carregar
+document.addEventListener('DOMContentLoaded', function() {
+    carregarProdutos();
+});
