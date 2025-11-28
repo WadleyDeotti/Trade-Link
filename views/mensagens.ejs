@@ -34,7 +34,7 @@
             <header>
                 <h1><i class="fas fa-envelope"></i> Mensagens</h1>
                 <div class="user-info">
-                    <span>TradeLink</span>
+                    <span><TradeLink></span>
                     <img src="profile.jpg" alt="Usuário">
                 </div>
             </header>
@@ -130,28 +130,28 @@
                                 <img src="https://ui-avatars.com/api/?name=TradeLink&background=38528D&color=fff&size=80" alt="TradeLink" id="contact-avatar-large">
                             </div>
                             
-                            <div class="contact-name-large" id="contact-name-large">TradeLink</div>
+                            <div class="contact-name-large" id="contact-name-large"><%=usuario.nome_fantasia%></div>
                             <div class="contact-company" id="contact-company">Sistema de Mensagens</div>
                             
                             <div class="contact-info-section">
                                 <h4>Informações de Contato</h4>
                                 <div class="contact-info-item">
                                     <i class="fas fa-envelope"></i>
-                                    <span id="contact-email"><%= usuario.nome_fantasia %></span>
+                                    <span id="contact-email"><%= usuario.email %></span>
                                     <button class="btn-icon edit-info" data-field="email">
                                         <i class="fas fa-edit"></i>
                                     </button>
                                 </div>
                                 <div class="contact-info-item">
                                     <i class="fas fa-phone"></i>
-                                    <span id="contact-phone">(11) 3456-7890</span>
+                                    <span id="contact-phone"><%= usuario.telefone || "não definido" %></span>
                                     <button class="btn-icon edit-info" data-field="phone">
                                         <i class="fas fa-edit"></i>
                                     </button>
                                 </div>
                                 <div class="contact-info-item">
                                     <i class="fas fa-map-marker-alt"></i>
-                                    <span id="contact-address">São Paulo, SP</span>
+                                    <span id="contact-address"><%= usuario.localizacao %></span>
                                     <button class="btn-icon edit-info" data-field="address">
                                         <i class="fas fa-edit"></i>
                                     </button>
@@ -159,17 +159,17 @@
                             </div>
                             
                             <div class="contact-info-section">
-                                <h4>Detalhes da Empresa</h4>
+                                <h4>Detalhes d<%= usuario.cnpj? "a Empresa" : "o Fornecedor"%></h4>
                                 <div class="contact-info-item">
                                     <i class="fas fa-building"></i>
-                                    <span id="contact-company-name">TradeLink Ltda</span>
+                                    <span id="contact-company-name"><%= usuario.nome_fantasia %></span>
                                     <button class="btn-icon edit-info" data-field="companyName">
                                         <i class="fas fa-edit"></i>
                                     </button>
                                 </div>
                                 <div class="contact-info-item">
                                     <i class="fas fa-id-card"></i>
-                                    <span id="contact-cnpj">CNPJ: 12.345.678/0001-90</span>
+                                    <span id="contact-cnpj"><%= usuario.cnpj ? usuario.cnpj : usuario.cpf %></span>
                                     <button class="btn-icon edit-info" data-field="cnpj">
                                         <i class="fas fa-edit"></i>
                                     </button>

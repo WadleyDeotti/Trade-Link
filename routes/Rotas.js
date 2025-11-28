@@ -53,7 +53,7 @@ router.get("/api/historico/grafico", autenticar, historicoController.getGrafico)
 
 // Mensagens
 router.get("/mensagens", autenticar, (req, res) => {
-  res.render("mensagens", { usuario: req.session.usuario });
+  res.renderizador.render(res, "mensagens", {});
 });
 
 // Configurações
