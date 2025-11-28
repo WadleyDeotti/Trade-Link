@@ -275,102 +275,139 @@ export async function editarProduto(id_produto, { nome_produto, descricao, preco
 // ========== CONVERSAS ==========
 
 export async function buscarOuCriarConversa(usuario1, usuario2, tipo1, tipo2) {
-    const sql = `
-        SELECT * FROM conversas 
-        WHERE (usuario1_id = ? AND usuario2_id = ?)
-        OR (usuario1_id = ? AND usuario2_id = ?)
-    `;
+    try {
+        const sql = `
+            SELECT * FROM conversas 
+            WHERE (usuario1_id = ? AND usuario2_id = ?)
+            OR (usuario1_id = ? AND usuario2_id = ?)
+        `;
 
-    const [rows] = await this.pool.query(sql, [
-        usuario1, usuario2,
-        usuario2, usuario1
-    ]);
+        const [rows] = await conexao.execute(sql, [
+            usuario1, usuario2,
+            usuario2, usuario1
+        ]);
 
-    if (rows.length > 0) return rows[0];
+        if (rows.length > 0) return rows[0];
 
-    const insert = `
-        INSERT INTO conversas (usuario1_id, usuario2_id, tipo1, tipo2)
-        VALUES (?, ?, ?, ?)
-    `;
+        const insert = `
+            INSERT INTO conversas (usuario1_id, usuario2_id, tipo1, tipo2)
+            VALUES (?, ?, ?, ?)
+        `;
 
-    const [result] = await this.pool.query(insert, [
-        usuario1, usuario2,
-        tipo1, tipo2
-    ]);
+        const [result] = await conexao.execute(insert, [
+            usuario1, usuario2,
+            tipo1, tipo2
+        ]);
 
-    return {
-        id_conversa: result.insertId,
-        usuario1_id: usuario1,
-        usuario2_id: usuario2,
-        tipo1,
-        tipo2
-    };
+        return {
+            id_conversa: result.insertId,
+            usuario1_id: usuario1,
+            usuario2_id: usuario2,
+            tipo1,
+            tipo2
+        };
+    } catch (error) {
+        console.error('Erro ao buscar ou criar conversa:', error);
+        throw error;
+    }
 }
 
 export async function listarConversasDoUsuario(id_usuario) {
-    const sql = `
-        SELECT c.*,
-            (SELECT conteudo FROM mensagens 
-              WHERE id_conversa = c.id_conversa 
-              ORDER BY id_mensagem DESC LIMIT 1) AS ultima_msg,
+    try {
+        const sql = `
+            SELECT c.*,
+                (SELECT conteudo FROM mensagens 
+                  WHERE id_conversa = c.id_conversa 
+                  ORDER BY id_mensagem DESC LIMIT 1) AS ultima_msg,
 
-            (SELECT COUNT(*) FROM mensagens 
-              WHERE id_conversa = c.id_conversa 
-              AND lida = 0
-              AND remetente_id != ?) AS nao_lidas
+                (SELECT COUNT(*) FROM mensagens 
+                  WHERE id_conversa = c.id_conversa 
+                  AND lida = 0
+                  AND remetente_id != ?) AS nao_lidas,
 
-        FROM conversas c
-        WHERE c.usuario1_id = ? OR c.usuario2_id = ?
-    `;
+                COALESCE(f1.nome_fantasia, e1.nome_fantasia, f2.nome_fantasia, e2.nome_fantasia) AS nome_contato
 
-    const [rows] = await this.pool.query(sql, [
-        id_usuario,
-        id_usuario,
-        id_usuario
-    ]);
+            FROM conversas c
+            LEFT JOIN fornecedores f1 ON (c.usuario1_id != ? AND c.usuario1_id = f1.id_fornecedor AND c.tipo1 = 'fornecedor')
+            LEFT JOIN empresas e1 ON (c.usuario1_id != ? AND c.usuario1_id = e1.id_empresa AND c.tipo1 = 'empresa')
+            LEFT JOIN fornecedores f2 ON (c.usuario2_id != ? AND c.usuario2_id = f2.id_fornecedor AND c.tipo2 = 'fornecedor')
+            LEFT JOIN empresas e2 ON (c.usuario2_id != ? AND c.usuario2_id = e2.id_empresa AND c.tipo2 = 'empresa')
+            WHERE c.usuario1_id = ? OR c.usuario2_id = ?
+            ORDER BY c.criado_em DESC
+        `;
 
-    return rows;
+        const [rows] = await conexao.execute(sql, [
+            id_usuario,
+            id_usuario,
+            id_usuario,
+            id_usuario,
+            id_usuario,
+            id_usuario,
+            id_usuario
+        ]);
+
+        console.log('Conversas encontradas:', rows);
+        return rows;
+    } catch (error) {
+        console.error('Erro ao listar conversas:', error);
+        throw error;
+    }
 }
 
 // ========== MENSAGENS ==========
 
 export async function salvarMensagem(id_conversa, remetente_id, tipo_remetente, conteudo) {
-    const sql = `
-        INSERT INTO mensagens (id_conversa, remetente_id, tipo_remetente, conteudo)
-        VALUES (?, ?, ?, ?)
-    `;
+    try {
+        const sql = `
+            INSERT INTO mensagens (id_conversa, remetente_id, tipo_remetente, conteudo)
+            VALUES (?, ?, ?, ?)
+        `;
 
-    const [result] = await this.pool.query(sql, [
-        id_conversa,
-        remetente_id,
-        tipo_remetente,
-        conteudo
-    ]);
+        const [result] = await conexao.execute(sql, [
+            id_conversa,
+            remetente_id,
+            tipo_remetente,
+            conteudo
+        ]);
 
-    return result.insertId;
+        return result.insertId;
+    } catch (error) {
+        console.error('Erro ao salvar mensagem:', error);
+        throw error;
+    }
 }
 
 export async function listarMensagens(id_conversa) {
-    const sql = `
-        SELECT *
-        FROM mensagens
-        WHERE id_conversa = ?
-        ORDER BY enviado_em ASC
-    `;
+    try {
+        const sql = `
+            SELECT *
+            FROM mensagens
+            WHERE id_conversa = ?
+            ORDER BY enviado_em ASC
+        `;
 
-    const [rows] = await this.pool.query(sql, [id_conversa]);
-    return rows;
+        const [rows] = await conexao.execute(sql, [id_conversa]);
+        return rows;
+    } catch (error) {
+        console.error('Erro ao listar mensagens:', error);
+        throw error;
+    }
 }
 
 export async function marcarLidas(id_conversa, usuario_id) {
-    const sql = `
-        UPDATE mensagens
-        SET lida = 1
-        WHERE id_conversa = ?
-          AND remetente_id != ?
-    `;
+    try {
+        const sql = `
+            UPDATE mensagens
+            SET lida = 1
+            WHERE id_conversa = ?
+              AND remetente_id != ?
+        `;
 
-    await this.pool.query(sql, [id_conversa, usuario_id]);
+        await conexao.execute(sql, [id_conversa, usuario_id]);
+    } catch (error) {
+        console.error('Erro ao marcar mensagens como lidas:', error);
+        throw error;
+    }
 }
 
 

@@ -9,7 +9,6 @@
 </head>
 <body>
     <div class="dashboard-container">
-        
         <div class="sidebar">
             <div class="logo">
                 <img src="logo.png" alt="TradeLink">
@@ -29,19 +28,17 @@
            </nav>
         </div>
 
-        
         <div class="main-content">
             <header>
                 <h1><i class="fas fa-envelope"></i> Mensagens</h1>
                 <div class="user-info">
-                    <span><TradeLink></span>
-                    <img src="profile.jpg" alt="Usuário">
+                    <span>TradeLink</span>
+                    <img src="https://ui-avatars.com/api/?name=User&background=38528D&color=fff&size=40" alt="Usuário">
                 </div>
             </header>
 
             <div class="content">
                 <div class="messages-container">
-                    <!-- Lista de conversas -->
                     <div class="conversations-list">
                         <div class="conversations-header">
                             <h2>Conversas</h2>
@@ -60,7 +57,6 @@
                         </div>
                     </div>
                     
-                    <!-- Área de conversa -->
                     <div class="conversation-area">
                         <div class="conversation-header">
                             <div class="current-contact" id="current-contact">
@@ -73,17 +69,8 @@
                                 </div>
                             </div>
                             <div class="conversation-actions" id="conversation-actions" style="display: none;">
-                                <button class="btn-icon" title="Ligar">
-                                    <i class="fas fa-phone"></i>
-                                </button>
-                                <button class="btn-icon" title="Vide chamada">
-                                    <i class="fas fa-video"></i>
-                                </button>
                                 <button class="btn-icon" title="Informações" id="toggle-contact-info">
                                     <i class="fas fa-info-circle"></i>
-                                </button>
-                                <button class="btn-icon" title="Editar conversa" id="edit-conversation">
-                                    <i class="fas fa-edit"></i>
                                 </button>
                             </div>
                         </div>
@@ -93,18 +80,9 @@
                                 <i class="fas fa-comments"></i>
                                 <p>Selecione uma conversa para ver as mensagens</p>
                             </div>
-                            <!-- As mensagens serão carregadas aqui via JavaScript -->
                         </div>
                         
                         <div class="message-input-container" id="message-input-container" style="display: none;">
-                            <div class="message-input-actions">
-                                <button class="btn-icon" title="Anexar arquivo">
-                                    <i class="fas fa-paperclip"></i>
-                                </button>
-                                <button class="btn-icon" title="Emojis">
-                                    <i class="far fa-smile"></i>
-                                </button>
-                            </div>
                             <div class="message-input">
                                 <textarea id="message-text" placeholder="Digite sua mensagem..." rows="1"></textarea>
                             </div>
@@ -116,7 +94,6 @@
                         </div>
                     </div>
                     
-                    <!-- Informações do contato (opcional) -->
                     <div class="contact-info-panel" id="contact-info-panel">
                         <div class="contact-info-header">
                             <h3>Informações do Contato</h3>
@@ -138,48 +115,15 @@
                                 <div class="contact-info-item">
                                     <i class="fas fa-envelope"></i>
                                     <span id="contact-email"><%= usuario.email %></span>
-                                    <button class="btn-icon edit-info" data-field="email">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
                                 </div>
                                 <div class="contact-info-item">
                                     <i class="fas fa-phone"></i>
                                     <span id="contact-phone"><%= usuario.telefone || "não definido" %></span>
-                                    <button class="btn-icon edit-info" data-field="phone">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
                                 </div>
                                 <div class="contact-info-item">
                                     <i class="fas fa-map-marker-alt"></i>
                                     <span id="contact-address"><%= usuario.localizacao %></span>
-                                    <button class="btn-icon edit-info" data-field="address">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
                                 </div>
-                            </div>
-                            
-                            <div class="contact-info-section">
-                                <h4>Detalhes d<%= usuario.cnpj? "a Empresa" : "o Fornecedor"%></h4>
-                                <div class="contact-info-item">
-                                    <i class="fas fa-building"></i>
-                                    <span id="contact-company-name"><%= usuario.nome_fantasia %></span>
-                                    <button class="btn-icon edit-info" data-field="companyName">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                </div>
-                                <div class="contact-info-item">
-                                    <i class="fas fa-id-card"></i>
-                                    <span id="contact-cnpj"><%= usuario.cnpj ? usuario.cnpj : usuario.cpf %></span>
-                                    <button class="btn-icon edit-info" data-field="cnpj">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            
-                            <div class="contact-actions">
-                                <button class="btn btn-secondary">
-                                    <i class="fas fa-file-alt"></i> Ver Pedidos
-                                </button>
                             </div>
                         </div>
                     </div>
@@ -188,7 +132,6 @@
         </div>
     </div>
 
-    
     <div id="new-conversation-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -196,88 +139,23 @@
                 <span class="close">&times;</span>
             </div>
             <div class="modal-body">
-                <form id="new-conversation-form">
-                    <div class="form-group">
-                        <label for="conversation-type">Tipo de Contato:</label>
-                        <select id="conversation-type" required>
-                            <option value="">Selecione o tipo</option>
-                            <option value="supplier">Fornecedor</option>
-                            <option value="client">Cliente</option>
-                            <option value="logistics">Logística</option>
-                            <option value="internal">Interno TradeLink</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="conversation-search">Buscar Contato:</label>
-                        <input type="text" id="conversation-search" placeholder="Digite o nome do contato">
-                    </div>
-                    
-                    <div class="contacts-list" id="contacts-list">
-                        <!-- Os contatos serão carregados aqui via JavaScript -->
-                    </div>
-                    
-                    <div class="form-actions">
-                        <button type="button" class="btn btn-secondary close-modal">Cancelar</button>
-                        <button type="submit" class="btn btn-primary">Iniciar Conversa</button>
-                    </div>
-                </form>
+                <div class="form-group">
+                    <label for="conversation-search">Buscar Contato:</label>
+                    <input type="text" id="conversation-search" placeholder="Digite o nome do contato...">
+                </div>
+                
+                <div class="contacts-list" id="contacts-list">
+                    <!-- Contatos serão carregados aqui -->
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary close-modal">Cancelar</button>
+                </div>
             </div>
         </div>
     </div>
 
-    
-    <div id="edit-conversation-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Editar Conversa</h2>
-                <span class="close">&times;</span>
-            </div>
-            <div class="modal-body">
-                <form id="edit-conversation-form">
-                    <input type="hidden" id="edit-conversation-id">
-                    
-                    <div class="form-group">
-                        <label for="edit-conversation-name">Nome da Conversa:</label>
-                        <input type="text" id="edit-conversation-name" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="edit-conversation-notifications">Notificações:</label>
-                        <select id="edit-conversation-notifications">
-                            <option value="all">Todas as mensagens</option>
-                            <option value="mentions">Apenas menções</option>
-                            <option value="none">Nenhuma</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="edit-conversation-muted"> 
-                            <span class="checkmark"></span>
-                            Silenciar conversa
-                        </label>
-                    </div>
-                    
-                    <div class="form-actions">
-                        <button type="button" class="btn btn-danger" id="delete-conversation">
-                            <i class="fas fa-trash"></i> Excluir Conversa
-                        </button>
-                        <button type="button" class="btn btn-secondary close-modal">Cancelar</button>
-                        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    
-    <div id="toast" class="toast">
-        <i class="fas fa-check-circle"></i>
-        <span id="toast-message">Operação realizada com sucesso!</span>
-    </div>
-
-    <script src="/node_modules/socket.io/socket.io.js"></script>
-    <script src="/JS/mensagens.js"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+    <script src="/JS/mensagens.js"></script>
 </body>
 </html>

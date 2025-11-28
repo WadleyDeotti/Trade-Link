@@ -53,7 +53,7 @@ router.get("/api/historico/grafico", autenticar, historicoController.getGrafico)
 
 // Mensagens
 router.get("/mensagens", autenticar, (req, res) => {
-  res.renderizador.render(res, "mensagens", {});
+  res.render("mensagens", { usuario: req.session.usuario });
 });
 
 // Configurações
@@ -84,9 +84,49 @@ router.get("/api/usuario-atual", autenticar, (req, res) => {
   res.json(req.session.usuario);
 });
 
+// API para listar contatos (empresas e fornecedores)
+router.get("/api/contatos", autenticar, async (req, res) => {
+  try {
+    const { getFornecedor, buscarEmpresaPorId } = await import("../Repository.js");
+    
+    // Buscar fornecedores
+    const fornecedores = await getFornecedor();
+    
+    // Buscar empresas (você pode precisar criar uma função similar no Repository)
+    const empresas = []; // Por enquanto vazio, você pode implementar depois
+    
+    const contatos = [
+      ...fornecedores.map(f => ({ ...f, tipo: 'fornecedor' })),
+      ...empresas.map(e => ({ ...e, tipo: 'empresa' }))
+    ];
+    
+    res.json(contatos);
+  } catch (error) {
+    console.error("Erro ao buscar contatos:", error);
+    res.status(500).json({ error: "Erro ao buscar contatos" });
+  }
+});
+
 // Conversas e mensagens (API)
 router.get("/listar-conversas/:id_usuario", autenticar, MessageController.listarConversas);
 router.get("/listar-mensagens/:id_conversa", autenticar, MessageController.listarMensagens);
+
+// Criar nova conversa
+router.post("/criar-conversa", autenticar, async (req, res) => {
+  try {
+    const { buscarOuCriarConversa } = await import("../Repository.js");
+    const usuario = req.session.usuario;
+    const usuario1 = usuario.id_fornecedor || usuario.id_empresa;
+    const tipo1 = usuario.id_fornecedor ? 'fornecedor' : 'empresa';
+    const { usuario2, tipo2 } = req.body;
+    
+    const conversa = await buscarOuCriarConversa(usuario1, usuario2, tipo1, tipo2);
+    res.json(conversa);
+  } catch (error) {
+    console.error("Erro ao criar conversa:", error);
+    res.status(500).json({ error: "Erro ao criar conversa" });
+  }
+});
 
 // ------------------- POSTs (PROTEGIDOS) -------------------
 

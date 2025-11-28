@@ -12,11 +12,12 @@ const service = new MessageService(chatObserver);
 class ChatController {
 
   // =======================
-  // LISTAR CONVERSAS\
+  // LISTAR CONVERSAS
   // =======================
   async listarConversas(req, res) {
     try {
-      const id_usuario = req.session.usuario.id_usuario;
+      const usuario = req.session.usuario;
+      const id_usuario = usuario.id_fornecedor || usuario.id_empresa;
 
       const conversas = await listarConversasDoUsuario(id_usuario);
 
@@ -33,13 +34,14 @@ class ChatController {
   // =======================
   async listarMensagens(req, res) {
     try {
-      const usuario = req.session.usuario.id_usuario;
+      const usuario = req.session.usuario;
+      const usuario_id = usuario.id_fornecedor || usuario.id_empresa;
       const { id_conversa } = req.params;
 
       const msgs = await service.listarMensagens(id_conversa);
 
       // marca como lidas
-      await marcarLidas(id_conversa, usuario);
+      await marcarLidas(id_conversa, usuario_id);
 
       res.json(msgs);
 
@@ -54,7 +56,8 @@ class ChatController {
   // =======================
   async enviar(req, res) {
     try {
-      const remetente_id = req.session.usuario.id_usuario;
+      const usuario = req.session.usuario;
+      const remetente_id = usuario.id_fornecedor || usuario.id_empresa;
       const { id_conversa, tipo_remetente, conteudo } = req.body;
 
       // Salva + notifica via Observer
