@@ -4,10 +4,10 @@ import {
   salvarMensagem,
   marcarLidas
 } from "../Repository.js";
-import ChatService from "../service.js";
+import MessageService from "../service.js";
 import chatObserver from "../utils/MessageObserver.js";
 
-const service = new ChatService(chatObserver);
+const service = new MessageService(chatObserver);
 
 class ChatController {
 
@@ -58,7 +58,7 @@ class ChatController {
       const { id_conversa, tipo_remetente, conteudo } = req.body;
 
       // Salva + notifica via Observer
-      const msg = await service.salvarMensagem(
+      const msg = await service.enviarMensagem(
         id_conversa,
         remetente_id,
         tipo_remetente,
@@ -70,6 +70,29 @@ class ChatController {
     } catch (err) {
       console.error(err);
       res.status(500).json({ error: "Erro ao enviar mensagem" });
+    }
+  }
+
+  // =======================
+  // SALVAR MENSAGEM
+  // =======================
+  async salvarMensagemChat(req, res) {
+    try {
+      const remetente_id = req.session.usuario.id_usuario;
+      const { id_conversa, tipo_remetente, conteudo } = req.body;
+
+      const id_mensagem = await salvarMensagem(
+        id_conversa,
+        remetente_id,
+        tipo_remetente,
+        conteudo
+      );
+
+      res.json({ id_mensagem, success: true });
+
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "Erro ao salvar mensagem" });
     }
   }
 

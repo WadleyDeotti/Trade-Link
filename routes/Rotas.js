@@ -104,6 +104,9 @@ router.post("/editarProduto/:id", autenticar, produtoManagementController.editar
 // enviar mensagem no chat
 router.post("/enviar", autenticar, MessageController.enviar);
 
+// salvar mensagem no chat
+router.post("/salvar-mensagem", autenticar, MessageController.salvarMensagemChat);
+
 // ------------------- POSTs PÚBLICAS -------------------
 // Cadastro
 router.post("/cadastrar", loginController.cadastrar);

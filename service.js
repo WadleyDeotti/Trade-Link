@@ -31,6 +31,10 @@ class MessageService {
     async listarMensagens(id_conversa) {
         return await Repository.listarMensagens(id_conversa);
     }
+
+    async salvarMensagem(id_conversa, remetente_id, tipo_remetente, conteudo) {
+        return await Repository.salvarMensagem(id_conversa, remetente_id, tipo_remetente, conteudo);
+    }
 }
 
 export default MessageService;
