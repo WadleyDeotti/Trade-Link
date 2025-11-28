@@ -1,7 +1,6 @@
 // routes/usuarioRoutes.js
 import express from "express";
 import * as usuarioController from "../controllers/usuarioController.js";
-import * as produtoManagementController from "../controllers/produtoManagementController.js";
 import * as configController from "../controllers/configController.js";
 import * as loginController from "../controllers/loginController.js";
 import * as inicialController from "../controllers/inicialController.js";
@@ -9,7 +8,6 @@ import * as categoriaController from "../controllers/categoriaController.js";
 import * as produtoController from "../controllers/produtoController.js";
 import * as historicoController from "../controllers/historicoController.js";
 import MessageController from "../controllers/MessageController.js";
-
 import { sendMessage } from "../controllers/chatController.js"; // usar .js com ES Module
 import { autenticar } from "../middleware/auth.js";
 
@@ -143,10 +141,19 @@ router.post("/salvarConfiguracoes", autenticar, configController.salvarConfigura
 router.post("/updateDados", autenticar, usuarioController.updateDados);
 
 // Cadastrar produto
-router.post("/cadastrarProduto", autenticar, produtoManagementController.cadastrarProduto);
+router.post("/cadastrarProduto", autenticar, produtoController.cadastrarProduto);
 
 // Editar produto
-router.post("/editarProduto/:id", autenticar, produtoManagementController.editarProduto);
+router.post("/editarProduto/:id", autenticar, produtoController.editarProduto);
+
+// API para buscar produto (JSON)
+router.get("/api/produto/:id", autenticar, produtoController.buscarProduto);
+
+// Buscar produtos do fornecedor
+router.get("/produtos/fornecedor/:id", autenticar, produtoController.buscarProdutosFornecedor);
+
+// Excluir produto
+router.post("/excluirProduto/:id", autenticar, produtoController.excluirProduto);
 
 // enviar mensagem no chat
 router.post("/enviar", autenticar, MessageController.enviar);

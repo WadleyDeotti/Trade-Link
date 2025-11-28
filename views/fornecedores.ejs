@@ -24,7 +24,6 @@
                     <li><a href="pedidos"><i class="fas fa-file-invoice"></i> Pedidos/Vendas</a></li>
                     <li><a href="historico"><i class="fas fa-history"></i> Histórico</a></li>
                     <li><a href="chat"><i class="fas fa-robot"></i> Chat IA</a></li>
-                    <li><a href="mensagens"><i class="fas fa-envelope"></i> Mensagens</a></li>
                     <li><a href="categoria"><i class="fas fa-tags"></i> Categorias</a></li>
                     <li><a href="configuracoes"><i class="fas fa-cog"></i> Configurações</a></li>
                 </ul>
@@ -67,7 +66,7 @@
                             </p>
                             <div class="profile-stats">
                                 <div class="stat-item">
-                                    <span class="stat-value" id="products-count">0</span>
+                                    <span class="stat-value" id="products-count"><%= typeof produtosFornecedor !== 'undefined' ? produtosFornecedor.length : 0 %></span>
                                     <span class="stat-label">Produtos</span>
                                 </div>
                                 <div class="stat-item">
@@ -137,7 +136,54 @@
                         </button>
                     </div>
                 </form>
+                <% if(usuario.id_fornecedor){ %>
+                    <div class="form-section">
+                        <h2>Produtos do Fornecedor</h2>
+                        <div class="products-section">
+                            <div class="products-carousel">
+                                <button class="carousel-button carousel-button-prev">
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+                                <div class="carousel-container">
+                                    <div class="carousel-track">
+                                        <% if (typeof produtosFornecedor !== 'undefined' && produtosFornecedor.length > 0) { %>
+                                            <% produtosFornecedor.forEach(produto => { %>
+                                                <div class="product-card">
+                                                    <div class="product-image">
+                                                        <img src="/imagens/produto-default.jpg" alt="<%= produto.nome_produto %>">
+                                                    </div>
+                                                    <div class="product-info">
+                                                        <h3><%= produto.nome_produto %></h3>
+                                                        <p class="product-description"><%= produto.descricao || 'Sem descrição' %></p>
+                                                        <p class="product-price">R$ <%= parseFloat(produto.preco).toFixed(2) %></p>
+                                                        <p class="product-category"><%= produto.categoria || 'Sem categoria' %></p>
+                                                        <div class="product-actions">
+                                                            <button class="btn btn-sm btn-primary" onclick="abrirModalVisualizacao(<%= produto.id_produto %>)">
+                                                                <i class="fas fa-eye"></i> Ver
+                                                            </button>
+                                                            <button class="btn btn-sm btn-secondary" onclick="abrirModalEdicao(<%= produto.id_produto %>)">
+                                                                <i class="fas fa-edit"></i> Editar
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            <% }) %>
+                                        <% } else { %>
+                                            <p class="no-products">Nenhum produto cadastrado ainda.</p>
+                                        <% } %>
+                                    </div>
+                                </div>
+                                <button class="carousel-button carousel-button-next">
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
+                            <button class="btn btn-primary" id="add-product-btn">
+                                <i class="fas fa-plus"></i> Adicionar Produto
+                            </button>
+                        </div>
+                    </div>
             </div>
+            <% } %>
         </div>
     </div>
 
@@ -166,15 +212,14 @@
     </div>
 
     <!-- Modal para Adicionar/Editar Produto -->
-    <form action="cadastrarProduto" method="POST">
-        <div id="product-modal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 id="product-modal-title">Adicionar Produto</h2>
-                    <span class="close">&times;</span>
-                </div>
-                <div class="modal-body">
-                    <form id="formProduct">
+    <div id="product-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="product-modal-title">Adicionar Produto</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="formProduct" action="cadastrarProduto" method="POST">
                         <div class="form-group">
                             <label for="product-name">Nome do Produto:</label>
                             <input id="product-name" type="text" name="nome_produto" required>
@@ -206,15 +251,57 @@
                                     style="max-width: 100%; max-height: 200px;">
                             </div>
                         </div>
-                    </form>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" id="cancel-product-btn">Cancelar</button>
+                        <button type="submit" class="btn btn-primary" id="save-product-btn">Salvar Produto</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Editar Produto -->
+    <form id="formEditProduct" method="POST">
+        <div id="edit-product-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Editar Produto</h2>
+                    <span class="close">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="edit-product-id" name="id_produto">
+                    <div class="form-group">
+                        <label for="edit-product-name">Nome do Produto:</label>
+                        <input id="edit-product-name" type="text" name="nome_produto" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-product-description">Descrição:</label>
+                        <textarea id="edit-product-description" name="descricao" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-product-price">Preço (R$):</label>
+                        <input id="edit-product-price" type="number" step="0.01" name="preco" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-categoria">Categoria:</label>
+                        <select id="edit-categoria" name="categoria" required>
+                            <option value="">Selecione uma categoria</option>
+                            <option value="eletronicos">Eletrônicos</option>
+                            <option value="roupas">Roupas</option>
+                            <option value="alimentos">Alimentos</option>
+                            <option value="livros">Livros</option>
+                            <option value="outros">Outros</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" id="cancel-product-btn">Cancelar</button>
-                    <button type="submit" class="btn btn-primary" id="save-product-btn">Salvar Produto</button>
+                    <button type="button" class="btn btn-secondary" onclick="fecharModalEdicao()">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar Alterações</button>
                 </div>
             </div>
         </div>
     </form>
+
     <!-- Modal de Visualização/Edição do Produto -->
     <div id="product-view-modal" class="modal">
         <div class="modal-content">
@@ -228,9 +315,9 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" id="close-product-btn">Fechar</button>
-                <button type="button" class="btn btn-primary" id="edit-product-btn">Editar</button>
-                <button type="button" class="btn btn-danger" id="delete-product-btn">Excluir</button>
+                <button type="button" class="btn btn-secondary" onclick="fecharModal()">Fechar</button>
+                <button type="button" class="btn btn-primary" onclick="editarProduto()">Editar</button>
+                <button type="button" class="btn btn-danger" onclick="excluirProduto()">Excluir</button>
             </div>
         </div>
     </div>
@@ -258,6 +345,10 @@
         <span id="toast-message">Operação realizada com sucesso!</span>
     </div>
 
+    <script>
+        // Disponibilizar dados do usuário para o JavaScript
+        window.usuario = <%- JSON.stringify(usuario) %>;
+    </script>
     <script src="JS/fornecedores.js"></script>
 </body>
 

@@ -272,6 +272,73 @@ export async function editarProduto(id_produto, { nome_produto, descricao, preco
   return resultado;
 }
 
+export async function inserirProduto(produto) {
+  const sql = `
+    INSERT INTO produtos (
+      id_fornecedor,
+      nome_produto,
+      preco,
+      descricao,
+      disponivel,
+      categoria
+    ) VALUES (?, ?, ?, ?, ?, ?)
+  `;
+
+  const valores = [
+    produto.id_fornecedor,
+    produto.nome_produto,
+    produto.preco,
+    produto.descricao,
+    produto.disponivel,
+    produto.categoria
+  ];
+
+  const [resultado] = await conexao.execute(sql, valores);
+  return resultado;
+}
+
+export async function updateProdutos(dados) {
+  const sql = `
+    UPDATE produtos SET
+      nome_produto = ?,
+      preco = ?,
+      descricao = ?,
+      categoria = ?
+    WHERE id_produto = ?
+  `;
+
+  const values = [
+    dados.nome_produto,
+    dados.preco,
+    dados.descricao,
+    dados.categoria,
+    dados.id_produto
+  ];
+
+  console.log('📦 Dados recebidos no repository:', dados);
+
+  const [resultado] = await conexao.execute(sql, values);
+  console.log('🧾 Resultado do UPDATE:', resultado);
+
+  return resultado;
+}
+
+export async function deleteProduto(id_produto) {
+  const sql = `
+    DELETE FROM produtos
+    WHERE id_produto = ?
+  `;
+
+  const values = [id_produto];
+
+  console.log('🗑️ ID recebido para exclusão:', id_produto);
+
+  const [resultado] = await conexao.execute(sql, values);
+  console.log('🧾 Resultado do DELETE:', resultado);
+
+  return resultado;
+}
+
 // ========== CONVERSAS ==========
 
 export async function buscarOuCriarConversa(usuario1, usuario2, tipo1, tipo2) {
