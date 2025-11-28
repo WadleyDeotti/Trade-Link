@@ -82,6 +82,8 @@ router.get("/api/usuario-atual", autenticar, (req, res) => {
   res.json(req.session.usuario);
 });
 
+
+
 // API para listar contatos (empresas e fornecedores)
 router.get("/api/contatos", autenticar, async (req, res) => {
   try {

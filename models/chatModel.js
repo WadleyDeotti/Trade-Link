@@ -1,20 +1,15 @@
 // models/chatModel.js
-import fs from "fs";
-import path from "path";
-import xlsx from "xlsx";
-
-const faqPath = path.resolve("data/faq.xlsx");
+const faqData = [
+  { pergunta: "como funciona", resposta: "O Trade Link conecta empresas e fornecedores para facilitar negociações e contratos." },
+  { pergunta: "cadastro", resposta: "Você pode se cadastrar como empresa ou fornecedor na página de registro." },
+  { pergunta: "contrato", resposta: "Nossa plataforma automatiza a criação de contratos comerciais entre as partes." },
+  { pergunta: "suporte", resposta: "Para suporte técnico, entre em contato através do chat ou email." }
+];
 
 export function findFAQAnswer(userQuestion) {
-  if (!fs.existsSync(faqPath)) return null;
-
-  const workbook = xlsx.readFile(faqPath);
-  const sheet = workbook.Sheets[workbook.SheetNames[0]];
-  const data = xlsx.utils.sheet_to_json(sheet);
-
-  const match = data.find(item =>
+  const match = faqData.find(item =>
     userQuestion.toLowerCase().includes(item.pergunta.toLowerCase())
   );
-
+  
   return match ? match.resposta : null;
 }

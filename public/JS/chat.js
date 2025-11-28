@@ -13,7 +13,7 @@ async function sendMessage() {
     // Chamada para API GPT
     try {
 
-       const res = await fetch('/chat/send', {
+       const res = await fetch('/send', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ message: text })
