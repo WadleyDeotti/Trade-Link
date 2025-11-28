@@ -23,35 +23,35 @@ O **Trade Link** é uma plataforma digital que conecta **empresas e fornecedores
 # Requisitos Funcionais
 
 - [x] **RF01** – O sistema deve permitir o cadastro de fornecedores.  
-- [x] **RF02** – O sistema deve permitir o cadastro de empreendedores.  
+- [x] **RF02** – O sistema deve permitir o cadastro de empresas.  
 - [x] **RF03** – O usuário deve poder realizar login e autenticação segura.  
 - [x] **RF04** – O sistema deve permitir que fornecedores cadastrem seus produtos e serviços.  
-- [ ] **RF05** – O sistema deve permitir que empreendedores pesquisem fornecedores por categoria.  
-- [ ] **RF06** – O sistema deve ter um mecanismo de busca eficiente.  
-- [x] **RF07** – Os usuários devem poder conversar com uma ia.  
+- [x] **RF05** – O sistema deve permitir que empresas pesquisem fornecedores por categoria.  
+- [x] **RF06** – O sistema deve ter um mecanismo de busca eficiente.  
+- [x] **RF07** – Os usuários devem poder conversar com uma IA.  
 - [x] **RF08** – O sistema deve permitir que fornecedores personalizem seus perfis.  
-- [x] **RF09** – O usuário deve poder redefinir a senha em caso de esquecimento.  
-- [-] **RF10** – O sistema deve enviar notificações sobre mensagens e negociações pendentes.  
-- [x] **RF11** – O usuário deve conseguir visualizar um histórico de negociações.  
-- [-] **RF12** – O sistema deve permitir integração com gateways de pagamento para transações diretas.  
-- [ ] **RF13** – O sistema deve permitir avaliações e comentários sobre fornecedores.  
-- [x] **RF14** – O sistema deve permitir a exportação de relatórios sobre compras e negociações.  
-- [x] **RF15** – Deve haver um dashboard com métricas de uso para fornecedores.  
-- [-] **RF16** – O sistema deve permitir a filtragem de fornecedores por localização.  
-- [-] **RF17** – O sistema deve permitir integração com redes sociais para login.  
-- [-] **RF18** – O sistema deve ter um sistema de recomendação de fornecedores baseado em buscas anteriores.  
-- [-] **RF19** – O usuário deve poder favoritar fornecedores para contato futuro.  
-- [ ] **RF20** – O sistema deve permitir que fornecedores criem promoções e descontos.  
-- [-] **RF21** – O sistema deve oferecer suporte a múltiplos idiomas.  
-- [ ] **RF22** – O sistema deve permitir que fornecedores e empreendedores enviem documentos e contratos.  
-- [ ] **RF23** – O sistema deve permitir o agendamento de reuniões online entre fornecedores e clientes.  
-- [x] **RF24** – O sistema deve oferecer um chat em tempo real para suporte técnico.  
-- [ ] **RF25** – O sistema deve gerar alertas sobre prazos e entregas.  
-- [-] **RF26** – O sistema deve permitir integração com serviços logísticos parceiros.  
-- [ ] **RF27** – O sistema deve oferecer um modo "catálogo" para fornecedores exibirem seus produtos de forma organizada.  
-- [-] **RF28** – O sistema deve permitir a criação de listas de compras e pedidos recorrentes.  
-- [-] **RF29** – O sistema deve contar com autenticação em dois fatores para maior segurança.  
-- [-] **RF30** – O sistema deve permitir um modo premium para fornecedores que desejam maior visibilidade.  
+- [ ] **RF09** – O usuário deve poder redefinir a senha em caso de esquecimento.   
+- [x] **RF10** – O sistema deve permitir configurações de privacidade e notificações.
+- [x] **RF11** – O usuário deve conseguir visualizar um histórico de negociações.   
+- [x] **RF12** – O sistema deve permitir gestão de produtos pelos fornecedores.
+- [ ] **RF13** – O sistema deve ter um dashboard com informações do usuário.
+- [x] **RF14** – O sistema deve permitir visualização de perfis de fornecedores.
+- [x] **RF15** – Deve haver um dashboard com métricas de uso para fornecedores.
+- [x] **RF16** – O sistema deve permitir navegação por categorias de produtos.
+- [x] **RF17** – O sistema deve exibir detalhes completos dos produtos.
+- [ ] **RF18** – O sistema deve ter um sistema de recomendação de fornecedores baseado em buscas anteriores.     
+- [x] **RF19** – O sistema deve permitir autenticação segura com sessões.
+- [x] **RF20** – O sistema deve ter middleware de autenticação para rotas protegidas.
+- [x] **RF21** – O sistema deve permitir logout seguro.
+- [ ] **RF22** – O sistema deve permitir que fornecedores e empresas enviem documentos e contratos.    
+- [x] **RF23** – O sistema deve ter estrutura para gestão de contratos.
+- [ ] **RF24** – O sistema deve oferecer um chat em tempo real para suporte técnico.   
+- [x] **RF25** – O sistema deve permitir visualização de produtos relacionados.
+- [x] **RF26** – O sistema deve ter sistema de busca avançada com filtros.
+- [x] **RF27** – O sistema deve oferecer um modo "categoria" para fornecedores exibirem seus produtos de forma organizada.  
+- [ ] **RF28** – O sistema deve permitir a criação de listas de compras e pedidos recorrentes.  
+- [ ] **RF29** – O sistema deve contar com autenticação em dois fatores para maior segurança.
+- [x] **RF30** – O sistema deve permitir que fornecedores e empresas conversem entre si.
 
 ---
 
