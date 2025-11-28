@@ -8,5 +8,6 @@ export default class ProdutoRenderizador {
     } else {
       res.render('produto', data);
     }
+    
   }
 }

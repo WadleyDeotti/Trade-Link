@@ -18,6 +18,7 @@ export default class FornecedorRenderizador {
         console.error('Erro ao buscar produtos do fornecedor:', error);
         data.produtosFornecedor = [];
       }
+      
     } else {
       console.log('Usuário não é fornecedor ou não está logado');
       data.produtosFornecedor = [];
