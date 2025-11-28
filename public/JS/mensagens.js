@@ -1,6 +1,6 @@
 // mensagens.js
-let usuarioId = USER_ID;            // vindo do EJS
-let usuarioTipo = USER_TIPO;        // "empresa" ou "fornecedor"
+let usuarioId = null;            // será definido via API
+let usuarioTipo = null;        // "empresa" ou "fornecedor"
 let conversaAtiva = null;
 let socket = io(); // se ainda não tiver socket.io, pode comentar esta linha
 
@@ -140,6 +140,42 @@ document.getElementById("inputMensagem").addEventListener("keypress", e => {
 });
 
 // ==============================
-// 9️⃣ Inicialização
+// 9️⃣ Carregar dados do usuário
 // ==============================
+async function carregarDadosUsuario() {
+  try {
+    const res = await fetch('/api/usuario-atual');
+    const usuario = await res.json();
+    
+    if (usuario) {
+      usuarioId = usuario.id_usuario;
+      usuarioTipo = usuario.tipo;
+      
+      // Atualizar informações do painel
+      const nomeUsuario = usuario.nome_fantasia || 'Usuário';
+      document.getElementById('contact-name-large').textContent = nomeUsuario;
+      document.getElementById('contact-company').textContent = usuario.tipo === 'empresa' ? 'Empresa' : 'Fornecedor';
+      document.getElementById('contact-email').textContent = usuario.email || 'Email não informado';
+      document.getElementById('contact-phone').textContent = usuario.telefone || 'Telefone não informado';
+      document.getElementById('contact-address').textContent = usuario.localizacao || 'Localização não informada';
+      document.getElementById('contact-company-name').textContent = usuario.razao_social || usuario.nome_fantasia || 'Empresa não informada';
+      
+      const documento = usuario.tipo === 'empresa' 
+        ? `CNPJ: ${usuario.cnpj || 'Não informado'}`
+        : `CPF: ${usuario.cpf || 'Não informado'}`;
+      document.getElementById('contact-cnpj').textContent = documento;
+      
+      // Atualizar avatar
+      const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(nomeUsuario)}&background=38528D&color=fff&size=80`;
+      document.getElementById('contact-avatar-large').src = avatarUrl;
+    }
+  } catch (err) {
+    console.error('Erro ao carregar dados do usuário:', err);
+  }
+}
+
+// ==============================
+// 🔟 Inicialização
+// ==============================
+carregarDadosUsuario();
 carregarConversas();

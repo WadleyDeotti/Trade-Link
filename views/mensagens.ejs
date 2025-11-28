@@ -6,7 +6,6 @@
     <title>Mensagens - TradeLink</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/css/mensagens.css">
-    <script src="/JS/mensagens.js"></script>
 </head>
 <body>
     <div class="dashboard-container">
@@ -138,7 +137,7 @@
                                 <h4>Informações de Contato</h4>
                                 <div class="contact-info-item">
                                     <i class="fas fa-envelope"></i>
-                                    <span id="contact-email">contato@tradelink.com</span>
+                                    <span id="contact-email"><%= usuario.nome_fantasia %></span>
                                     <button class="btn-icon edit-info" data-field="email">
                                         <i class="fas fa-edit"></i>
                                     </button>
@@ -180,9 +179,6 @@
                             <div class="contact-actions">
                                 <button class="btn btn-secondary">
                                     <i class="fas fa-file-alt"></i> Ver Pedidos
-                                </button>
-                                <button class="btn btn-primary" id="edit-contact-profile">
-                                    <i class="fas fa-user-edit"></i> Editar Perfil
                                 </button>
                             </div>
                         </div>
@@ -276,71 +272,12 @@
     </div>
 
     
-    <div id="edit-contact-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Editar Perfil do Contato</h2>
-                <span class="close">&times;</span>
-            </div>
-            <div class="modal-body">
-                <form id="edit-contact-form">
-                    <input type="hidden" id="edit-contact-id">
-                    
-                    <div class="form-group">
-                        <label for="edit-contact-avatar">URL do Avatar:</label>
-                        <input type="text" id="edit-contact-avatar" placeholder="https://...">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="edit-contact-name">Nome:</label>
-                        <input type="text" id="edit-contact-name" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="edit-contact-company">Empresa:</label>
-                        <input type="text" id="edit-contact-company">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="edit-contact-email">Email:</label>
-                        <input type="email" id="edit-contact-email">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="edit-contact-phone">Telefone:</label>
-                        <input type="tel" id="edit-contact-phone">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="edit-contact-address">Endereço:</label>
-                        <input type="text" id="edit-contact-address">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="edit-contact-cnpj">CNPJ:</label>
-                        <input type="text" id="edit-contact-cnpj">
-                    </div>
-                    
-                    <div class="form-actions">
-                        <button type="button" class="btn btn-secondary close-modal">Cancelar</button>
-                        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    
     <div id="toast" class="toast">
         <i class="fas fa-check-circle"></i>
         <span id="toast-message">Operação realizada com sucesso!</span>
     </div>
 
-    <script>
-        const USER_ID = "<%= usuario.id_usuario %>";
-        const USER_TIPO = "<%= usuario.tipo %>";
-    </script>
     <script src="/node_modules/socket.io/socket.io.js"></script>
-    <script src="mensagens.js"></script>  
+    <script src="/JS/mensagens.js"></script> 
 </body>
 </html>

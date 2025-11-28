@@ -52,7 +52,9 @@ router.get("/api/historico/resumo", autenticar, historicoController.getResumo);
 router.get("/api/historico/grafico", autenticar, historicoController.getGrafico);
 
 // Mensagens
-router.get("/mensagens", autenticar, (req, res) => res.render("mensagens"));
+router.get("/mensagens", autenticar, (req, res) => {
+  res.render("mensagens", { usuario: req.session.usuario });
+});
 
 // Configurações
 router.get("/configuracoes", autenticar, (req, res) =>
@@ -76,6 +78,11 @@ router.get("/produtos", autenticar, produtoController.getListaProdutos);
 
 // Chat
 router.get("/chat", autenticar, (req, res) => res.render("chat"));
+
+// API do usuário atual
+router.get("/api/usuario-atual", autenticar, (req, res) => {
+  res.json(req.session.usuario);
+});
 
 // Conversas e mensagens (API)
 router.get("/listar-conversas/:id_usuario", autenticar, MessageController.listarConversas);
