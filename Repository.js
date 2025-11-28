@@ -3,27 +3,23 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 // repository.js
-import mysql from 'mysql2/promise';
+import sqlite3 from 'sqlite3';
+import { open } from 'sqlite';
 import { Empresa } from './models/empresaModel.js';
 import { Fornecedor } from './models/fornecedorModel.js';
 import { Produto } from './models/produtoModel.js';
 
-
-// 🧩 Cria a conexão (ou pool)
-const conexao = mysql.createPool({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: "pit",
-  namedPlaceholders: true
+// 🧩 Cria a conexão SQLite
+const conexao = await open({
+  filename: './database.db',
+  driver: sqlite3.Database
 });
 
 // ✅ Teste de conexão
 (async () => {
   try {
-    const conn = await conexao.getConnection();
-    console.log("Conectado ao banco de dados com sucesso!");
-    conn.release();
+    await conexao.get("SELECT 1");
+    console.log("Conectado ao banco SQLite com sucesso!");
   } catch (err) {
     console.error("Erro ao conectar ao banco:", err);
   }
@@ -31,33 +27,33 @@ const conexao = mysql.createPool({
 
 // ---------------- Funções ----------------
 export async function testeUsuario() {
-  const [rows] = await conexao.query("SELECT * FROM fornecedores WHERE id_fornecedor = 5");
+  const rows = await conexao.all("SELECT * FROM fornecedores WHERE id_fornecedor = 5");
   return rows.length > 0 ? new Fornecedor(rows[0]) : null;
 }
 
 export async function getProdutos() {
-  const [rows] = await conexao.execute(`
+  const rows = await conexao.all(`
     SELECT p.id_produto, p.id_fornecedor, p.nome_produto, p.descricao, p.preco, p.disponivel, p.categoria,
            f.nome_fantasia
     FROM produtos p
-    JOIN fornecedores f USING(id_fornecedor)
+    JOIN fornecedores f ON p.id_fornecedor = f.id_fornecedor
   `);
   return rows.map(row => new Produto(row));
 }
 
 export async function getProdutosPorCategoria(categoria) {
-  const [rows] = await conexao.execute(`
+  const rows = await conexao.all(`
     SELECT p.id_produto, p.id_fornecedor, p.nome_produto, p.descricao, p.preco, p.disponivel, p.categoria,
            f.nome_fantasia
     FROM produtos p
-    JOIN fornecedores f USING(id_fornecedor)
+    JOIN fornecedores f ON p.id_fornecedor = f.id_fornecedor
     WHERE p.categoria = ?
   `, [categoria]);
   return rows.map(row => new Produto(row));
 }
 
 export async function getCategorias() {
-  const [rows] = await conexao.execute(`
+  const rows = await conexao.all(`
     SELECT DISTINCT categoria
     FROM produtos
     WHERE categoria IS NOT NULL
@@ -71,7 +67,7 @@ export async function buscarProdutos(termo, categoria, precoMin, precoMax) {
     SELECT p.id_produto, p.id_fornecedor, p.nome_produto, p.descricao, p.preco, p.disponivel, p.categoria,
            f.nome_fantasia
     FROM produtos p
-    JOIN fornecedores f USING(id_fornecedor)
+    JOIN fornecedores f ON p.id_fornecedor = f.id_fornecedor
     WHERE 1=1
   `;
   const params = [];
@@ -98,34 +94,34 @@ export async function buscarProdutos(termo, categoria, precoMin, precoMax) {
 
   sql += ` ORDER BY p.nome_produto`;
 
-  const [rows] = await conexao.execute(sql, params);
+  const rows = await conexao.all(sql, params);
   return rows.map(row => new Produto(row));
 }
 
 export async function buscarProdutoPorId(id_produto) {
-  const [rows] = await conexao.execute(`
+  const row = await conexao.get(`
     SELECT p.id_produto, p.id_fornecedor, p.nome_produto, p.descricao, p.preco, p.disponivel, p.categoria,
            f.nome_fantasia, f.telefone, f.email
     FROM produtos p
-    JOIN fornecedores f USING(id_fornecedor)
+    JOIN fornecedores f ON p.id_fornecedor = f.id_fornecedor
     WHERE p.id_produto = ?
   `, [id_produto]);
-  return rows.length > 0 ? new Produto(rows[0]) : null;
+  return row ? new Produto(row) : null;
 }
 
 export async function buscarProdutosRelacionados(categoria, id_produto_atual) {
-  const [rows] = await conexao.execute(`
+  const rows = await conexao.all(`
     SELECT p.id_produto, p.nome_produto, p.preco, p.categoria
     FROM produtos p
     WHERE p.categoria = ? AND p.id_produto != ? AND p.disponivel = 1
-    ORDER BY RAND()
+    ORDER BY RANDOM()
     LIMIT 3
   `, [categoria, id_produto_atual]);
   return rows.map(row => new Produto(row));
 }
 
 export async function buscarProdutosPorFornecedor(id_fornecedor) {
-  const [rows] = await conexao.execute(`
+  const rows = await conexao.all(`
     SELECT p.id_produto, p.id_fornecedor, p.nome_produto, p.descricao, p.preco, p.disponivel, p.categoria
     FROM produtos p
     WHERE p.id_fornecedor = ?
@@ -135,24 +131,24 @@ export async function buscarProdutosPorFornecedor(id_fornecedor) {
 }
 
 export async function getFornecedor() {
-  const [rows] = await conexao.execute("SELECT * FROM fornecedores");
+  const rows = await conexao.all("SELECT * FROM fornecedores");
   return rows.map(row => new Fornecedor(row));
 }
 
 export async function buscarCNPJ(cnpj) {
-  const [rows] = await conexao.execute(
+  const row = await conexao.get(
     "SELECT * FROM empresas WHERE cnpj = ?",
     [cnpj]
   );
-  return rows.length > 0 ? new Empresa(rows[0]) : null;
+  return row ? new Empresa(row) : null;
 }
 
 export async function buscarCPF(cpf) {
-  const [rows] = await conexao.execute(
+  const row = await conexao.get(
     "SELECT * FROM fornecedores WHERE cpf = ?",
     [cpf]
   );
-  return rows.length > 0 ? new Fornecedor(rows[0]) : null;
+  return row ? new Fornecedor(row) : null;
 }
 
 // Atualizações
@@ -171,7 +167,7 @@ export async function updateEmpresa(dados) {
     dados.important_only, dados.email_notifications, dados.push_notifications,
     dados.language, dados.datetime_format, dados.timezone, dados.id_empresa
   ];
-  const [resultado] = await conexao.execute(sql, values);
+  const resultado = await conexao.run(sql, values);
   return resultado;
 }
 
@@ -190,85 +186,85 @@ export async function updateFornecedor(dados) {
     dados.important_only, dados.email_notifications, dados.push_notifications,
     dados.language, dados.datetime_format, dados.timezone, dados.id_fornecedor
   ];
-  const [resultado] = await conexao.execute(sql, values);
+  const resultado = await conexao.run(sql, values);
   return resultado;
 }
 
 // Atualizar senha
 export async function updateSenhaEmpresa({ senha_hash, id_empresa }) {
   const sql = "UPDATE empresas SET senha_hash = ? WHERE id_empresa = ?";
-  const [resultado] = await conexao.execute(sql, [senha_hash, id_empresa]);
+  const resultado = await conexao.run(sql, [senha_hash, id_empresa]);
   return resultado;
 }
 
 export async function updateSenhaFornecedor({ senha_hash, id_fornecedor }) {
   const sql = "UPDATE fornecedores SET senha_hash = ? WHERE id_fornecedor = ?";
-  const [resultado] = await conexao.execute(sql, [senha_hash, id_fornecedor]);
+  const resultado = await conexao.run(sql, [senha_hash, id_fornecedor]);
   return resultado;
 }
 
 // Buscar senha
 export async function buscarSenhaEmpresa(id_empresa) {
   const sql = "SELECT senha_hash FROM empresas WHERE id_empresa = ?";
-  const [rows] = await conexao.execute(sql, [id_empresa]);
-  return rows.length > 0 ? rows[0].senha_hash : null;
+  const row = await conexao.get(sql, [id_empresa]);
+  return row ? row.senha_hash : null;
 }
 
 export async function buscarSenhaFornecedor(id_fornecedor) {
   const sql = "SELECT senha_hash FROM fornecedores WHERE id_fornecedor = ?";
-  const [rows] = await conexao.execute(sql, [id_fornecedor]);
-  return rows.length > 0 ? rows[0].senha_hash : null;
+  const row = await conexao.get(sql, [id_fornecedor]);
+  return row ? row.senha_hash : null;
 }
 
 // Buscar por ID
 export async function buscarEmpresaPorId(id_empresa) {
   const sql = "SELECT * FROM empresas WHERE id_empresa = ?";
-  const [rows] = await conexao.execute(sql, [id_empresa]);
-  return rows.length > 0 ? new Empresa(rows[0]) : null;
+  const row = await conexao.get(sql, [id_empresa]);
+  return row ? new Empresa(row) : null;
 }
 
 export async function buscarFornecedorPorId(id_fornecedor) {
   const sql = "SELECT * FROM fornecedores WHERE id_fornecedor = ?";
-  const [rows] = await conexao.execute(sql, [id_fornecedor]);
-  return rows.length > 0 ? new Fornecedor(rows[0]) : null;
+  const row = await conexao.get(sql, [id_fornecedor]);
+  return row ? new Fornecedor(row) : null;
 }
 
 // Inserções
 export async function inserirEmpresa({ nome_fantasia, cnpj, email, senha_hash }) {
   const sql = "INSERT INTO empresas (nome_fantasia, cnpj, email, senha_hash) VALUES (?,?,?,?)";
-  const [resultado] = await conexao.execute(sql, [nome_fantasia, cnpj, email, senha_hash]);
+  const resultado = await conexao.run(sql, [nome_fantasia, cnpj, email, senha_hash]);
   return resultado;
 }
 
 export async function inserirFornecedor({ nome_fantasia, cpf, email, senha_hash }) {
   const sql = "INSERT INTO fornecedores (nome_fantasia, cpf, email, senha_hash) VALUES (?,?,?,?)";
-  const [resultado] = await conexao.execute(sql, [nome_fantasia, cpf, email, senha_hash]);
+  const resultado = await conexao.run(sql, [nome_fantasia, cpf, email, senha_hash]);
   return resultado;
 }
 
 // Atualizar dados gerais
 export async function atualizarFornecedor({ id_fornecedor, nome_fantasia, email, localizacao, telefone, descricao }) {
   const sql = "UPDATE fornecedores SET nome_fantasia = ?, email = ?, localizacao = ?, telefone = ?, descricao = ? WHERE id_fornecedor = ?";
-  const [resultado] = await conexao.execute(sql, [nome_fantasia, email, localizacao, telefone, descricao, id_fornecedor]);
+  const resultado = await conexao.run(sql, [nome_fantasia, email, localizacao, telefone, descricao, id_fornecedor]);
   return resultado;
 }
 
 export async function atualizarEmpresa({ id_empresa, nome_fantasia, email, localizacao, telefone, descricao }) {
   const sql = "UPDATE empresas SET nome_fantasia = ?, email = ?, localizacao = ?, telefone = ?, descricao = ? WHERE id_empresa = ?";
-  const [resultado] = await conexao.execute(sql, [nome_fantasia, email, localizacao, telefone, descricao, id_empresa]);
+  const resultado = await conexao.run(sql, [nome_fantasia, email, localizacao, telefone, descricao, id_empresa]);
   return resultado;
 }
 
 // Cadastrar produto
 export async function cadastrarProduto({ id_fornecedor, nome_produto, descricao, preco, categoria }) {
   const sql = "INSERT INTO produtos (id_fornecedor, nome_produto, descricao, preco, categoria) VALUES (?,?,?,?,?)";
-  const [resultado] = await conexao.execute(sql, [id_fornecedor, nome_produto, descricao, preco, categoria]);
+  const resultado = await conexao.run(sql, [id_fornecedor, nome_produto, descricao, preco, categoria]);
   return resultado;
 }
 
 export async function editarProduto(id_produto, { nome_produto, descricao, preco, categoria }) {
   const sql = "UPDATE produtos SET nome_produto = ?, descricao = ?, preco = ?, categoria = ? WHERE id_produto = ?";
-  const [resultado] = await conexao.execute(sql, [nome_produto, descricao, preco, categoria, id_produto]);
+  const resultado = await conexao.run(sql, [nome_produto, descricao, preco, categoria, id_produto]);
   return resultado;
 }
 
@@ -293,7 +289,7 @@ export async function inserirProduto(produto) {
     produto.categoria
   ];
 
-  const [resultado] = await conexao.execute(sql, valores);
+  const resultado = await conexao.run(sql, valores);
   return resultado;
 }
 
@@ -317,7 +313,7 @@ export async function updateProdutos(dados) {
 
   console.log('📦 Dados recebidos no repository:', dados);
 
-  const [resultado] = await conexao.execute(sql, values);
+  const resultado = await conexao.run(sql, values);
   console.log('🧾 Resultado do UPDATE:', resultado);
 
   return resultado;
@@ -333,7 +329,7 @@ export async function deleteProduto(id_produto) {
 
   console.log('🗑️ ID recebido para exclusão:', id_produto);
 
-  const [resultado] = await conexao.execute(sql, values);
+  const resultado = await conexao.run(sql, values);
   console.log('🧾 Resultado do DELETE:', resultado);
 
   return resultado;
@@ -349,7 +345,7 @@ export async function buscarOuCriarConversa(usuario1, usuario2, tipo1, tipo2) {
             OR (usuario1_id = ? AND usuario2_id = ?)
         `;
 
-        const [rows] = await conexao.execute(sql, [
+        const rows = await conexao.all(sql, [
             usuario1, usuario2,
             usuario2, usuario1
         ]);
@@ -361,13 +357,13 @@ export async function buscarOuCriarConversa(usuario1, usuario2, tipo1, tipo2) {
             VALUES (?, ?, ?, ?)
         `;
 
-        const [result] = await conexao.execute(insert, [
+        const result = await conexao.run(insert, [
             usuario1, usuario2,
             tipo1, tipo2
         ]);
 
         return {
-            id_conversa: result.insertId,
+            id_conversa: result.lastID,
             usuario1_id: usuario1,
             usuario2_id: usuario2,
             tipo1,
@@ -403,7 +399,7 @@ export async function listarConversasDoUsuario(id_usuario) {
             ORDER BY c.criado_em DESC
         `;
 
-        const [rows] = await conexao.execute(sql, [
+        const rows = await conexao.all(sql, [
             id_usuario,
             id_usuario,
             id_usuario,
@@ -430,14 +426,14 @@ export async function salvarMensagem(id_conversa, remetente_id, tipo_remetente, 
             VALUES (?, ?, ?, ?)
         `;
 
-        const [result] = await conexao.execute(sql, [
+        const result = await conexao.run(sql, [
             id_conversa,
             remetente_id,
             tipo_remetente,
             conteudo
         ]);
 
-        return result.insertId;
+        return result.lastID;
     } catch (error) {
         console.error('Erro ao salvar mensagem:', error);
         throw error;
@@ -453,7 +449,7 @@ export async function listarMensagens(id_conversa) {
             ORDER BY enviado_em ASC
         `;
 
-        const [rows] = await conexao.execute(sql, [id_conversa]);
+        const rows = await conexao.all(sql, [id_conversa]);
         return rows;
     } catch (error) {
         console.error('Erro ao listar mensagens:', error);
@@ -470,47 +466,37 @@ export async function marcarLidas(id_conversa, usuario_id) {
               AND remetente_id != ?
         `;
 
-        await conexao.execute(sql, [id_conversa, usuario_id]);
+        await conexao.run(sql, [id_conversa, usuario_id]);
     } catch (error) {
         console.error('Erro ao marcar mensagens como lidas:', error);
         throw error;
     }
 }
 
-
-
-
-// Historico completo
 // ------------------- Funções de token -------------------
-export const salvarTokenE = (empresa, callback) => {
-const sql = 'UPDATE empresas SET token_redefinicao=?, expira_token=? WHERE cnpj=?';
-pool.query(sql, [empresa.token_redefinicao, empresa.expira_token, empresa.cnpj], callback);
-};
+export async function salvarTokenE(empresa) {
+  const sql = 'UPDATE empresas SET token_redefinicao=?, expira_token=? WHERE cnpj=?';
+  const resultado = await conexao.run(sql, [empresa.token_redefinicao, empresa.expira_token, empresa.cnpj]);
+  return resultado;
+}
 
+export async function salvarTokenF(fornecedor) {
+  const sql = 'UPDATE fornecedores SET token_redefinicao=?, expira_token=? WHERE cpf=?';
+  const resultado = await conexao.run(sql, [fornecedor.token_redefinicao, fornecedor.expira_token, fornecedor.cpf]);
+  return resultado;
+}
 
-export const salvarTokenF = (fornecedor, callback) => {
-const sql = 'UPDATE fornecedores SET token_redefinicao=?, expira_token=? WHERE cpf=?';
-pool.query(sql, [fornecedor.token_redefinicao, fornecedor.expira_token, fornecedor.cpf], callback);
-};
+export async function procurarTokenE(token) {
+  const sql = 'SELECT * FROM empresas WHERE token_redefinicao=?';
+  const row = await conexao.get(sql, [token]);
+  return row || null;
+}
 
-
-export const procurarTokenE = (token, callback) => {
-const sql = 'SELECT * FROM empresas WHERE token_redefinicao=?';
-pool.query(sql, [token], (err, resultados) => {
-if (err) return callback(err);
-callback(null, resultados?.[0] || null);
-});
-};
-
-
-export const procurarTokenF = (token, callback) => {
-const sql = 'SELECT * FROM fornecedores WHERE token_redefinicao=?';
-pool.query(sql, [token], (err, resultados) => {
-if (err) return callback(err);
-callback(null, resultados?.[0] || null);
-});
-};
-
+export async function procurarTokenF(token) {
+  const sql = 'SELECT * FROM fornecedores WHERE token_redefinicao=?';
+  const row = await conexao.get(sql, [token]);
+  return row || null;
+}
 
 // ------------------- HISTÓRICO / RELATÓRIOS -------------------
 export const buscarHistorico = async ({ year, type, search }) => {
@@ -551,8 +537,8 @@ export const buscarHistorico = async ({ year, type, search }) => {
             const paramsCompras = [];
 
             if (year) {
-                queryCompras += " AND YEAR(c.data_compra) = ?";
-                paramsCompras.push(year);
+                queryCompras += " AND strftime('%Y', c.data_compra) = ?";
+                paramsCompras.push(year.toString());
             }
 
             // filtra status apenas se o tipo NÃO for compra/venda puro
@@ -566,7 +552,7 @@ export const buscarHistorico = async ({ year, type, search }) => {
                 paramsCompras.push(searchTerm);
             }
 
-            const [compras] = await conexao.execute(queryCompras, paramsCompras);
+            const compras = await conexao.all(queryCompras, paramsCompras);
             resultados.push(...compras);
         }
 
@@ -590,8 +576,8 @@ export const buscarHistorico = async ({ year, type, search }) => {
             const paramsVendas = [];
 
             if (year) {
-                queryVendas += " AND YEAR(ct.data_inicio) = ?";
-                paramsVendas.push(year);
+                queryVendas += " AND strftime('%Y', ct.data_inicio) = ?";
+                paramsVendas.push(year.toString());
             }
 
             if (type && type !== "all" && !isCategoryFilter) {
@@ -604,7 +590,7 @@ export const buscarHistorico = async ({ year, type, search }) => {
                 paramsVendas.push(searchTerm);
             }
 
-            const [vendas] = await conexao.execute(queryVendas, paramsVendas);
+            const vendas = await conexao.all(queryVendas, paramsVendas);
             resultados.push(...vendas);
         }
 
