@@ -146,7 +146,6 @@
                                 </button>
                                 <div class="carousel-container">
                                     <div class="carousel-track">
-                                        <!-- Produtos serão adicionados aqui via JavaScript -->
                                         <% if (typeof produtosFornecedor !== 'undefined' && produtosFornecedor.length > 0) { %>
                                             <% produtosFornecedor.forEach(produto => { %>
                                                 <div class="product-card">
@@ -213,15 +212,14 @@
     </div>
 
     <!-- Modal para Adicionar/Editar Produto -->
-    <form action="cadastrarProduto" method="POST">
-        <div id="product-modal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 id="product-modal-title">Adicionar Produto</h2>
-                    <span class="close">&times;</span>
-                </div>
-                <div class="modal-body">
-                    <form id="formProduct">
+    <div id="product-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="product-modal-title">Adicionar Produto</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="formProduct" action="cadastrarProduto" method="POST">
                         <div class="form-group">
                             <label for="product-name">Nome do Produto:</label>
                             <input id="product-name" type="text" name="nome_produto" required>
@@ -253,15 +251,14 @@
                                     style="max-width: 100%; max-height: 200px;">
                             </div>
                         </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" id="cancel-product-btn">Cancelar</button>
-                    <button type="submit" class="btn btn-primary" id="save-product-btn">Salvar Produto</button>
-                </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" id="cancel-product-btn">Cancelar</button>
+                        <button type="submit" class="btn btn-primary" id="save-product-btn">Salvar Produto</button>
+                    </div>
+                </form>
             </div>
         </div>
-    </form>
+    </div>
 
     <!-- Modal para Editar Produto -->
     <form id="formEditProduct" method="POST">

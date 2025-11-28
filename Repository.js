@@ -303,7 +303,6 @@ export async function updateProdutos(dados) {
       nome_produto = ?,
       preco = ?,
       descricao = ?,
-      disponivel = ?,
       categoria = ?
     WHERE id_produto = ?
   `;
@@ -312,7 +311,6 @@ export async function updateProdutos(dados) {
     dados.nome_produto,
     dados.preco,
     dados.descricao,
-    dados.disponivel,
     dados.categoria,
     dados.id_produto
   ];

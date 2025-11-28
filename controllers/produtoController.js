@@ -62,6 +62,9 @@ export const editarProduto = async (req, res) => {
 export const buscarProduto = async (req, res) => {
   try {
     const produto = await repository.buscarProdutoPorId(req.params.id);
+    if (!produto) {
+      return res.status(404).json({ error: 'Produto não encontrado' });
+    }
     res.json(produto);
   } catch (err) {
     console.error('Erro ao buscar produto:', err);
